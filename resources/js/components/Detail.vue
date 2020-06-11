@@ -69,20 +69,33 @@
         </div>
         <div class="course-content-body">
             <ul class="assignment-calendar">
-                <li v-for="date in dateList" :key="date" class="assignment-calendar-item">
-                    {{date}}
-                    <template v-if="findAssignment(date)">
-                        {{findAssignment(date).body}}
-                    </template>
-                </li>
+                <template v-for="date in dateList">
+                    <li v-if="findAssignment(date)" :key="date" class="assignment-calendar-item">
+                        {{date}}
+                        <assignment :assignment="findAssignment(date)" />
+                    </li>
+                    <li v-else :key="date" class="assignment-calendar-item" @click="addAssignment(date)">
+                        {{date}}
+                    </li>
+                </template>
             </ul>
+            <div class="assignment-modal" v-if="modalVisibility" @click="modalVisibility = false">
+                <div class="assignment-modal-close"><i class="fas fa-times"></i></div>
+                <div class="assignment-modal-body" @click.stop>
+                    {{modalAssignment.date}}
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import Assignment from './Assignments';
 
 export default {
+    components: {
+        Assignment
+    },
     data: function(){
         return{
             course: {},
@@ -100,7 +113,13 @@ export default {
             },
             periodInfo: {},
             dateList: [],
-            assignments: []
+            assignments: [],
+            modalAssignment: {
+                date: undefined,
+                body: '',
+                done_flg: false,
+            },
+            modalVisibility: false
         }
     },
     computed: {
@@ -225,6 +244,10 @@ export default {
                 .then(() => {
                     this.$router.push('/timetable');
                 })
+        },
+        addAssignment: function(date){
+            this.modalVisibility = true;
+            this.modalAssignment.date = date;
         }
     },
     async mounted(){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Assignment;
 
 class AssignmentController extends Controller
 {
@@ -66,9 +67,11 @@ class AssignmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Assignment $assignment)
     {
-        //
+        return $assignment->update([
+            'done_flg' => $request->done_flg
+        ]);
     }
 
     /**
