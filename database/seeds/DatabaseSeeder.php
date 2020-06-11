@@ -106,5 +106,12 @@ class DatabaseSeeder extends Seeder
             'body' => 'read a textbook',
             'date' => '2020-04-13',
         ]);
+        $assignment2 = factory(Assignment::class)->create([
+            'user_id' => $user1->id,
+            'course_id' => $course1->id,
+            'body' => 'read a textbook',
+            'date' => '2020-04-15',
+            'done_flg' => true,
+        ]);
     }
 }
