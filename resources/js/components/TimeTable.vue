@@ -1,12 +1,15 @@
 <template>
     <div>
+        <my-header name="時間割" :auth="auth" bk-color="#919191" />
         <table class="course">
             <tr class="course-day-head">
                 <th></th>
                 <th 
-                    v-for="day in dayOfWeek" :key="day"
+                    v-for="(day, index) in dayOfWeek" :key="day"
                     class="course-day-head-panel"
-                >{{day}}</th>
+                >
+                    <span :class="today === index ? 'current' : ''">{{day}}</span>
+                </th>
             </tr>
             <tr 
                 v-for="period in periods" :key="period"
@@ -32,10 +35,12 @@
 
 <script>
 import Course from './modules/Course';
+import MyHeader from './modules/Header';
 
 export default {
     components: {
-        Course
+        Course,
+        MyHeader
     },
     data: function(){
         return{
@@ -47,6 +52,9 @@ export default {
     computed: {
         auth: function(){
             return __auth();
+        },
+        today: function(){
+            return new Date().getDay();
         }
     },
     methods: {

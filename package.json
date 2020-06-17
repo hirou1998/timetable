@@ -29,6 +29,7 @@
         "vuex": "^3.4.0"
     },
     "dependencies": {
-        "normalize-scss": "^7.0.1"
+        "normalize-scss": "^7.0.1",
+        "vue-burger-menu": "^2.0.5"
     }
 }

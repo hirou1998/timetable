@@ -1,9 +1,10 @@
 <template>
     <div class="course-detail">
-        <h2 class="course-detail-title" :style="{'backgroundColor': course.color}">
+        <my-header :name="course.name" :auth="auth" :bk-color="course.color" @delete="deleteCourse" @edit="edit" />
+        <!-- <h2 class="course-detail-title" :style="{'backgroundColor': course.color}">
             <span>{{getWeekOfDay(periodInfo.day_of_week)}}曜{{periodInfo.period}}限</span>
             {{course.name}}
-        </h2>
+        </h2> -->
         <div class="course-detail-body">
             <h3 class="course-detail-body-title" @click="toggleInfo" v-if="!isEditing">
                 {{course.name}}
@@ -16,8 +17,8 @@
                 <input type="text" class="form-control" v-model="formData.name" placeholder="科目名">
             </div>
             <div class="course-detail-body-info" v-if="isInfoOpen">
-                <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="edit" v-if="!isEditing">EDIT</button>
-                <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-else>SAVE</button>
+                <!-- <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="edit" v-if="!isEditing">EDIT</button> -->
+                <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-if="isEditing">SAVE</button>
                 <button class="btn btn-danger btn-sm course-detail-body-info-cancel" @click="edit" v-if="isEditing && isAlreadyRegistered">CANCEL</button>
                 <div class="course-detail-body-info-item">
                     <img src="/images/teacher-icon.png" alt="">
@@ -62,39 +63,34 @@
                         </ul>
                     </div>
                 </div>
-                <div class="text-center">
-                    <button class="btn btn-danger btn-sm" @click="deleteCourse">この時間割を消す</button>
-                </div>
             </div>
         </div>
         <div class="course-content-body">
             <ul class="assignment-calendar">
-                <template v-for="date in dateList">
-                    <li v-if="findAssignment(date)" :key="date" class="assignment-calendar-item">
-                        {{date}}
-                        <assignment :assignment="findAssignment(date)" />
-                    </li>
-                    <li v-else :key="date" class="assignment-calendar-item" @click="addAssignment(date)">
-                        {{date}}
-                    </li>
+                <template v-for="(date, index) in dateList">
+                    <assignment-block 
+                        :key="date + index + Math.random()"
+                        :date="date"
+                        :assignment="findAssignment(date)" 
+                        :is-next-day="isNextDay(index)"
+                        @add="addAssignment" />
                 </template>
             </ul>
-            <div class="assignment-modal" v-if="modalVisibility" @click="modalVisibility = false">
-                <div class="assignment-modal-close"><i class="fas fa-times"></i></div>
-                <div class="assignment-modal-body" @click.stop>
-                    {{modalAssignment.date}}
-                </div>
-            </div>
+            <assignment-modal v-if="modalVisibility" @close="modalVisibility = false" :modal-assignment="modalAssignment" @update="updateAssignment" />
         </div>
     </div>
 </template>
 
 <script>
-import Assignment from './Assignments';
+import AssignmentBlock from './Assignment-block';
+import AssignmentModal from './Assignment-modal';
+import MyHeader from './modules/Header';
 
 export default {
     components: {
-        Assignment
+        AssignmentBlock,
+        AssignmentModal,
+        MyHeader
     },
     data: function(){
         return{
@@ -118,6 +114,8 @@ export default {
                 date: undefined,
                 body: '',
                 done_flg: false,
+                memo: '',
+                id: undefined
             },
             modalVisibility: false
         }
@@ -131,6 +129,12 @@ export default {
                 return p.day_of_week;
             });
         },
+        today: function(){
+            return new Date();
+        },
+        thisYear: function(){
+            return new Date().getFullYear();
+        }
     },
     methods: {
         async getCourse(){
@@ -183,7 +187,6 @@ export default {
             var dateListArray = [];
 
             for(var i = startDay; i < diff + 7; i = i + 7){
-                //console.log(i);
                 for(var j = 0; j < this.course.periods.length; j++){
                     var num = this.course.periods[j].day_of_week + i - startDay * 2;
                     if(num > 0 && num <= diff){
@@ -195,6 +198,17 @@ export default {
                 }
             }
             this.dateList = dateListArray;
+        },
+        isNextDay: function(index){
+            var date = new Date(this.dateList[index]);
+            date.setFullYear(this.thisYear);
+            date.setHours(23);
+            date.setMinutes(59);
+            var prevDate = new Date(this.dateList[index - 1]);
+            prevDate.setFullYear(this.thisYear);
+            prevDate.setHours(0);
+            prevDate.setMinutes(0);
+            return this.today >= prevDate && this.today <= date ? true : false;
         },
         splitParams: function(param){
             param = param.split('&');
@@ -248,6 +262,30 @@ export default {
         addAssignment: function(date){
             this.modalVisibility = true;
             this.modalAssignment.date = date;
+            var item = this.findAssignment(date);
+            if(item){
+                this.modalAssignment.body = item.body;
+                this.modalAssignment.done_flg = item.done_flg;
+                this.modalAssignment.memo = item.memo;
+                this.modalAssignment.id = item.id
+            }else{
+                this.modalAssignment.body = '';
+                this.modalAssignment.done_flg = false;
+                this.modalAssignment.memo = '';
+                this.modalAssignment.id = undefined
+            }
+        },
+        updateAssignment: function(data){
+            this.assignments = this.assignments.map(a => {
+                if(a.id === data.id){
+                    return a = {
+                        ...data,
+                        'date': this.getDateOfAssignment(data.date),
+                    }
+                }else{
+                    return a;
+                }
+            })
         }
     },
     async mounted(){

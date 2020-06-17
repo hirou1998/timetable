@@ -10,6 +10,7 @@ $factory->define(Assignment::class, function (Faker $faker) {
         'body' => $faker->sentence(6),
         'date' => $faker->date(),
         'done_flg' => false,
+        'memo' => $faker->sentence(10),
         'course_id' => function(){
             return factory(Course::class)->create()->id;
         },

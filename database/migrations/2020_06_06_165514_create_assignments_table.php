@@ -18,6 +18,7 @@ class CreateAssignmentsTable extends Migration
             $table->text('body');
             $table->date('date');
             $table->boolean('done_flg');
+            $table->text('memo');
             $table->uuid('course_id');
             $table->uuid('user_id');
             $table->timestamps();

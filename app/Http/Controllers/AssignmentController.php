@@ -69,9 +69,18 @@ class AssignmentController extends Controller
      */
     public function update(Request $request, Assignment $assignment)
     {
-        return $assignment->update([
-            'done_flg' => $request->done_flg
-        ]);
+        if($request->body){
+            $assignment->update([
+                'body' => $request->body,
+                'memo' => $request->memo,
+                'done_flg' => $request->done_flg
+            ]);
+            return $assignment;
+        }else{
+            return $assignment->update([
+                'done_flg' => $request->done_flg
+            ]);
+        }
     }
 
     /**

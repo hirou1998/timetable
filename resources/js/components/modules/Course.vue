@@ -1,6 +1,6 @@
 <template>
     <div class="course-panel-card" @click="seeDetail">
-        <div class="course-panel-color-lavel" :style="{'backgroundColor': course.course.color}"></div>
+        <div class="course-panel-color-label" :style="{'backgroundColor': course.course.color}"></div>
         <p class="course-panel-name">{{course.course.name}}</p>
     </div>
 </template>
