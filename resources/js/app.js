@@ -3,6 +3,7 @@ require('./bootstrap');
 import router from './router.js'
 import store from './store'
 import Axios from 'axios';
+import Main from './components/Main';
 
 window.Vue = require('vue');
 
@@ -19,4 +20,7 @@ new Vue({
             }
           }
     },
+    components: {
+        app: Main
+    }
 }).$mount('#app');

@@ -21,18 +21,19 @@ Route::get('/login', function(){
 Route::get('/', function () {
     return view('top.index');
 });
-Route::get('/timetable', function(){
-    return view('timetable.index');
-});
-Route::get('/timetable/detail', function(){
-    return view('timetable.detail');
-});
-Route::get('/test', function(){
-    return view('top.index');
-});
+
 Route::post('/register', 'Auth\RegisterController@register');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
-Route::post('/course/update/{course}', 'CourseController@update');
-Route::delete('/period/{period}', 'PeriodController@destroy');
-Route::resource('/assignment', 'AssignmentController');
+
+Route::middleware(['auth'])->group(function(){
+    Route::get('/timetable', function(){
+        return view('timetable.index');
+    });
+    Route::get('/timetable/detail', function(){
+        return view('timetable.detail');
+    });
+    Route::post('/course/update/{course}', 'CourseController@update');
+    Route::delete('/period/{period}', 'PeriodController@destroy');
+    Route::resource('/assignment', 'AssignmentController');
+});

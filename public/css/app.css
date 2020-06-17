@@ -15488,6 +15488,21 @@ ul {
   padding: 0;
 }
 
+a {
+  color: #2b2b2b;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #2b2b2b;
+  text-decoration: none;
+}
+
+.radio-title {
+  font-size: 0.5rem;
+  margin-bottom: 0;
+}
+
 .course {
   width: 90%;
   margin: 2vw auto;
@@ -15501,6 +15516,12 @@ ul {
 
 .course-day-head-panel {
   text-align: center;
+}
+
+.course-day-head-panel span.current {
+  background-color: #BBDEFF;
+  border-radius: 50%;
+  padding: 0 1vw;
 }
 
 .course-period-panel {
@@ -15518,8 +15539,12 @@ ul {
 }
 
 .course-panel-card {
-  padding: 1vw;
+  padding: 4vw 0.5vw;
   position: relative;
+  height: 100%;
+  border: solid 1px #707070;
+  border-radius: 5px;
+  background: #fff;
 }
 
 .course-panel-name {
@@ -15528,9 +15553,9 @@ ul {
   margin: 0;
 }
 
-.course-panel-color-lavel {
+.course-panel-color-label {
   position: absolute;
-  top: -15%;
+  top: 7%;
   left: 0;
   width: 80%;
   height: 10px;
@@ -15603,7 +15628,7 @@ ul {
 }
 
 .course-content-body .assignment-calendar {
-  height: 45vh;
+  height: 80vh;
   overflow: scroll;
   margin-bottom: 0;
 }
@@ -15612,6 +15637,13 @@ ul {
   border-bottom: solid 1px #707070;
   padding: 2vh 2vw;
   display: flex;
+}
+
+.course-content-body .assignment-calendar-item .next {
+  background-color: #BBDEFF;
+  border-radius: 50%;
+  padding: 1vh 1vw;
+  margin: -1vh -1vw;
 }
 
 .course-content-body .assignment-calendar-content {
@@ -15659,11 +15691,131 @@ ul {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
+  padding: 5vw;
+}
+
+.assignment-modal-body-memo-container {
+  border-top: solid 1px #707070;
+  border-bottom: solid 2px #707070;
+  margin-bottom: 2vh;
+  padding: 2vh 0;
+}
+
+.assignment-modal-body-memo-title {
+  font-size: 0.5rem;
+  color: #888282;
+  font-weight: normal;
 }
 
 .assignment-modal-close {
   position: absolute;
   top: 4vh;
   right: 6vw;
+}
+
+.assignment-modal .btn-modal {
+  flex: 1;
+  margin: 1vh 1vw;
+  font-size: 0.5rem;
+  padding: 0.5vh 0;
+  color: #fff;
+}
+
+.navbar {
+  background-color: #919191;
+  position: relative;
+  display: block;
+}
+
+.navbar-button-icon {
+  color: #fff;
+  font-size: 5vw;
+}
+
+.navbar-title {
+  text-align: center;
+}
+
+.navbar-title {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.navbar-hamburger {
+  position: absolute;
+  top: 50%;
+  left: 10vw;
+  transform: translate(0, -50%);
+}
+
+.navbar-hamburger-menu {
+  background-color: #919191;
+  position: fixed;
+  width: 80vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: translate(-100%, 0);
+  transition: 0.5s;
+  z-index: 3;
+  color: #fff;
+  padding: 5vh 0;
+  font-size: 5vw;
+  font-weight: normal;
+}
+
+.navbar-hamburger-menu.open {
+  transform: translate(0, 0);
+}
+
+.navbar-hamburger-menu-close {
+  position: absolute;
+  top: 2vh;
+  right: 2vw;
+  color: #fff;
+}
+
+.navbar-hamburger-menu-big {
+  padding-left: 6vw;
+}
+
+.navbar-hamburger-menu-big i {
+  margin-right: 4vw;
+}
+
+.navbar-hamburger-menu-items {
+  margin-top: 4vw;
+}
+
+.navbar-hamburger-menu-item {
+  padding: 3vw 0 3vw 14vw;
+  width: 90%;
+  border-radius: 0 30px 30px 0;
+}
+
+.navbar-hamburger-menu-item a {
+  color: #fff;
+}
+
+.navbar-hamburger-menu-item.current {
+  background-color: #D2D2D2;
+}
+
+.navbar-hamburger-menu-item.current a {
+  color: #707070;
+}
+
+.navbar-hamburger-menu-logout {
+  position: absolute;
+  bottom: 2vh;
+  left: 0;
+  border-top: solid 1px #fff;
+  border-bottom: solid 1px #fff;
+  width: 100%;
+  padding: 2vw 4vw;
+}
+
+.navbar-hamburger-menu-logout a {
+  color: #fff;
 }
 
