@@ -2187,6 +2187,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -2258,8 +2259,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (!params.course) {
                   _this.isEditing = true;
-
-                  _this.$set(_this.formData, 'periods', [{
+                  _this.isAdding = _this.$set(_this.formData, 'periods', [{
                     'day_of_week': params.day,
                     'period': params.period
                   }]);
@@ -2387,6 +2387,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this3.isEditing = false;
       });
     },
+    register: function register() {
+      axios.post("/course/register/".concat(this.auth.id), {
+        'name': this.formData.name,
+        'teacher': this.formData.teacher,
+        'type': this.formData.type,
+        'periods': this.formData.periods
+      }).then(function (_ref4) {
+        var data = _ref4.data;
+        console.log(data);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
     findPeriod: function findPeriod() {
       var _this4 = this;
 
@@ -2453,8 +2466,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return axios.get("/api/user/setting/".concat(_this7.auth.id)).then(function (_ref4) {
-                var data = _ref4.data;
+              return axios.get("/api/user/setting/".concat(_this7.auth.id)).then(function (_ref5) {
+                var data = _ref5.data;
                 _this7.setting = data;
               });
 
@@ -63765,7 +63778,7 @@ var render = function() {
         _vm._v(" "),
         _vm.isInfoOpen
           ? _c("div", { staticClass: "course-detail-body-info" }, [
-              _vm.isEditing
+              _vm.isEditing && _vm.isAlreadyRegistered
                 ? _c(
                     "button",
                     {
@@ -63786,6 +63799,18 @@ var render = function() {
                       on: { click: _vm.edit }
                     },
                     [_vm._v("CANCEL")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isEditing && !_vm.isAlreadyRegistered
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-success btn-sm course-detail-body-info-cancel",
+                      on: { click: _vm.register }
+                    },
+                    [_vm._v("登録")]
                   )
                 : _vm._e(),
               _vm._v(" "),

@@ -18,8 +18,9 @@
             </div>
             <div class="course-detail-body-info" v-if="isInfoOpen">
                 <!-- <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="edit" v-if="!isEditing">EDIT</button> -->
-                <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-if="isEditing">SAVE</button>
+                <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-if="isEditing && isAlreadyRegistered">SAVE</button>
                 <button class="btn btn-danger btn-sm course-detail-body-info-cancel" @click="edit" v-if="isEditing && isAlreadyRegistered">CANCEL</button>
+                <button class="btn btn-success btn-sm course-detail-body-info-cancel" @click="register" v-if="isEditing && !isAlreadyRegistered">登録</button>
                 <div class="course-detail-body-info-item">
                     <img src="/images/teacher-icon.png" alt="">
                     <p class="course-detail-body-text" v-if="!isEditing">{{course.teacher}} 先生</p>
@@ -141,6 +142,7 @@ export default {
             const params = await this.splitParams(location.search.substring(1));
             if(!params.course){
                 this.isEditing = true;
+                this.isAdding =
                 this.$set(this.formData, 'periods', [
                     {
                         'day_of_week' : params.day,
@@ -249,6 +251,18 @@ export default {
                 console.log(data);
                 this.isEditing = false;
             });
+        },
+        register: function(){
+            axios.post(`/course/register/${this.auth.id}`, {
+                'name': this.formData.name,
+                'teacher': this.formData.teacher,
+                'type': this.formData.type,
+                'periods': this.formData.periods
+            }).then(({data}) => {
+                console.log(data)
+            }).catch((err) => {
+                console.log(err);
+            })
         },
         findPeriod: function(){
             return this.course.periods.filter(p => p.day_of_week === this.selected.day && p.period === this.selected.period);

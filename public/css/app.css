@@ -15725,6 +15725,7 @@ a:hover {
   background-color: #919191;
   position: relative;
   display: block;
+  min-height: 6vh;
 }
 
 .navbar-button-icon {

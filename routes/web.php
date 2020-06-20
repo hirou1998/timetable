@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function(){
         return view('timetable.index');
     });
     Route::post('/course/update/{course}', 'CourseController@update');
+    Route::post('/course/register/{user}', 'CourseController@store');
     Route::delete('/period/{period}', 'PeriodController@destroy');
     Route::resource('/{course}/assignment', 'AssignmentController');
 });
