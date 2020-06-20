@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Assignment;
+use App\Course;
 
 class AssignmentController extends Controller
 {
@@ -33,9 +34,15 @@ class AssignmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Course $course)
     {
-        //
+        return $course->assignments()->create([
+            'body' => $request->body,
+            'memo' => $request->memo,
+            'done_flg' => $request->done_flg,
+            'user_id' => auth()->user()->id,
+            'date' => $request->date,
+        ]);
     }
 
     /**
@@ -67,7 +74,7 @@ class AssignmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Assignment $assignment)
+    public function update(Request $request, Course $course, Assignment $assignment)
     {
         if($request->body){
             $assignment->update([
@@ -89,8 +96,9 @@ class AssignmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Course $course, Assignment $assignment)
     {
-        //
+        $assignment->delete();
+        return response()->json([]);
     }
 }

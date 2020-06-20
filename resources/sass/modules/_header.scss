@@ -40,14 +40,21 @@
         }
         &-close{
             position: absolute;
-            top: 2vh;
+            top: 0;
             right: 2vw;
             color: #fff;
+        }
+        &-user-name{
+            flex: 5;
         }
         &-big{
             padding-left: 6vw;
             i{
-                margin-right: 4vw;
+                flex: 1;
+            }
+            a{
+                color: #fff;
+                flex: 1;
             }
         }
         &-items{

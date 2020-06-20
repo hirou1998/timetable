@@ -16,10 +16,15 @@ export default {
             assignmentInfo: this.assignment
         }
     },
+    computed: {
+        courseId: function(){
+            return this.$route.query.course;
+        }
+    },
     methods: {
         makeAssignmentDone: function(){
             this.assignmentInfo.done_flg === 0 ? this.assignmentInfo.done_flg = 1 : this.assignmentInfo.done_flg = 0;
-            axios.put(`/assignment/${this.assignment.id}`, {
+            axios.put(`/${this.courseId}/assignment/${this.assignment.id}`, {
                 'done_flg': this.assignmentInfo.done_flg
             }).then(({data}) => {
                 

@@ -5,6 +5,7 @@ import TimeTable from './components/TimeTable'
 import Register from './components/Register'
 import Login from './components/Login'
 import Detail from './components/Detail'
+import Setting from './components/Setting'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
             path: '/timetable/detail',
             name: 'detail',
             component: Detail
+        },
+        {
+            path: '/setting',
+            name: 'setting',
+            component: Setting
         },
     ]
 })

@@ -15770,9 +15770,13 @@ a:hover {
 
 .navbar-hamburger-menu-close {
   position: absolute;
-  top: 2vh;
+  top: 0;
   right: 2vw;
   color: #fff;
+}
+
+.navbar-hamburger-menu-user-name {
+  flex: 5;
 }
 
 .navbar-hamburger-menu-big {
@@ -15780,7 +15784,12 @@ a:hover {
 }
 
 .navbar-hamburger-menu-big i {
-  margin-right: 4vw;
+  flex: 1;
+}
+
+.navbar-hamburger-menu-big a {
+  color: #fff;
+  flex: 1;
 }
 
 .navbar-hamburger-menu-items {
@@ -15817,5 +15826,24 @@ a:hover {
 
 .navbar-hamburger-menu-logout a {
   color: #fff;
+}
+
+.setting-head {
+  background-color: #919191;
+  color: #fff;
+  padding: 2vh 0 0;
+  position: relative;
+}
+
+.setting-head-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.setting-head-title {
+  margin: 0;
+  font-size: 1.6rem;
+  text-align: center;
 }
 

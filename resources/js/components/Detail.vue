@@ -76,7 +76,7 @@
                         @add="addAssignment" />
                 </template>
             </ul>
-            <assignment-modal v-if="modalVisibility" @close="modalVisibility = false" :modal-assignment="modalAssignment" @update="updateAssignment" />
+            <assignment-modal ref="modal" v-show="modalVisibility" @close="modalVisibility = false" :assignment="modalAssignment" @update="updateAssignment" @filter="filterItem" @add="addAssignmentByModal" />
         </div>
     </div>
 </template>
@@ -272,7 +272,9 @@ export default {
                 this.modalAssignment.body = '';
                 this.modalAssignment.done_flg = false;
                 this.modalAssignment.memo = '';
-                this.modalAssignment.id = undefined
+                this.modalAssignment.id = undefined;
+                this.$refs.modal.isEditing = true;
+                this.$refs.modal.isAdding = true;
             }
         },
         updateAssignment: function(data){
@@ -286,6 +288,15 @@ export default {
                     return a;
                 }
             })
+        },
+        filterItem: function(id){
+            this.assignments = this.assignments.filter(a => a.id !== id);
+        },
+        addAssignmentByModal: function(item){
+            this.assignments.push({
+                ...item,
+                date: this.getDateOfAssignment(item.date)
+            });
         }
     },
     async mounted(){
