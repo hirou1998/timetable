@@ -33,7 +33,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/timetable/detail', function(){
         return view('timetable.detail');
     });
+    Route::get('/setting', function(){
+        return view('timetable.index');
+    });
     Route::post('/course/update/{course}', 'CourseController@update');
     Route::delete('/period/{period}', 'PeriodController@destroy');
-    Route::resource('/assignment', 'AssignmentController');
+    Route::resource('/{course}/assignment', 'AssignmentController');
 });

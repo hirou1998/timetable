@@ -5,7 +5,8 @@
         </div>
         <div class="navbar-hamburger-menu-user navbar-hamburger-menu-big d-flex align-items-center">
             <i class="fas fa-user"></i>
-            {{auth.name}}
+            <p class="mb-0 navbar-hamburger-menu-user-name">{{auth.name}}</p>
+            <router-link to="/setting"><i class="fas fa-cog"></i></router-link>
         </div>
         <ul class="navbar-hamburger-menu-items">
             <li class="navbar-hamburger-menu-item" :class="isCurrentPage('timetable') ? 'current' : ''" @click="toggleHamburger">
