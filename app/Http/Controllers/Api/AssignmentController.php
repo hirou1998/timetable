@@ -11,7 +11,14 @@ class AssignmentController extends Controller
 {
     public function index(Assignment $assignment, Course $course, Request $request)
     {
-        $courseId = $request->course;
-        return $assignment->where('course_id', $courseId)->orderby('date')->get();
+        if($request->course){
+            $courseId = $request->course;
+            return $assignment->where('course_id', $courseId)->orderby('date')->get();
+        }elseif($request->user){
+            $userId = $request->user;
+            return $assignment->where('user_id', $userId)->orderby('date')->get();
+        }else{
+            return response()->json([]);
+        }
     }
 }
