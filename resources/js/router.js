@@ -6,6 +6,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Detail from './components/Detail'
 import Setting from './components/Setting'
+import Calendar from './components/Calendar'
 
 Vue.use(Router)
 
@@ -42,5 +43,10 @@ export default new Router({
             name: 'setting',
             component: Setting
         },
+        {
+            path: '/calendar',
+            name: 'calendar',
+            component: Calendar
+        }
     ]
 })

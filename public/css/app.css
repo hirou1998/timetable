@@ -15848,3 +15848,57 @@ a:hover {
   text-align: center;
 }
 
+.calendar {
+  margin-top: 4vh;
+}
+
+.calendar-navigation {
+  justify-content: space-between;
+  height: 4vh;
+}
+
+.calendar-flex {
+  flex-wrap: wrap;
+  color: #888282;
+}
+
+.calendar-head {
+  height: 4vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.calendar-head.current span {
+  background-color: #FCD1D1;
+  border-radius: 50%;
+  padding: 0 1vw;
+}
+
+.calendar-item {
+  width: calc(100% / 7);
+  border-bottom: solid 1px #F0F0F0;
+  border-right: solid 1px #F0F0F0;
+}
+
+.calendar-item-head {
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  width: calc(100% / 2);
+  margin: 0 auto;
+}
+
+.calendar-item-head.current {
+  background-color: #D4EAFF;
+  border-radius: 50%;
+}
+
+.calendar-day {
+  height: calc(82vh / 5);
+}
+
+.calendar-day.expanded {
+  height: calc(82vh / 6) !important;
+}
+
