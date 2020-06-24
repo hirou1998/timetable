@@ -67,9 +67,11 @@
             </div>
         </div>
         <div class="course-content-body">
-            <ul class="assignment-calendar">
+            <ul class="assignment-calendar" ref="assignment" id="assignment">
                 <template v-for="(date, index) in dateList">
-                    <assignment-block 
+                    <assignment-block
+                        :class="isNextDay(index) ? 'next' : ''"
+                        :ref="isNextDay(index) ? 'next' : ''"
                         :key="date + index + Math.random()"
                         :date="date"
                         :assignment="findAssignment(date)" 
@@ -159,6 +161,8 @@ export default {
                     this.periodInfo = this.findPeriod()[0];
                     this.getAssignments();
                     this.getDateList();
+                    var target = this.indexOfNextDay();
+                    //this.scroll();
                 });
             }
         },
@@ -202,15 +206,23 @@ export default {
             this.dateList = dateListArray;
         },
         isNextDay: function(index){
-            var date = new Date(this.dateList[index]);
-            date.setFullYear(this.thisYear);
-            date.setHours(23);
-            date.setMinutes(59);
-            var prevDate = new Date(this.dateList[index - 1]);
-            prevDate.setFullYear(this.thisYear);
-            prevDate.setHours(0);
-            prevDate.setMinutes(0);
-            return this.today >= prevDate && this.today <= date ? true : false;
+            return this.indexOfNextDay() === index ? true : false;
+        },
+        indexOfNextDay: function(){
+            for(var i = 0; i < this.dateList.length; i++){
+                var date = new Date(this.dateList[i]);
+                date.setFullYear(this.thisYear);
+                date.setHours(23);
+                date.setMinutes(59);
+                var prev = new Date(this.dateList[i - 1]);
+                prev.setFullYear(this.thisYear);
+                prev.setHours(23);
+                prev.setMinutes(59);
+                if(this.today > prev && this.today <= date){
+                    return i;
+                    break;
+                }
+            }
         },
         splitParams: function(param){
             param = param.split('&');
@@ -311,6 +323,8 @@ export default {
                 ...item,
                 date: this.getDateOfAssignment(item.date)
             });
+        },
+        scroll(){
         }
     },
     async mounted(){
@@ -318,6 +332,7 @@ export default {
             this.setting = data;
         })
         this.getCourse();
+        this.scroll();
     }
 }
 </script>

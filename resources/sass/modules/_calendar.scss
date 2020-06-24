@@ -16,28 +16,36 @@
         align-items: flex-end;
         justify-content: center;
 
-        &.current span{
-            background-color: #FCD1D1;
-            border-radius: 50%;
-            padding: 0 1vw;
+        &.sunday span{
+            color: red;
         }
     }
     &-item{
         width: calc(100% / 7);
         border-bottom: solid 1px #F0F0F0;
         border-right: solid 1px #F0F0F0;
+        overflow: hidden;
+        padding: 0 .5vw;
 
         &-head{
             text-align: center;
             font-weight: bold;
             display: block;
             width: calc(100% / 2);
-            margin: 0 auto;
+            margin: 1vh auto;
 
             &.current{
                 background-color: #D4EAFF;
                 border-radius: 50%;
             }
+        }
+        &-checked{
+            color: #fff;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            border-radius: 2px;
+            text-align: center;
+            padding-left: .5vw;
         }
     }
     &-day{

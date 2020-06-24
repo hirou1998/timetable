@@ -69,7 +69,6 @@ export default {
         }
     },
     mounted(){
-        //console.log(this.auth);
         axios.get(`/api/period/${this.auth.id}`)
             .then(({data}) => {
                 this.courses = data;

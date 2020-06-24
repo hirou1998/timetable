@@ -38,7 +38,6 @@
 
 <script>
 import AssignmentBlock from './Assignment-block';
-import moment from 'moment';
 
 export default {
     components: {
@@ -89,7 +88,7 @@ export default {
                 'body': this.formItem.body,
                 'memo': this.formItem.memo,
                 'done_flg': this.formItem.done_flg,
-                'date': moment(this.formItem.date).format('YYYY-MM-DD')
+                'date': this.formatDate(this.formItem.date),
             }).then(({data}) => {
                 this.isEditing = false;
                 this.isAdding = false;
@@ -104,6 +103,14 @@ export default {
             var item = new Date(date);
             return item.getMonth() + 1 + '/' + item.getDate();
         },
+        formatDate: function(date){
+            var today = new Date();
+            var year = today.getFullYear();
+            date = new Date(date);
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            return year + '-' + month + '-' + day;
+        }
     }
 }
 </script>
