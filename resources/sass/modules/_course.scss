@@ -116,7 +116,7 @@
 
         .assignment-calendar{
             height: 80vh;
-            overflow: scroll;
+            overflow: auto;
             margin-bottom: 0;
             
             &-item{

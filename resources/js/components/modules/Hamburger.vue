@@ -13,7 +13,7 @@
                 <router-link to="/timetable">時間割</router-link>
             </li>
             <li class="navbar-hamburger-menu-item" :class="isCurrentPage('calendar') ? 'current' : ''" @click="toggleHamburger">
-                カレンダー
+                <router-link to="/calendar">カレンダー</router-link>
             </li>
             <template v-if="isCurrentPage('detail')">
                 <li class="navbar-hamburger-menu-item btn-info" @click="toggleHamburger(); editCourse()">内容を編集</li>

@@ -15629,7 +15629,7 @@ a:hover {
 
 .course-content-body .assignment-calendar {
   height: 80vh;
-  overflow: scroll;
+  overflow: auto;
   margin-bottom: 0;
 }
 
@@ -15869,16 +15869,16 @@ a:hover {
   justify-content: center;
 }
 
-.calendar-head.current span {
-  background-color: #FCD1D1;
-  border-radius: 50%;
-  padding: 0 1vw;
+.calendar-head.sunday span {
+  color: red;
 }
 
 .calendar-item {
   width: calc(100% / 7);
   border-bottom: solid 1px #F0F0F0;
   border-right: solid 1px #F0F0F0;
+  overflow: hidden;
+  padding: 0 0.5vw;
 }
 
 .calendar-item-head {
@@ -15886,12 +15886,21 @@ a:hover {
   font-weight: bold;
   display: block;
   width: calc(100% / 2);
-  margin: 0 auto;
+  margin: 1vh auto;
 }
 
 .calendar-item-head.current {
   background-color: #D4EAFF;
   border-radius: 50%;
+}
+
+.calendar-item-checked {
+  color: #fff;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  border-radius: 2px;
+  text-align: center;
+  padding-left: 0.5vw;
 }
 
 .calendar-day {
