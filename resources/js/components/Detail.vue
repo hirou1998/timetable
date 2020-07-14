@@ -1,23 +1,18 @@
 <template>
     <div class="course-detail">
         <my-header :name="course.name" :auth="auth" :bk-color="course.color" @delete="deleteCourse" @edit="edit" />
-        <!-- <h2 class="course-detail-title" :style="{'backgroundColor': course.color}">
-            <span>{{getWeekOfDay(periodInfo.day_of_week)}}曜{{periodInfo.period}}限</span>
-            {{course.name}}
-        </h2> -->
         <div class="course-detail-body">
-            <h3 class="course-detail-body-title" @click="toggleInfo" v-if="!isEditing">
+            <h2 class="course-detail-body-title" @click="toggleInfo" v-if="!isEditing">
                 {{course.name}}
                 <template>
                     <i class="fas fa-angle-down" v-if="!isInfoOpen" ></i>
                     <i class="fas fa-angle-up" v-else></i>
                 </template>
-            </h3>
+            </h2>
             <div class="form-group" v-else>
                 <input type="text" class="form-control" v-model="formData.name" placeholder="科目名">
             </div>
             <div class="course-detail-body-info" v-if="isInfoOpen">
-                <!-- <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="edit" v-if="!isEditing">EDIT</button> -->
                 <button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-if="isEditing && isAlreadyRegistered">SAVE</button>
                 <button class="btn btn-danger btn-sm course-detail-body-info-cancel" @click="edit" v-if="isEditing && isAlreadyRegistered">CANCEL</button>
                 <button class="btn btn-success btn-sm course-detail-body-info-cancel" @click="register" v-if="isEditing && !isAlreadyRegistered">登録</button>
@@ -67,17 +62,17 @@
             </div>
         </div>
         <div class="course-content-body">
-            <ul class="assignment-calendar" ref="assignment" id="assignment">
-                <template v-for="(date, index) in dateList">
-                    <assignment-block
-                        :class="isNextDay(index) ? 'next' : ''"
-                        :ref="isNextDay(index) ? 'next' : ''"
-                        :key="date + index + Math.random()"
-                        :date="date"
-                        :assignment="findAssignment(date)" 
-                        :is-next-day="isNextDay(index)"
-                        @add="addAssignment" />
-                </template>
+            <ul class="assignment-calendar" ref="assignments" id="assignment">
+                <assignment-block
+                    v-for="(date, index) in dateList"
+                    :class="isNextDay(index) ? 'next' : ''"
+                    :id="isNextDay(index) ? 'next' : ''"
+                    :key="date + index + Math.random()"
+                    :date="date"
+                    :assignment="findAssignment(date)" 
+                    :is-next-day="isNextDay(index)"
+                    @add="addAssignment"
+                    ref="items" />
             </ul>
             <assignment-modal ref="modal" v-show="modalVisibility" @close="modalVisibility = false" :assignment="modalAssignment" @update="updateAssignment" @filter="filterItem" @add="addAssignmentByModal" />
         </div>
@@ -161,8 +156,6 @@ export default {
                     this.periodInfo = this.findPeriod()[0];
                     this.getAssignments();
                     this.getDateList();
-                    var target = this.indexOfNextDay();
-                    //this.scroll();
                 });
             }
         },
@@ -324,15 +317,12 @@ export default {
                 date: this.getDateOfAssignment(item.date)
             });
         },
-        scroll(){
-        }
     },
     async mounted(){
         await axios.get(`/api/user/setting/${this.auth.id}`).then(({data}) => {
             this.setting = data;
         })
-        this.getCourse();
-        this.scroll();
+        await this.getCourse();
     }
 }
 </script>

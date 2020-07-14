@@ -15503,6 +15503,10 @@ a:hover {
   margin-bottom: 0;
 }
 
+.btn-white {
+  color: white !important;
+}
+
 .course {
   width: 90%;
   margin: 2vw auto;
@@ -15850,6 +15854,7 @@ a:hover {
 
 .calendar {
   margin-top: 4vh;
+  position: relative;
 }
 
 .calendar-navigation {
@@ -15909,5 +15914,217 @@ a:hover {
 
 .calendar-day.expanded {
   height: calc(82vh / 6) !important;
+}
+
+.calendar-add {
+  position: absolute;
+  bottom: 5vh;
+  right: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-add-button {
+  width: 15vw;
+  height: 15vw;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  background-color: #919191;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0px 0px 7px #919191;
+}
+
+.calendar-add-button i {
+  font-size: 2.2rem;
+  color: #fff;
+}
+
+.calendar-add-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  color: #919191;
+}
+
+.calendar-add-modal::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #EDEDED;
+  opacity: 0.5;
+}
+
+.calendar-add-modal-inner {
+  position: absolute;
+  width: 96%;
+  height: 35%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #EDEDED;
+  border: solid 1px #707070;
+  overflow-x: hidden;
+}
+
+.calendar-add-modal-inner-main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate(0, 0);
+  transition: 0.4s;
+}
+
+.calendar-add-modal-inner-main[data-visibility=hidden] {
+  transform: translate(-100%, 0);
+}
+
+.calendar-add-modal-inner-color {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate(100%, 0);
+  transition: 0.4s;
+}
+
+.calendar-add-modal-inner-color[data-visibility=visible] {
+  transform: translate(0, 0);
+}
+
+.calendar-add-modal-inner-head {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.calendar-add-modal-inner-block {
+  padding: 1vh 0;
+  display: flex;
+}
+
+.calendar-add-modal-inner-block:not(:last-child) {
+  border-bottom: solid 1px #707070;
+}
+
+.calendar-add-modal-inner-form {
+  background-color: transparent;
+  border: none;
+}
+
+.calendar-add-modal-inner-icon {
+  flex: 1;
+  margin-left: 5vw;
+  font-size: 1.6rem;
+  margin-right: 3vw;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.calendar-add-modal-inner .color-icon {
+  border-radius: 50%;
+  display: block;
+  width: 5vw;
+  height: 5vw;
+}
+
+.calendar-add-modal-inner-text {
+  margin-bottom: 0.5rem;
+}
+
+.calendar-detail-body {
+  padding: 5vw;
+  color: #919191;
+}
+
+.calendar-detail-head {
+  margin-bottom: 2vh;
+}
+
+.calendar-detail-head-title {
+  border-bottom: solid 2px #707070;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+}
+
+.calendar-detail-info {
+  border-bottom: solid 2px #707070;
+}
+
+.calendar-detail-info-period {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.calendar-detail-info-course {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.calendar-detail-info-course-block {
+  width: 2vw;
+  height: 2vw;
+  display: block;
+  margin-right: 1.5vw;
+}
+
+.calendar-checked-item {
+  padding: 2vw;
+  border-radius: 5px;
+  position: relative;
+  color: #fff;
+}
+
+.calendar-checked-item::after {
+  content: attr(data-course);
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translate(0, -50%);
+  color: #fff;
+  opacity: 0.5;
+  font-size: 1.2rem;
+}
+
+.calendar-checked-item-title {
+  font-size: 1.2rem;
+}
+
+.calendar-checked-item-memo {
+  font-size: 0.8rem;
+  margin-bottom: 1vh;
+}
+
+.el-switch.is-checked .el-switch__core {
+  border: solid 1px #707070 !important;
+  background: #707070 !important;
+}
+
+.el-switch.is-checked .el-switch__core::after {
+  background-color: #fff !important;
+}
+
+.el-input__inner {
+  background-color: transparent !important;
+  color: #919191 !important;
+  border: none !important;
+}
+
+.el-input--prefix .el-input__inner {
+  padding-left: 0 !important;
+}
+
+.el-input__prefix {
+  display: none;
 }
 

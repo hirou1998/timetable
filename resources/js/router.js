@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Detail from './components/Detail'
 import Setting from './components/Setting'
 import Calendar from './components/Calendar'
+import CalendarDetail from './components/Calendar-detail'
 
 Vue.use(Router)
 
@@ -47,6 +48,12 @@ export default new Router({
             path: '/calendar',
             name: 'calendar',
             component: Calendar
+        },
+        {
+            path: '/calendar/detail',
+            name: 'calendar-detail',
+            component: CalendarDetail,
+            props: true
         }
     ]
 })
