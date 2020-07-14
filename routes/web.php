@@ -39,8 +39,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/calendar', function(){
         return view('timetable.index');
     });
+    Route::get('/calendar/detail', function(){
+        return view('timetable.index');
+    });
     Route::post('/course/update/{course}', 'CourseController@update');
     Route::post('/course/register/{user}', 'CourseController@store');
     Route::delete('/period/{period}', 'PeriodController@destroy');
     Route::resource('/{course}/assignment', 'AssignmentController');
+    Route::resource('/{user}/event', 'EventController');
 });

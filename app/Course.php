@@ -13,7 +13,7 @@ class Course extends Model
 
     public function periods()
     {
-        return $this->hasMany(Period::class);
+        return $this->hasMany(Period::class)->orderBy('day_of_week', 'ASC');
     }
 
     public function getPeriodsCountAttribute()
@@ -75,5 +75,10 @@ class Course extends Model
     public function assignments()
     {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
     }
 }
