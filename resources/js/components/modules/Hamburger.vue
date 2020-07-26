@@ -4,9 +4,9 @@
             <i class="fas fa-times"></i>
         </div>
         <div class="navbar-hamburger-menu-user navbar-hamburger-menu-big d-flex align-items-center">
-            <i class="fas fa-user"></i>
+            <img src="/images/profile.png" alt="profile-icon" style="width: 10%; margin-right: 1vw;">
             <p class="mb-0 navbar-hamburger-menu-user-name">{{auth.name}}</p>
-            <router-link to="/setting"><i class="fas fa-cog"></i></router-link>
+            <router-link to="/setting"><img src="/images/setting.png" alt="setting-icon" style="width: 50%;"></router-link>
         </div>
         <ul class="navbar-hamburger-menu-items">
             <li class="navbar-hamburger-menu-item" :class="isCurrentPage('timetable') ? 'current' : ''" @click="toggleHamburger">
