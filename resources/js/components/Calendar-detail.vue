@@ -42,6 +42,13 @@
                         :style="{backgroundColor: assignment.course.color}"
                     /> 
                 </ul>
+                <ul>
+                    <calendar-item 
+                        v-for="event in events"
+                        :key="event.id"
+                        :event="event"
+                    />
+                </ul>
             </section>
         </div>
     </div>
@@ -58,7 +65,7 @@ export default {
         CalendarCheckedItem,
         MyHeader
     },
-    props: ['day', 'month', 'year', 'courses', 'assignments'],
+    props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
     data: function(){
         return{
             weeks: ['日', '月', '火', '水', '木', '金', '土'],

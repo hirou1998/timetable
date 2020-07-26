@@ -3780,6 +3780,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3789,7 +3796,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     CalendarCheckedItem: _modules_Calendar_checked_item__WEBPACK_IMPORTED_MODULE_2__["default"],
     MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  props: ['day', 'month', 'year', 'courses', 'assignments'],
+  props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
   data: function data() {
     return {
       weeks: ['日', '月', '火', '水', '木', '金', '土'],
@@ -3876,6 +3883,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
+/* harmony import */ var _modules_Calendar_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/Calendar-modal */ "./resources/js/components/modules/Calendar-modal.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3968,77 +3976,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_1__["default"]
+    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_1__["default"],
+    CalendarModal: _modules_Calendar_modal__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -4053,31 +3996,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       assignments: [],
       courses: [],
       events: [],
-      modalVisibility: false,
-      eventForm: {
-        title: '',
-        allday: false,
-        startDay: new Date(),
-        startTime: '10:00',
-        endDay: new Date(),
-        endTime: '11:00',
-        location: '',
-        color: '#B6ABE4'
-      },
-      prevStartTime: '10:00',
-      timePickerOptions: {
-        start: '0:00',
-        step: '00:15',
-        end: '23:45'
-      },
-      colorOptionsVisibility: false
+      modalVisibility: false
     };
   },
   methods: {
-    addEvent: function addEvent() {
+    addEvent: function addEvent(data) {
       var _this = this;
 
-      var form = this.eventForm;
+      var form = data;
       axios.post("/".concat(this.auth.id, "/event/"), {
         'title': form.title,
         'isAllday': form.allday,
@@ -4090,31 +4016,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).then(function (_ref) {
         var data = _ref.data;
         console.log(data);
+
+        _this.events.push(data);
+
         _this.modalVisibility = false;
       })["catch"](function (err) {
         console.log(err);
       });
-    },
-    changeEndTime: function changeEndTime(newValue) {
-      var prev = this.prevStartTime.split(':');
-      var prevToSecond = this.toSeconds(prev[0], prev[1]);
-      var current = newValue.split(':');
-      var currentToSecond = this.toSeconds(current[0], current[1]);
-      var end = this.eventForm.endTime.split(':');
-      var endToSecond = this.toSeconds(end[0], end[1]);
-      var transition = currentToSecond - prevToSecond;
-      endToSecond = endToSecond + transition;
-      var result = this.toHourAndMinute(endToSecond);
-      this.eventForm.endTime = result.hour + ':' + result.minute;
-      this.prevStartTime = newValue;
-    },
-    changeEndDay: function changeEndDay(newValue) {
-      var start = new Date(newValue);
-      var end = new Date(this.eventForm.endDay);
-
-      if (start.getTime() > end.getTime()) {
-        this.eventForm.endDay = newValue;
-      }
     },
     findAssignment: function findAssignment(month, date) {
       return this.assignments.filter(function (a) {
@@ -4125,7 +4033,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var month;
       String(this.currentMonth).length === 2 ? month = this.currentMonth : month = '0' + this.currentMonth;
       var target = this.currentYear + '-' + month + '-' + date;
-      console.log(target);
       return this.events.filter(function (e) {
         return e.start_day == target;
       });
@@ -4136,6 +4043,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return c.day_of_week === remainder;
       });
       var assignments = this.findAssignment(this.currentMonth, day);
+      var events = this.findEvent(day);
       this.$router.push({
         name: 'calendar-detail',
         params: {
@@ -4143,7 +4051,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           day: day,
           month: this.currentMonth,
           year: this.currentYear,
-          assignments: assignments
+          assignments: assignments,
+          events: events
         }
       });
     },
@@ -4216,24 +4125,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.getEvents(this.currentYear, this.currentMonth);
     },
-    toggleColorOptions: function toggleColorOptions() {
-      this.colorOptionsVisibility = !this.colorOptionsVisibility;
-    },
     toggleModal: function toggleModal() {
       this.modalVisibility = !this.modalVisibility;
-    },
-    toSeconds: function toSeconds(hour, minute) {
-      return Number(hour) * 3600 + Number(minute) * 60;
-    },
-    toHourAndMinute: function toHourAndMinute(second) {
-      var hour = Math.floor(Math.abs(second) / 3600);
-      var minute = Math.floor(Math.abs(second) % 3600 / 60);
-      String(hour).length === 1 ? hour = '0' + hour : hour = hour;
-      minute === 0 ? minute = '00' : minute = minute;
-      return _defineProperty({
-        hour: hour,
-        minute: minute
-      }, "minute", minute);
     }
   },
   computed: {
@@ -5333,8 +5226,248 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: []
+  props: ['event'],
+  computed: {
+    getDate: function getDate() {
+      var date = new Date(this.start);
+      return date.getMonth() + 1 + '月' + date.getDate() + '日';
+    },
+    getEndTime: function getEndTime() {
+      if (this.endTime) {
+        var time = this.endTime.split(':');
+        return time[0] + ':' + time[1];
+      } else {
+        return;
+      }
+    },
+    getStartTime: function getStartTime() {
+      if (this.startTime) {
+        var time = this.startTime.split(':');
+        return time[0] + ':' + time[1];
+      } else {
+        return;
+      }
+    },
+    body: {
+      get: function get() {
+        return this.event.body;
+      }
+    },
+    color: {
+      get: function get() {
+        return this.event.color;
+      }
+    },
+    endTime: {
+      get: function get() {
+        return this.event.end_time;
+      }
+    },
+    location: {
+      get: function get() {
+        return this.event.location;
+      }
+    },
+    start: {
+      get: function get() {
+        return this.event.start_day;
+      }
+    },
+    startTime: {
+      get: function get() {
+        return this.event.start_time;
+      }
+    }
+  },
+  methods: {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      eventForm: {
+        title: '',
+        allday: false,
+        startDay: new Date(),
+        startTime: '10:00',
+        endDay: new Date(),
+        endTime: '11:00',
+        location: '',
+        color: '#B6ABE4'
+      },
+      prevStartTime: '10:00',
+      timePickerOptions: {
+        start: '0:00',
+        step: '00:15',
+        end: '23:45'
+      },
+      colorOptionsVisibility: false,
+      colorList: ['#B6ABE4', '#B5179D', '#ABC9E3', '#F2EFAC', '#B8EDE1']
+    };
+  },
+  methods: {
+    close: function close() {
+      this.$emit('close');
+    },
+    changeEndTime: function changeEndTime(newValue) {
+      var prev = this.prevStartTime.split(':');
+      var prevToSecond = this.toSeconds(prev[0], prev[1]);
+      var current = newValue.split(':');
+      var currentToSecond = this.toSeconds(current[0], current[1]);
+      var end = this.eventForm.endTime.split(':');
+      var endToSecond = this.toSeconds(end[0], end[1]);
+      var transition = currentToSecond - prevToSecond;
+      endToSecond = endToSecond + transition;
+      var result = this.toHourAndMinute(endToSecond);
+      this.eventForm.endTime = result.hour + ':' + result.minute;
+      this.prevStartTime = newValue;
+    },
+    changeEndDay: function changeEndDay(newValue) {
+      var start = new Date(newValue);
+      var end = new Date(this.eventForm.endDay);
+
+      if (start.getTime() > end.getTime()) {
+        this.eventForm.endDay = newValue;
+      }
+    },
+    save: function save() {
+      this.$emit('save', this.eventForm);
+    },
+    toSeconds: function toSeconds(hour, minute) {
+      return Number(hour) * 3600 + Number(minute) * 60;
+    },
+    toHourAndMinute: function toHourAndMinute(second) {
+      var hour = Math.floor(Math.abs(second) / 3600);
+      var minute = Math.floor(Math.abs(second) % 3600 / 60);
+      String(hour).length === 1 ? hour = '0' + hour : hour = hour;
+      minute === 0 ? minute = '00' : minute = minute;
+      return _defineProperty({
+        hour: hour,
+        minute: minute
+      }, "minute", minute);
+    },
+    toggleColorOptions: function toggleColorOptions() {
+      this.colorOptionsVisibility = !this.colorOptionsVisibility;
+    }
+  }
 });
 
 /***/ }),
@@ -105898,6 +106031,17 @@ var render = function() {
               })
             }),
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "ul",
+            _vm._l(_vm.events, function(event) {
+              return _c("calendar-item", {
+                key: event.id,
+                attrs: { event: event }
+              })
+            }),
+            1
           )
         ])
       ])
@@ -106039,9 +106183,19 @@ var render = function() {
                       _c(
                         "ul",
                         _vm._l(_vm.findEvent(day), function(event) {
-                          return _c("li", { key: event.id }, [
-                            _vm._v(_vm._s(event.body))
-                          ])
+                          return _c(
+                            "li",
+                            {
+                              key: event.id,
+                              staticClass: "calendar-item-event"
+                            },
+                            [
+                              _c("span", {
+                                style: { backgroundColor: event.color }
+                              }),
+                              _vm._v(_vm._s(event.body))
+                            ]
+                          )
                         }),
                         0
                       )
@@ -106066,261 +106220,17 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "section",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.modalVisibility,
-              expression: "modalVisibility"
-            }
-          ],
-          staticClass: "calendar-add-modal"
-        },
-        [
-          _c("div", { staticClass: "calendar-add-modal-inner" }, [
-            _c(
-              "div",
-              {
-                staticClass: "calendar-add-modal-inner-main",
-                attrs: {
-                  "data-visibility": _vm.colorOptionsVisibility
-                    ? "hidden"
-                    : "visible"
-                }
-              },
-              [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "calendar-add-modal-inner-head calendar-add-modal-inner-block"
-                  },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "calendar-add-modal-inner-cancel",
-                        on: { click: _vm.toggleModal }
-                      },
-                      [_c("i", { staticClass: "fas fa-times" })]
-                    ),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.eventForm.title,
-                            expression: "eventForm.title"
-                          }
-                        ],
-                        staticClass:
-                          "form-control calendar-add-modal-inner-form",
-                        attrs: { type: "text", placeholder: "タイトルを入力" },
-                        domProps: { value: _vm.eventForm.title },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.eventForm,
-                              "title",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-info btn-sm btn-white",
-                        on: { click: _vm.addEvent }
-                      },
-                      [_vm._v("保存")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticStyle: { width: "50%" } },
-                    [
-                      _c(
-                        "p",
-                        {
-                          staticClass: "calendar-add-modal-inner-text",
-                          staticStyle: { "line-height": "1.4" }
-                        },
-                        [_vm._v("終日")]
-                      ),
-                      _vm._v(" "),
-                      _c("el-date-picker", {
-                        attrs: { type: "date", format: "M月d日" },
-                        on: { change: _vm.changeEndDay },
-                        model: {
-                          value: _vm.eventForm.startDay,
-                          callback: function($$v) {
-                            _vm.$set(_vm.eventForm, "startDay", $$v)
-                          },
-                          expression: "eventForm.startDay"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("el-date-picker", {
-                        attrs: { type: "date", format: "M月d日" },
-                        model: {
-                          value: _vm.eventForm.endDay,
-                          callback: function($$v) {
-                            _vm.$set(_vm.eventForm, "endDay", $$v)
-                          },
-                          expression: "eventForm.endDay"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticStyle: { width: "35%" } },
-                    [
-                      _c("el-switch", {
-                        staticStyle: { marginBottom: ".5rem" },
-                        model: {
-                          value: _vm.eventForm.allday,
-                          callback: function($$v) {
-                            _vm.$set(_vm.eventForm, "allday", $$v)
-                          },
-                          expression: "eventForm.allday"
-                        }
-                      }),
-                      _vm._v(" "),
-                      !_vm.eventForm.allday
-                        ? [
-                            _c("el-time-select", {
-                              attrs: {
-                                "picker-options": _vm.timePickerOptions
-                              },
-                              on: { change: _vm.changeEndTime },
-                              model: {
-                                value: _vm.eventForm.startTime,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.eventForm, "startTime", $$v)
-                                },
-                                expression: "eventForm.startTime"
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("el-time-select", {
-                              attrs: {
-                                "picker-options": _vm.timePickerOptions
-                              },
-                              model: {
-                                value: _vm.eventForm.endTime,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.eventForm, "endTime", $$v)
-                                },
-                                expression: "eventForm.endTime"
-                              }
-                            })
-                          ]
-                        : _vm._e()
-                    ],
-                    2
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _c("div", { staticStyle: { flex: "7" } }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.eventForm.location,
-                          expression: "eventForm.location"
-                        }
-                      ],
-                      staticClass: "calendar-add-modal-inner-form",
-                      attrs: { type: "text", placeholder: "場所を追加" },
-                      domProps: { value: _vm.eventForm.location },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.eventForm,
-                            "location",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "calendar-add-modal-inner-icon",
-                      staticStyle: { "align-items": "center" }
-                    },
-                    [
-                      _c("span", {
-                        staticClass: "color-icon",
-                        style: { backgroundColor: _vm.eventForm.color }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticStyle: { flex: "7" } }, [
-                    _vm._v(
-                      "\n                        色を指定する\n                        "
-                    ),
-                    _c("button", [
-                      _c("i", {
-                        staticClass: "fas fa-chevron-right",
-                        on: { click: _vm.toggleColorOptions }
-                      })
-                    ])
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "calendar-add-modal-inner-color",
-                attrs: {
-                  "data-visibility": _vm.colorOptionsVisibility
-                    ? "visible"
-                    : "hidden"
-                }
-              },
-              [
-                _c("button", { on: { click: _vm.toggleColorOptions } }, [
-                  _c("i", { staticClass: "fas fa-chevron-left" })
-                ])
-              ]
-            )
-          ])
-        ]
-      )
+      _c("calendar-modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.modalVisibility,
+            expression: "modalVisibility"
+          }
+        ],
+        on: { close: _vm.toggleModal, save: _vm.addEvent }
+      })
     ],
     1
   )
@@ -106337,22 +106247,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("button", [_c("i", { staticClass: "fas fa-chevron-right" })])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "calendar-add-modal-inner-icon" }, [
-      _c("i", { staticClass: "far fa-clock" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "calendar-add-modal-inner-icon" }, [
-      _c("i", { staticClass: "fas fa-map-marker-alt" })
-    ])
   }
 ]
 render._withStripped = true
@@ -107802,7 +107696,7 @@ var render = function() {
   return _c(
     "li",
     {
-      staticClass: "calendar-checked-item",
+      staticClass: "calendar-checked-item calendar-detail-item",
       attrs: { "data-course": _vm.assignment.course.name }
     },
     [
@@ -107838,9 +107732,365 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("li")
+  return _c("li", { staticClass: "calendar-event-item calendar-detail-item" }, [
+    _c("h3", { staticClass: "calendar-event-item-title" }, [
+      _c("span", { style: { backgroundColor: _vm.color } }),
+      _vm._v("\n        " + _vm._s(_vm.body) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "calendar-event-item-text" }, [
+      _vm._v(
+        _vm._s(_vm.getDate) +
+          " " +
+          _vm._s(_vm.getStartTime) +
+          "-" +
+          _vm._s(_vm.getEndTime)
+      )
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "calendar-event-item-text" }, [
+      _c("img", {
+        staticClass: "calendar-event-item-icon",
+        attrs: { src: "/images/location.png", alt: "" }
+      }),
+      _vm._v("\n        " + _vm._s(_vm.location) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "calendar-event-item-edit" }, [
+      _c("img", { attrs: { src: "/images/edit-event.png", alt: "" } })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", { staticClass: "calendar-add-modal" }, [
+    _c("div", { staticClass: "calendar-add-modal-inner" }, [
+      _c(
+        "div",
+        {
+          staticClass: "calendar-add-modal-inner-main",
+          attrs: {
+            "data-visibility": _vm.colorOptionsVisibility ? "hidden" : "visible"
+          }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "calendar-add-modal-inner-head calendar-add-modal-inner-block"
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "calendar-add-modal-inner-cancel",
+                  on: { click: _vm.close }
+                },
+                [_c("i", { staticClass: "fas fa-times i-normal" })]
+              ),
+              _vm._v(" "),
+              _c("div", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.eventForm.title,
+                      expression: "eventForm.title"
+                    }
+                  ],
+                  staticClass: "form-control calendar-add-modal-inner-form",
+                  attrs: { type: "text", placeholder: "タイトルを入力" },
+                  domProps: { value: _vm.eventForm.title },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.eventForm, "title", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-info btn-sm btn-white",
+                  on: { click: _vm.save }
+                },
+                [_vm._v("保存")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticStyle: { width: "50%" } },
+              [
+                _c(
+                  "p",
+                  {
+                    staticClass: "calendar-add-modal-inner-text",
+                    staticStyle: { "line-height": "1.4" }
+                  },
+                  [_vm._v("終日")]
+                ),
+                _vm._v(" "),
+                _c("el-date-picker", {
+                  attrs: { type: "date", format: "M月d日" },
+                  on: { change: _vm.changeEndDay },
+                  model: {
+                    value: _vm.eventForm.startDay,
+                    callback: function($$v) {
+                      _vm.$set(_vm.eventForm, "startDay", $$v)
+                    },
+                    expression: "eventForm.startDay"
+                  }
+                }),
+                _vm._v(" "),
+                _c("el-date-picker", {
+                  attrs: { type: "date", format: "M月d日" },
+                  model: {
+                    value: _vm.eventForm.endDay,
+                    callback: function($$v) {
+                      _vm.$set(_vm.eventForm, "endDay", $$v)
+                    },
+                    expression: "eventForm.endDay"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticStyle: { width: "35%" } },
+              [
+                _c("el-switch", {
+                  staticStyle: { marginBottom: ".5rem" },
+                  model: {
+                    value: _vm.eventForm.allday,
+                    callback: function($$v) {
+                      _vm.$set(_vm.eventForm, "allday", $$v)
+                    },
+                    expression: "eventForm.allday"
+                  }
+                }),
+                _vm._v(" "),
+                !_vm.eventForm.allday
+                  ? [
+                      _c("el-time-select", {
+                        attrs: { "picker-options": _vm.timePickerOptions },
+                        on: { change: _vm.changeEndTime },
+                        model: {
+                          value: _vm.eventForm.startTime,
+                          callback: function($$v) {
+                            _vm.$set(_vm.eventForm, "startTime", $$v)
+                          },
+                          expression: "eventForm.startTime"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("el-time-select", {
+                        attrs: { "picker-options": _vm.timePickerOptions },
+                        model: {
+                          value: _vm.eventForm.endTime,
+                          callback: function($$v) {
+                            _vm.$set(_vm.eventForm, "endTime", $$v)
+                          },
+                          expression: "eventForm.endTime"
+                        }
+                      })
+                    ]
+                  : _vm._e()
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticStyle: { flex: "7" } }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.eventForm.location,
+                    expression: "eventForm.location"
+                  }
+                ],
+                staticClass: "calendar-add-modal-inner-form",
+                attrs: { type: "text", placeholder: "場所を追加" },
+                domProps: { value: _vm.eventForm.location },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.eventForm, "location", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
+            _c(
+              "div",
+              {
+                staticClass: "calendar-add-modal-inner-icon",
+                staticStyle: { "align-items": "center" }
+              },
+              [
+                _c("span", {
+                  staticClass: "color-icon",
+                  style: { backgroundColor: _vm.eventForm.color }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticStyle: { flex: "7" } }, [
+              _vm._v(
+                "\n                    色を指定する\n                    "
+              ),
+              _c("button", [
+                _c("i", {
+                  staticClass: "fas fa-chevron-right i-normal",
+                  on: { click: _vm.toggleColorOptions }
+                })
+              ])
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "calendar-add-modal-inner-color",
+          attrs: {
+            "data-visibility": _vm.colorOptionsVisibility ? "visible" : "hidden"
+          }
+        },
+        [
+          _c("div", { staticClass: "calendar-add-modal-inner-block" }, [
+            _c(
+              "div",
+              { staticClass: "color-title", staticStyle: { flex: "7" } },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "d-flex mr-3",
+                    on: { click: _vm.toggleColorOptions }
+                  },
+                  [_c("i", { staticClass: "fas fa-chevron-left i-normal" })]
+                ),
+                _vm._v("\n                    色を指定する\n                ")
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "color-area" },
+            _vm._l(_vm.colorList, function(color) {
+              return _c("div", { key: color }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "color-circle",
+                    style: { backgroundColor: color },
+                    attrs: {
+                      "aria-checked":
+                        _vm.eventForm.color === color ? true : false
+                    }
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.eventForm.color,
+                          expression: "eventForm.color"
+                        }
+                      ],
+                      staticClass: "color-circle-input",
+                      attrs: { type: "radio" },
+                      domProps: {
+                        value: color,
+                        checked: _vm._q(_vm.eventForm.color, color)
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.eventForm, "color", color)
+                        }
+                      }
+                    })
+                  ]
+                )
+              ])
+            }),
+            0
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "calendar-add-modal-inner-icon" }, [
+      _c("img", { attrs: { src: "/images/period-icon.png", alt: "" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "calendar-add-modal-inner-icon" }, [
+      _c("img", { attrs: { src: "/images/location.png", alt: "" } })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -107923,14 +108173,20 @@ var render = function() {
             "navbar-hamburger-menu-user navbar-hamburger-menu-big d-flex align-items-center"
         },
         [
-          _c("i", { staticClass: "fas fa-user" }),
+          _c("img", {
+            staticStyle: { width: "10%", "margin-right": "1vw" },
+            attrs: { src: "/images/profile.png", alt: "profile-icon" }
+          }),
           _vm._v(" "),
           _c("p", { staticClass: "mb-0 navbar-hamburger-menu-user-name" }, [
             _vm._v(_vm._s(_vm.auth.name))
           ]),
           _vm._v(" "),
           _c("router-link", { attrs: { to: "/setting" } }, [
-            _c("i", { staticClass: "fas fa-cog" })
+            _c("img", {
+              staticStyle: { width: "50%" },
+              attrs: { src: "/images/setting.png", alt: "setting-icon" }
+            })
           ])
         ],
         1
@@ -125391,6 +125647,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_item_vue_vue_type_template_id_1197c542___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_item_vue_vue_type_template_id_1197c542___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Calendar-modal.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/components/modules/Calendar-modal.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Calendar-modal.vue?vue&type=template&id=1a37f7de& */ "./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de&");
+/* harmony import */ var _Calendar_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Calendar-modal.vue?vue&type=script&lang=js& */ "./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Calendar_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/modules/Calendar-modal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Calendar-modal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Calendar-modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Calendar-modal.vue?vue&type=template&id=1a37f7de& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Calendar-modal.vue?vue&type=template&id=1a37f7de&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Calendar_modal_vue_vue_type_template_id_1a37f7de___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

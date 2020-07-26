@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
+
+    public function colors()
+    {
+        return $this->hasMany(Color::class);
+    }
 }
