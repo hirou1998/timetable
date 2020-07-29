@@ -60,6 +60,7 @@
         </section>
         <calendar-modal
             v-show="modalVisibility"
+            v-model="eventForm"
             @close="toggleModal"
             @save="addEvent"
         />
@@ -89,6 +90,16 @@ export default {
             courses: [],
             events: [],
             modalVisibility: false,
+            eventForm: {
+                title: '',
+                allday: false,
+                startDay: new Date(),
+                startTime: '10:00',
+                endDay: new Date(),
+                endTime: '11:00',
+                location: '',
+                color: '#B6ABE4'
+            },
         }
     },
     methods: {
