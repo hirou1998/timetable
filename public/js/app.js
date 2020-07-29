@@ -3724,7 +3724,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modules_Calendar_item__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Calendar-item */ "./resources/js/components/modules/Calendar-item.vue");
 /* harmony import */ var _modules_Calendar_checked_item__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/Calendar-checked-item */ "./resources/js/components/modules/Calendar-checked-item.vue");
-/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
+/* harmony import */ var _modules_Calendar_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Calendar-modal */ "./resources/js/components/modules/Calendar-modal.vue");
+/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3787,6 +3788,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -3794,14 +3803,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     CalendarItem: _modules_Calendar_item__WEBPACK_IMPORTED_MODULE_1__["default"],
     CalendarCheckedItem: _modules_Calendar_checked_item__WEBPACK_IMPORTED_MODULE_2__["default"],
-    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_3__["default"]
+    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_4__["default"],
+    CalendarModal: _modules_Calendar_modal__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
   data: function data() {
     return {
       weeks: ['日', '月', '火', '水', '木', '金', '土'],
       setting: {},
-      infoVisibility: false
+      infoVisibility: false,
+      modalVisibility: false,
+      eventForm: {}
     };
   },
   computed: {
@@ -3814,50 +3826,81 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
-    getSetting: function getSetting() {
+    editEvent: function editEvent(data) {
       var _this = this;
 
-      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref) {
+      var form = data;
+      axios.put("/".concat(this.auth.id, "/event/").concat(form.id), {
+        'title': form.title,
+        'isAllday': form.allday,
+        'startDay': this.getDateOfEvent(form.startDay),
+        'endDay': this.getDateOfEvent(form.endDay),
+        'startTime': form.startTime,
+        'endTime': form.endTime,
+        'color': form.color,
+        'location': form.location
+      }).then(function (_ref) {
         var data = _ref.data;
-        _this.setting = data;
+        console.log(data); //this.events.push(data);
+
+        _this.modalVisibility = false;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getDateOfEvent: function getDateOfEvent(date) {
+      var item = new Date(date);
+      var month = item.getMonth() + 1;
+      return item.getFullYear() + '/' + month + '/' + item.getDate();
+    },
+    getSetting: function getSetting() {
+      var _this2 = this;
+
+      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.setting = data;
       });
     },
     getPeriodTime: function getPeriodTime() {
-      var _this2 = this;
+      var _this3 = this;
 
       return this.courses.map(function (course) {
-        return _this2.setting.periods[course.period - 1];
+        return _this3.setting.periods[course.period - 1];
       });
     },
     toggleInfoVisibility: function toggleInfoVisibility() {
       this.infoVisibility = !this.infoVisibility;
+    },
+    toggleModal: function toggleModal(info) {
+      this.eventForm = info;
+      this.modalVisibility = !this.modalVisibility;
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this4 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(!_this3.day || !_this3.month)) {
+              if (!(!_this4.day || !_this4.month)) {
                 _context.next = 4;
                 break;
               }
 
-              _this3.$router.push('/calendar');
+              _this4.$router.push('/calendar');
 
               _context.next = 8;
               break;
 
             case 4:
               _context.next = 6;
-              return _this3.getSetting();
+              return _this4.getSetting();
 
             case 6:
-              _this3.currentMonth = _this3.month;
-              !_this3.courses.length ? _this3.infoVisibility = false : _this3.infoVisibility = true;
+              _this4.currentMonth = _this4.month;
+              !_this4.courses.length ? _this4.infoVisibility = false : _this4.infoVisibility = true;
 
             case 8:
             case "end":
@@ -3976,6 +4019,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3996,7 +4040,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       assignments: [],
       courses: [],
       events: [],
-      modalVisibility: false
+      modalVisibility: false,
+      eventForm: {
+        title: '',
+        allday: false,
+        startDay: new Date(),
+        startTime: '10:00',
+        endDay: new Date(),
+        endTime: '11:00',
+        location: '',
+        color: '#B6ABE4'
+      }
     };
   },
   methods: {
@@ -5239,59 +5293,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['event'],
+  data: function data() {
+    return {};
+  },
   computed: {
     getDate: function getDate() {
-      var date = new Date(this.start);
+      var date = new Date(this.event.start_day);
       return date.getMonth() + 1 + '月' + date.getDate() + '日';
     },
     getEndTime: function getEndTime() {
-      if (this.endTime) {
-        var time = this.endTime.split(':');
+      if (this.event.end_time) {
+        var time = this.event.end_time.split(':');
         return time[0] + ':' + time[1];
       } else {
         return;
       }
     },
     getStartTime: function getStartTime() {
-      if (this.startTime) {
-        var time = this.startTime.split(':');
+      if (this.event.start_time) {
+        var time = this.event.start_time.split(':');
         return time[0] + ':' + time[1];
       } else {
         return;
       }
-    },
-    body: {
-      get: function get() {
-        return this.event.body;
-      }
-    },
-    color: {
-      get: function get() {
-        return this.event.color;
-      }
-    },
-    endTime: {
-      get: function get() {
-        return this.event.end_time;
-      }
-    },
-    location: {
-      get: function get() {
-        return this.event.location;
-      }
-    },
-    start: {
-      get: function get() {
-        return this.event.start_day;
-      }
-    },
-    startTime: {
-      get: function get() {
-        return this.event.start_time;
-      }
     }
   },
-  methods: {}
+  methods: {
+    toggleModal: function toggleModal() {
+      var event = this.event;
+      event.is_allday == 0 ? event.is_allday = false : event.is_allday = true;
+      var info = {
+        id: event.id,
+        title: event.body,
+        allday: event.is_allday,
+        startDay: event.start_day,
+        startTime: event.start_time,
+        endDay: event.end_day,
+        endTime: event.end_time,
+        location: event.location,
+        color: event.color
+      };
+      this.$emit('open', info);
+    }
+  }
 });
 
 /***/ }),
@@ -5305,6 +5349,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
@@ -5401,18 +5449,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  model: {
+    prop: 'eventForm',
+    event: 'change'
+  },
+  props: ['eventForm'],
   data: function data() {
     return {
-      eventForm: {
-        title: '',
-        allday: false,
-        startDay: new Date(),
-        startTime: '10:00',
-        endDay: new Date(),
-        endTime: '11:00',
-        location: '',
-        color: '#B6ABE4'
-      },
       prevStartTime: '10:00',
       timePickerOptions: {
         start: '0:00',
@@ -5423,6 +5466,88 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       colorList: ['#B6ABE4', '#B5179D', '#ABC9E3', '#F2EFAC', '#B8EDE1']
     };
   },
+  computed: {
+    allday: {
+      get: function get() {
+        return this.eventForm.allday;
+      },
+      set: function set(allday) {
+        this.updateValue({
+          allday: allday
+        });
+      }
+    },
+    color: {
+      get: function get() {
+        return this.eventForm.color;
+      },
+      set: function set(color) {
+        this.updateValue({
+          color: color
+        });
+      }
+    },
+    endDay: {
+      get: function get() {
+        return this.eventForm.endDay;
+      },
+      set: function set(endDay) {
+        this.updateValue({
+          endDay: endDay
+        });
+      }
+    },
+    endTime: {
+      get: function get() {
+        return this.eventForm.endTime;
+      },
+      set: function set(endTime) {
+        this.updateValue({
+          endTime: endTime
+        });
+      }
+    },
+    location: {
+      get: function get() {
+        return this.eventForm.location;
+      },
+      set: function set(location) {
+        this.updateValue({
+          location: location
+        });
+      }
+    },
+    startDay: {
+      get: function get() {
+        return this.eventForm.startDay;
+      },
+      set: function set(startDay) {
+        this.updateValue({
+          startDay: startDay
+        });
+      }
+    },
+    startTime: {
+      get: function get() {
+        return this.eventForm.startTime;
+      },
+      set: function set(startTime) {
+        this.updateValue({
+          startTime: startTime
+        });
+      }
+    },
+    title: {
+      get: function get() {
+        return this.eventForm.title;
+      },
+      set: function set(title) {
+        this.updateValue({
+          title: title
+        });
+      }
+    }
+  },
   methods: {
     close: function close() {
       this.$emit('close');
@@ -5432,20 +5557,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var prevToSecond = this.toSeconds(prev[0], prev[1]);
       var current = newValue.split(':');
       var currentToSecond = this.toSeconds(current[0], current[1]);
-      var end = this.eventForm.endTime.split(':');
+      var end = this.endTime.split(':');
       var endToSecond = this.toSeconds(end[0], end[1]);
       var transition = currentToSecond - prevToSecond;
       endToSecond = endToSecond + transition;
       var result = this.toHourAndMinute(endToSecond);
-      this.eventForm.endTime = result.hour + ':' + result.minute;
+      this.endTime = result.hour + ':' + result.minute;
       this.prevStartTime = newValue;
     },
     changeEndDay: function changeEndDay(newValue) {
       var start = new Date(newValue);
-      var end = new Date(this.eventForm.endDay);
+      var end = new Date(this.endDay);
 
       if (start.getTime() > end.getTime()) {
-        this.eventForm.endDay = newValue;
+        this.endDay = newValue;
       }
     },
     save: function save() {
@@ -5466,6 +5591,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     toggleColorOptions: function toggleColorOptions() {
       this.colorOptionsVisibility = !this.colorOptionsVisibility;
+    },
+    updateValue: function updateValue(value) {
+      this.$emit('change', _objectSpread(_objectSpread({}, this.eventForm), value));
     }
   }
 });
@@ -106038,13 +106166,38 @@ var render = function() {
             _vm._l(_vm.events, function(event) {
               return _c("calendar-item", {
                 key: event.id,
-                attrs: { event: event }
+                attrs: { event: event },
+                on: { open: _vm.toggleModal }
               })
             }),
             1
           )
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _c("calendar-modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.modalVisibility,
+            expression: "modalVisibility"
+          }
+        ],
+        on: {
+          close: function($event) {
+            return _vm.toggleModal({})
+          },
+          save: _vm.editEvent
+        },
+        model: {
+          value: _vm.eventForm,
+          callback: function($$v) {
+            _vm.eventForm = $$v
+          },
+          expression: "eventForm"
+        }
+      })
     ],
     1
   )
@@ -106229,7 +106382,14 @@ var render = function() {
             expression: "modalVisibility"
           }
         ],
-        on: { close: _vm.toggleModal, save: _vm.addEvent }
+        on: { close: _vm.toggleModal, save: _vm.addEvent },
+        model: {
+          value: _vm.eventForm,
+          callback: function($$v) {
+            _vm.eventForm = $$v
+          },
+          expression: "eventForm"
+        }
       })
     ],
     1
@@ -107734,8 +107894,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("li", { staticClass: "calendar-event-item calendar-detail-item" }, [
     _c("h3", { staticClass: "calendar-event-item-title" }, [
-      _c("span", { style: { backgroundColor: _vm.color } }),
-      _vm._v("\n        " + _vm._s(_vm.body) + "\n    ")
+      _c("span", { style: { backgroundColor: _vm.event.color } }),
+      _vm._v("\n        " + _vm._s(_vm.event.body) + "\n    ")
     ]),
     _vm._v(" "),
     _c("p", { staticClass: "calendar-event-item-text" }, [
@@ -107753,22 +107913,18 @@ var render = function() {
         staticClass: "calendar-event-item-icon",
         attrs: { src: "/images/location.png", alt: "" }
       }),
-      _vm._v("\n        " + _vm._s(_vm.location) + "\n    ")
+      _vm._v("\n        " + _vm._s(_vm.event.location) + "\n    ")
     ]),
     _vm._v(" "),
-    _vm._m(0)
+    _c("div", { staticClass: "calendar-event-item-edit" }, [
+      _c("img", {
+        attrs: { src: "/images/edit-event.png", alt: "" },
+        on: { click: _vm.toggleModal }
+      })
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "calendar-event-item-edit" }, [
-      _c("img", { attrs: { src: "/images/edit-event.png", alt: "" } })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -107823,19 +107979,19 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.eventForm.title,
-                      expression: "eventForm.title"
+                      value: _vm.title,
+                      expression: "title"
                     }
                   ],
                   staticClass: "form-control calendar-add-modal-inner-form",
                   attrs: { type: "text", placeholder: "タイトルを入力" },
-                  domProps: { value: _vm.eventForm.title },
+                  domProps: { value: _vm.title },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(_vm.eventForm, "title", $event.target.value)
+                      _vm.title = $event.target.value
                     }
                   }
                 })
@@ -107872,22 +108028,22 @@ var render = function() {
                   attrs: { type: "date", format: "M月d日" },
                   on: { change: _vm.changeEndDay },
                   model: {
-                    value: _vm.eventForm.startDay,
+                    value: _vm.startDay,
                     callback: function($$v) {
-                      _vm.$set(_vm.eventForm, "startDay", $$v)
+                      _vm.startDay = $$v
                     },
-                    expression: "eventForm.startDay"
+                    expression: "startDay"
                   }
                 }),
                 _vm._v(" "),
                 _c("el-date-picker", {
                   attrs: { type: "date", format: "M月d日" },
                   model: {
-                    value: _vm.eventForm.endDay,
+                    value: _vm.endDay,
                     callback: function($$v) {
-                      _vm.$set(_vm.eventForm, "endDay", $$v)
+                      _vm.endDay = $$v
                     },
-                    expression: "eventForm.endDay"
+                    expression: "endDay"
                   }
                 })
               ],
@@ -107901,36 +108057,36 @@ var render = function() {
                 _c("el-switch", {
                   staticStyle: { marginBottom: ".5rem" },
                   model: {
-                    value: _vm.eventForm.allday,
+                    value: _vm.allday,
                     callback: function($$v) {
-                      _vm.$set(_vm.eventForm, "allday", $$v)
+                      _vm.allday = $$v
                     },
-                    expression: "eventForm.allday"
+                    expression: "allday"
                   }
                 }),
                 _vm._v(" "),
-                !_vm.eventForm.allday
+                !_vm.allday
                   ? [
                       _c("el-time-select", {
                         attrs: { "picker-options": _vm.timePickerOptions },
                         on: { change: _vm.changeEndTime },
                         model: {
-                          value: _vm.eventForm.startTime,
+                          value: _vm.startTime,
                           callback: function($$v) {
-                            _vm.$set(_vm.eventForm, "startTime", $$v)
+                            _vm.startTime = $$v
                           },
-                          expression: "eventForm.startTime"
+                          expression: "startTime"
                         }
                       }),
                       _vm._v(" "),
                       _c("el-time-select", {
                         attrs: { "picker-options": _vm.timePickerOptions },
                         model: {
-                          value: _vm.eventForm.endTime,
+                          value: _vm.endTime,
                           callback: function($$v) {
-                            _vm.$set(_vm.eventForm, "endTime", $$v)
+                            _vm.endTime = $$v
                           },
-                          expression: "eventForm.endTime"
+                          expression: "endTime"
                         }
                       })
                     ]
@@ -107949,19 +108105,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.eventForm.location,
-                    expression: "eventForm.location"
+                    value: _vm.location,
+                    expression: "location"
                   }
                 ],
                 staticClass: "calendar-add-modal-inner-form",
                 attrs: { type: "text", placeholder: "場所を追加" },
-                domProps: { value: _vm.eventForm.location },
+                domProps: { value: _vm.location },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.eventForm, "location", $event.target.value)
+                    _vm.location = $event.target.value
                   }
                 }
               })
@@ -107978,7 +108134,7 @@ var render = function() {
               [
                 _c("span", {
                   staticClass: "color-icon",
-                  style: { backgroundColor: _vm.eventForm.color }
+                  style: { backgroundColor: _vm.color }
                 })
               ]
             ),
@@ -108028,17 +108184,14 @@ var render = function() {
           _c(
             "div",
             { staticClass: "color-area" },
-            _vm._l(_vm.colorList, function(color) {
-              return _c("div", { key: color }, [
+            _vm._l(_vm.colorList, function(col) {
+              return _c("div", { key: col }, [
                 _c(
                   "label",
                   {
                     staticClass: "color-circle",
-                    style: { backgroundColor: color },
-                    attrs: {
-                      "aria-checked":
-                        _vm.eventForm.color === color ? true : false
-                    }
+                    style: { backgroundColor: col },
+                    attrs: { "aria-checked": col === _vm.color ? true : false }
                   },
                   [
                     _c("input", {
@@ -108046,19 +108199,16 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.eventForm.color,
-                          expression: "eventForm.color"
+                          value: _vm.color,
+                          expression: "color"
                         }
                       ],
                       staticClass: "color-circle-input",
                       attrs: { type: "radio" },
-                      domProps: {
-                        value: color,
-                        checked: _vm._q(_vm.eventForm.color, color)
-                      },
+                      domProps: { value: col, checked: _vm._q(_vm.color, col) },
                       on: {
                         change: function($event) {
-                          return _vm.$set(_vm.eventForm, "color", color)
+                          _vm.color = col
                         }
                       }
                     })

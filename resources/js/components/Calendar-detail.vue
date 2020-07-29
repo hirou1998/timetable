@@ -47,30 +47,41 @@
                         v-for="event in events"
                         :key="event.id"
                         :event="event"
+                        @open="toggleModal"
                     />
                 </ul>
             </section>
         </div>
+        <calendar-modal
+            v-show="modalVisibility"
+            v-model="eventForm"
+            @close="toggleModal({})"
+            @save="editEvent"
+        />
     </div>
 </template>
 
 <script>
 import CalendarItem from './modules/Calendar-item'
 import CalendarCheckedItem from './modules/Calendar-checked-item'
+import CalendarModal from './modules/Calendar-modal'
 import MyHeader from './modules/Header'
 
 export default {
     components: {
         CalendarItem,
         CalendarCheckedItem,
-        MyHeader
+        MyHeader,
+        CalendarModal
     },
     props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
     data: function(){
         return{
             weeks: ['日', '月', '火', '水', '木', '金', '土'],
             setting: {},
-            infoVisibility: false
+            infoVisibility: false,
+            modalVisibility: false,
+            eventForm: {}
         }
     },
     computed: {
@@ -83,6 +94,32 @@ export default {
         },
     },
     methods: {
+        editEvent(data){
+            var form = data;
+            axios.put(`/${this.auth.id}/event/${form.id}`, {
+                'title': form.title,
+                'isAllday': form.allday,
+                'startDay': this.getDateOfEvent(form.startDay),
+                'endDay': this.getDateOfEvent(form.endDay),
+                'startTime': form.startTime,
+                'endTime': form.endTime,
+                'color': form.color,
+                'location': form.location
+            })
+            .then(({data}) => {
+                console.log(data);
+                //this.events.push(data);
+                this.modalVisibility = false;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        getDateOfEvent: function(date){
+            var item = new Date(date);
+            var month = item.getMonth() + 1;
+            return item.getFullYear() + '/' + month + '/' + item.getDate();
+        },
         getSetting: function(){
             axios.get(`/api/user/setting/${this.auth.id}`).then(({data}) => {
                 this.setting = data;
@@ -95,6 +132,10 @@ export default {
         },
         toggleInfoVisibility: function(){
             this.infoVisibility = !this.infoVisibility;
+        },
+        toggleModal(info){
+            this.eventForm = info;
+            this.modalVisibility = !this.modalVisibility;
         }
     },
     async mounted(){

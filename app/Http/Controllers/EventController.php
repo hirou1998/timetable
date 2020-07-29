@@ -77,9 +77,18 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user, Event $event)
     {
-        //
+        return $event->update([
+            'body' => $request->title,
+            'is_allday' => $request->isAllday,
+            'start_day' => $request->startDay,
+            'end_day' => $request->endDay,
+            'start_time' => $request->startTime,
+            'end_time' => $request->endTime,
+            'color' => $request->color,
+            'location' => $request->location,
+        ]);
     }
 
     /**

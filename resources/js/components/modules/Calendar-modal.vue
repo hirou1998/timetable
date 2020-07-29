@@ -7,7 +7,7 @@
                         <i class="fas fa-times i-normal"></i>
                     </button>
                     <div>
-                        <input type="text" class="form-control calendar-add-modal-inner-form" v-model="eventForm.title" placeholder="タイトルを入力">
+                        <input type="text" class="form-control calendar-add-modal-inner-form" v-model="title" placeholder="タイトルを入力">
                     </div>
                     <button class="btn btn-info btn-sm btn-white" @click="save">保存</button>
                 </div>
@@ -18,31 +18,31 @@
                     <div style="width: 50%;">
                         <p class="calendar-add-modal-inner-text" style="line-height: 1.4;">終日</p>
                         <el-date-picker
-                        v-model="eventForm.startDay"
+                        v-model="startDay"
                         type="date"
                         format="M月d日"
                         @change="changeEndDay">
                         </el-date-picker>
                         <el-date-picker
-                        v-model="eventForm.endDay"
+                        v-model="endDay"
                         type="date"
                         format="M月d日">
                         </el-date-picker>
                     </div>
                     <div style="width: 35%;">
                         <el-switch
-                        v-model="eventForm.allday"
+                        v-model="allday"
                         style="marginBottom: .5rem;"
                         />
-                        <template v-if="!eventForm.allday">
+                        <template v-if="!allday">
                             <el-time-select
-                            v-model="eventForm.startTime"
+                            v-model="startTime"
                             @change="changeEndTime"
                             :picker-options="timePickerOptions"
                             >
                             </el-time-select>
                             <el-time-select
-                            v-model="eventForm.endTime"
+                            v-model="endTime"
                             :picker-options="timePickerOptions"
                             >
                             </el-time-select>
@@ -54,12 +54,12 @@
                         <img src="/images/location.png" alt="">
                     </div>
                     <div style="flex: 7;">
-                        <input class="calendar-add-modal-inner-form" type="text" v-model="eventForm.location" placeholder="場所を追加">
+                        <input class="calendar-add-modal-inner-form" type="text" v-model="location" placeholder="場所を追加">
                     </div>
                 </div>
                 <div class="calendar-add-modal-inner-block">
                     <div class="calendar-add-modal-inner-icon" style="align-items: center;">
-                        <span :style="{backgroundColor: eventForm.color}" class="color-icon"></span>
+                        <span :style="{backgroundColor: color}" class="color-icon"></span>
                     </div>
                     <div style="flex: 7;">
                         色を指定する
@@ -75,11 +75,11 @@
                     </div>
                 </div>
                 <div class="color-area">
-                    <div v-for="color in colorList" :key="color">
+                    <div v-for="col in colorList" :key="col">
                         <label 
-                            class="color-circle" :style="{backgroundColor: color}"
-                            :aria-checked="eventForm.color === color ? true : false">
-                            <input type="radio" v-model="eventForm.color" :value="color"
+                            class="color-circle" :style="{backgroundColor: col}"
+                            :aria-checked="col === color ? true : false">
+                            <input type="radio" v-model="color" :value="col"
                             class="color-circle-input"
                             >
                         </label>
@@ -93,18 +93,13 @@
 
 <script>
 export default {
+    model: {
+        prop: 'eventForm',
+        event: 'change'
+    },
+    props: ['eventForm'],
     data(){
         return{
-            eventForm: {
-                title: '',
-                allday: false,
-                startDay: new Date(),
-                startTime: '10:00',
-                endDay: new Date(),
-                endTime: '11:00',
-                location: '',
-                color: '#B6ABE4'
-            },
             prevStartTime: '10:00',
             timePickerOptions: {
                 start: '0:00',
@@ -113,6 +108,72 @@ export default {
             },
             colorOptionsVisibility: false,
             colorList: ['#B6ABE4', '#B5179D', '#ABC9E3', '#F2EFAC', '#B8EDE1']
+        }
+    },
+    computed: {
+        allday: {
+            get(){
+                return this.eventForm.allday
+            },
+            set(allday){
+                this.updateValue({allday})
+            }
+        },
+        color: {
+            get(){
+                return this.eventForm.color
+            },
+            set(color){
+                this.updateValue({color})
+            }
+        },
+        endDay: {
+            get(){
+                return this.eventForm.endDay
+            },
+            set(endDay){
+                this.updateValue({endDay})
+            }
+        },
+        endTime: {
+            get(){
+                return this.eventForm.endTime
+            },
+            set(endTime){
+                this.updateValue({endTime})
+            }
+        },
+        location: {
+            get(){
+                return this.eventForm.location
+            },
+            set(location){
+                this.updateValue({location})
+            }
+        },
+        startDay: {
+            get(){
+                return this.eventForm.startDay
+            },
+            set(startDay){
+                this.updateValue({startDay})
+            }
+        },
+        startTime: {
+            get(){
+                return this.eventForm.startTime
+            },
+            set(startTime){
+                this.updateValue({startTime})
+            }
+        },
+        title: {
+            get(){
+                return this.eventForm.title
+            },
+            set(title){
+                this.updateValue({title})
+            }
         }
     },
     methods: {
@@ -124,20 +185,20 @@ export default {
             var prevToSecond = this.toSeconds(prev[0], prev[1]);
             var current = newValue.split(':');
             var currentToSecond = this.toSeconds(current[0], current[1]);
-            var end = this.eventForm.endTime.split(':');
+            var end = this.endTime.split(':');
             var endToSecond = this.toSeconds(end[0], end[1]);
 
             var transition = currentToSecond - prevToSecond;
             endToSecond = endToSecond + transition;
             var result = this.toHourAndMinute(endToSecond);
-            this.eventForm.endTime = result.hour + ':' + result.minute;
+            this.endTime = result.hour + ':' + result.minute;
             this.prevStartTime = newValue;
         },
         changeEndDay: function(newValue){
             var start = new Date(newValue);
-            var end = new Date(this.eventForm.endDay);
+            var end = new Date(this.endDay);
             if(start.getTime() > end.getTime()){
-                this.eventForm.endDay = newValue;
+                this.endDay = newValue;
             }
         },
         save(){
@@ -159,6 +220,9 @@ export default {
         toggleColorOptions: function(){
             this.colorOptionsVisibility = !this.colorOptionsVisibility;
         },
+        updateValue: function(value){
+            this.$emit('change', {...this.eventForm, ...value})
+        }
     }
 }
 </script>
