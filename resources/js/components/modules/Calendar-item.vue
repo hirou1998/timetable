@@ -4,13 +4,16 @@
             <span :style="{backgroundColor: event.color}"></span>
             {{event.body}}
         </h3>
-        <p class="calendar-event-item-text">{{getDate}} {{getStartTime}}-{{getEndTime}}</p>
+        <p class="calendar-event-item-text">
+            {{getDate}} <template v-if="!event.is_allday">{{getStartTime}}-{{getEndTime}}</template>
+        </p>
         <p class="calendar-event-item-text">
             <img src="/images/location.png" alt="" class="calendar-event-item-icon">
             {{event.location}}
         </p>
         <div class="calendar-event-item-edit">
             <img src="/images/edit-event.png" alt="" @click="toggleModal">
+            <i class="far fa-trash-alt i-normal" @click="deleteEvent"></i>
         </div>
     </li>
 </template>
@@ -34,7 +37,7 @@ export default {
                 var time = this.event.end_time.split(':');
                 return time[0] + ':' + time[1]
             }else{
-                return
+                return ''
             }
         },
         getStartTime(){
@@ -42,11 +45,14 @@ export default {
                 var time = this.event.start_time.split(':');
                 return time[0] + ':' + time[1]
             }else{
-                return
+                return ''
             }
         },
     },
     methods: {
+        deleteEvent(){
+            this.$emit('remove', this.event)
+        },
         toggleModal(){
             var event = this.event;
             event.is_allday == 0 ? event.is_allday = false : event.is_allday = true;

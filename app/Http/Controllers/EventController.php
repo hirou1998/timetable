@@ -79,7 +79,7 @@ class EventController extends Controller
      */
     public function update(Request $request, User $user, Event $event)
     {
-        return $event->update([
+        $event->update([
             'body' => $request->title,
             'is_allday' => $request->isAllday,
             'start_day' => $request->startDay,
@@ -89,6 +89,7 @@ class EventController extends Controller
             'color' => $request->color,
             'location' => $request->location,
         ]);
+        return $event;
     }
 
     /**
@@ -97,8 +98,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user, Event $event)
     {
-        //
+        $event->delete();
+        return response()->json([]);
     }
 }

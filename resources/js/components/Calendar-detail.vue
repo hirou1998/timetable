@@ -44,10 +44,11 @@
                 </ul>
                 <ul>
                     <calendar-item 
-                        v-for="event in events"
+                        v-for="event in eventsInfo"
                         :key="event.id"
                         :event="event"
                         @open="toggleModal"
+                        @remove="toggleDeleteModal"
                     />
                 </ul>
             </section>
@@ -58,6 +59,16 @@
             @close="toggleModal({})"
             @save="editEvent"
         />
+        <delete-modal
+            v-show="deleteModalVisibility"
+            :info="deleteInfo"
+            type="event"
+            @close="deleteModalVisibility = false"
+            @delete="deleteEvent"
+        />
+        <event-add-button 
+            @open="toggleModal"
+        />
     </div>
 </template>
 
@@ -65,14 +76,18 @@
 import CalendarItem from './modules/Calendar-item'
 import CalendarCheckedItem from './modules/Calendar-checked-item'
 import CalendarModal from './modules/Calendar-modal'
+import DeleteModal from './modules/Delete-modal'
+import EventAddButton from './modules/Event-add-button'
 import MyHeader from './modules/Header'
 
 export default {
     components: {
         CalendarItem,
         CalendarCheckedItem,
+        CalendarModal,
+        DeleteModal,
+        EventAddButton,
         MyHeader,
-        CalendarModal
     },
     props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
     data: function(){
@@ -81,7 +96,20 @@ export default {
             setting: {},
             infoVisibility: false,
             modalVisibility: false,
-            eventForm: {}
+            deleteModalVisibility: false,
+            defaultEventForm: {
+                title: '',
+                allday: false,
+                startDay: this.today,
+                startTime: '10:00',
+                endDay: this.today,
+                endTime: '11:00',
+                location: '',
+                color: '#B6ABE4'
+            },
+            eventForm: {},
+            eventsInfo: this.events,
+            deleteInfo: {}
         }
     },
     computed: {
@@ -89,14 +117,17 @@ export default {
             return __auth();
         },
         dayOfWeek: function(){
-            var date = new Date(this.year, this.month - 1, this.day);
-            return this.weeks[date.getDay()];
+            return this.weeks[this.today.getDay()];
         },
+        today(){
+            var date = new Date(this.year, this.month - 1, this.day);
+            return date;
+        }
     },
     methods: {
-        editEvent(data){
+        addEvent: function(data){
             var form = data;
-            axios.put(`/${this.auth.id}/event/${form.id}`, {
+            axios.post(`/${this.auth.id}/event/`, {
                 'title': form.title,
                 'isAllday': form.allday,
                 'startDay': this.getDateOfEvent(form.startDay),
@@ -108,12 +139,52 @@ export default {
             })
             .then(({data}) => {
                 console.log(data);
-                //this.events.push(data);
+                this.eventsInfo.push(data);
                 this.modalVisibility = false;
             })
             .catch((err) => {
                 console.log(err);
             })
+        },
+        deleteEvent(){
+            var target = this.deleteInfo.id
+            axios.delete(`/${this.auth.id}/event/${target}`)
+            .then((data) => {
+                console.log(data);
+                this.eventsInfo = this.eventsInfo.filter(event => event.id !== target);
+                this.deleteModalVisibility = false;
+                this.deleteInfo = {};
+            })
+        },
+        editEvent(data){
+            var form = data;
+            if(form.id){
+                axios.put(`/${this.auth.id}/event/${form.id}`, {
+                    'title': form.title,
+                    'isAllday': form.allday,
+                    'startDay': this.getDateOfEvent(form.startDay),
+                    'endDay': this.getDateOfEvent(form.endDay),
+                    'startTime': form.startTime,
+                    'endTime': form.endTime,
+                    'color': form.color,
+                    'location': form.location
+                })
+                .then(({data}) => {
+                    this.eventsInfo = this.eventsInfo.map(event => {
+                        if(event.id === data.id){
+                            return data
+                        }else{
+                            return event
+                        }
+                    });
+                    this.modalVisibility = false;
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }else{
+                this.addEvent(form);
+            }
         },
         getDateOfEvent: function(date){
             var item = new Date(date);
@@ -134,8 +205,19 @@ export default {
             this.infoVisibility = !this.infoVisibility;
         },
         toggleModal(info){
-            this.eventForm = info;
-            this.modalVisibility = !this.modalVisibility;
+            if(info){
+                this.eventForm = info;
+                this.modalVisibility = !this.modalVisibility;
+            }else{
+                this.defaultEventForm.startDay = this.today;
+                this.defaultEventForm.endDay = this.today;
+                this.eventForm = this.defaultEventForm;
+                this.modalVisibility = !this.modalVisibility;
+            }
+        },
+        toggleDeleteModal(info){
+            this.deleteModalVisibility = !this.deleteModalVisibility;
+            this.deleteInfo = info;
         }
     },
     async mounted(){

@@ -52,11 +52,9 @@
                     </template>
                 </div>
             </div>
-            <div class="calendar-add">
-                <button class="calendar-add-button" @click="toggleModal">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
+            <event-add-button 
+                @open="toggleModal"
+            />
         </section>
         <calendar-modal
             v-show="modalVisibility"
@@ -70,11 +68,13 @@
 <script>
 import MyHeader from './modules/Header'
 import CalendarModal from './modules/Calendar-modal'
+import EventAddButton from './modules/Event-add-button'
 
 export default {
     components: {
+        EventAddButton,
+        CalendarModal,
         MyHeader,
-        CalendarModal
     },
     data: function(){
         return{
@@ -130,6 +130,7 @@ export default {
         findEvent: function(date){
             var month;
             String(this.currentMonth).length === 2 ? month = this.currentMonth : month = '0' + this.currentMonth;
+            String(date).length === 1 ? date = '0' + date : date = date;
             var target = this.currentYear + '-' + month + '-' + date;
             return this.events.filter(e => e.start_day == target);
         },
