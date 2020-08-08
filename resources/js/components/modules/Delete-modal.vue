@@ -3,7 +3,7 @@
         <div class="delete-modal-content">
             {{info}}
             を削除してもよろしいですか？
-            <div>
+            <div class="delete-modal-buttons">
                 <button class="btn btn-danger btn-sm" @click="deleteEvent">削除</button>
                 <button class="btn btn-success btn-sm" @click="closeModal">キャンセル</button>
             </div>

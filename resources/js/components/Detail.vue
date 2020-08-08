@@ -1,6 +1,6 @@
 <template>
     <div class="course-detail">
-        <my-header :name="course.name" :auth="auth" :bk-color="course.color" @delete="deleteCourse" @edit="edit" />
+        <my-header :name="course.name" :auth="auth" :bk-color="course.color" @delete="toggleDeleteModal" @edit="edit" />
         <div class="course-detail-body">
             <h2 class="course-detail-body-title" @click="toggleInfo" v-if="!isEditing">
                 {{course.name}}
@@ -76,18 +76,27 @@
             </ul>
             <assignment-modal ref="modal" v-show="modalVisibility" @close="modalVisibility = false" :assignment="modalAssignment" @update="updateAssignment" @filter="filterItem" @add="addAssignmentByModal" />
         </div>
+        <delete-modal
+            v-show="deleteModalVisibility"
+            :info="course"
+            type="時間割"
+            @close="deleteModalVisibility = false"
+            @delete="deleteCourse"
+        />
     </div>
 </template>
 
 <script>
 import AssignmentBlock from './Assignment-block';
 import AssignmentModal from './Assignment-modal';
+import DeleteModal from './modules/Delete-modal';
 import MyHeader from './modules/Header';
 
 export default {
     components: {
         AssignmentBlock,
         AssignmentModal,
+        DeleteModal,
         MyHeader
     },
     data: function(){
@@ -115,7 +124,8 @@ export default {
                 memo: '',
                 id: undefined
             },
-            modalVisibility: false
+            modalVisibility: false,
+            deleteModalVisibility: false
         }
     },
     computed: {
@@ -271,6 +281,9 @@ export default {
         },
         findPeriod: function(){
             return this.course.periods.filter(p => p.day_of_week === this.selected.day && p.period === this.selected.period);
+        },
+        toggleDeleteModal(){
+            this.deleteModalVisibility = !this.deleteModalVisibility
         },
         deleteCourse: function(){
             axios.delete(`/period/${this.periodInfo.id}`)

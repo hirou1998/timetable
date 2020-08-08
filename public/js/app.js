@@ -4353,7 +4353,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Assignment_block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Assignment-block */ "./resources/js/components/Assignment-block.vue");
 /* harmony import */ var _Assignment_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Assignment-modal */ "./resources/js/components/Assignment-modal.vue");
-/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
+/* harmony import */ var _modules_Delete_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Delete-modal */ "./resources/js/components/modules/Delete-modal.vue");
+/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -4447,6 +4448,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -4454,7 +4463,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     AssignmentBlock: _Assignment_block__WEBPACK_IMPORTED_MODULE_1__["default"],
     AssignmentModal: _Assignment_modal__WEBPACK_IMPORTED_MODULE_2__["default"],
-    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_3__["default"]
+    DeleteModal: _modules_Delete_modal__WEBPACK_IMPORTED_MODULE_3__["default"],
+    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   data: function data() {
     return {
@@ -4481,7 +4491,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         memo: '',
         id: undefined
       },
-      modalVisibility: false
+      modalVisibility: false,
+      deleteModalVisibility: false
     };
   },
   computed: {
@@ -4674,6 +4685,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return this.course.periods.filter(function (p) {
         return p.day_of_week === _this4.selected.day && p.period === _this4.selected.period;
       });
+    },
+    toggleDeleteModal: function toggleDeleteModal() {
+      this.deleteModalVisibility = !this.deleteModalVisibility;
     },
     deleteCourse: function deleteCourse() {
       var _this5 = this;
@@ -106621,7 +106635,7 @@ var render = function() {
           auth: _vm.auth,
           "bk-color": _vm.course.color
         },
-        on: { delete: _vm.deleteCourse, edit: _vm.edit }
+        on: { delete: _vm.toggleDeleteModal, edit: _vm.edit }
       }),
       _vm._v(" "),
       _c("div", { staticClass: "course-detail-body" }, [
@@ -107034,7 +107048,25 @@ var render = function() {
           })
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("delete-modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.deleteModalVisibility,
+            expression: "deleteModalVisibility"
+          }
+        ],
+        attrs: { info: _vm.course, type: "時間割" },
+        on: {
+          close: function($event) {
+            _vm.deleteModalVisibility = false
+          },
+          delete: _vm.deleteCourse
+        }
+      })
     ],
     1
   )
@@ -108494,7 +108526,7 @@ var render = function() {
           _vm._s(_vm.info) +
           "\n        を削除してもよろしいですか？\n        "
       ),
-      _c("div", [
+      _c("div", { staticClass: "delete-modal-buttons" }, [
         _c(
           "button",
           {
