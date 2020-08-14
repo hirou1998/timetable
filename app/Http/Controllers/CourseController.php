@@ -32,4 +32,12 @@ class CourseController extends Controller
         return $new_course;
     }
 
+    public function changeColor(Course $course, Request $request)
+    {
+        $course->update([
+            'color' => $request->color,
+        ]);
+        return $course;
+    }
+
 }

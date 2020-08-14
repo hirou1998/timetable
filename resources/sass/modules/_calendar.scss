@@ -9,7 +9,7 @@
 
     &-flex{
         flex-wrap: wrap;
-        color: #888282;
+        color: $text-color;
     }
     &-head{
         height: 4vh;
@@ -23,8 +23,8 @@
     }
     &-item{
         width: calc(100% / 7);
-        border-bottom: solid 1px #F0F0F0;
-        border-right: solid 1px #F0F0F0;
+        border-bottom: solid 1px $light-color;
+        border-right: solid 1px $light-color;
         overflow: hidden;
         padding: 0 .5vw;
 
@@ -81,10 +81,10 @@
             display: block;
             align-items: center;
             justify-content: center;
-            background-color: #919191;
+            background-color: $main-color;
             border-radius: 50%;
             border: none;
-            box-shadow: 0px 0px 7px #919191;
+            box-shadow: 0px 0px 7px $main-color;
             i{
                 font-size: 2.2rem;
                 color: #fff;
@@ -96,7 +96,7 @@
             height: 100%;
             top: 0;
             left: 0;
-            color: #919191;
+            color: $main-color;
             &::before{
                 content: "";
                 position: absolute;
@@ -114,7 +114,7 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
                 background-color: #EDEDED;
-                border: solid 1px #707070;
+                border: solid 1px $border-color;
                 overflow-x: hidden;
 
                 &-main{
@@ -144,24 +144,6 @@
                         display: flex;
                         align-items: center;
                     }
-                    .color-area{
-                        display: flex;
-                        width: 40%;
-                        flex-wrap: wrap;
-                        margin: 0 auto;
-                        justify-content: space-around;
-                        .color-circle{
-                            width: 10vw;
-                            height: 10vw;
-                            border-radius: 50%;
-                            &[aria-checked=true]{
-                                border: solid 2px #707070;
-                            }
-                        }
-                        .color-circle-input{
-                            visibility: hidden;
-                        }
-                    }
                 }
                 &-head{
                     justify-content: space-around;
@@ -171,10 +153,10 @@
                     padding: 1vh 0;
                     display: flex;
                     &:not(:last-child){
-                        border-bottom: solid 1px #707070;
+                        border-bottom: solid 1px $border-color;
                     }
                     &:first-child{
-                        border-bottom: solid 1px #707070;
+                        border-bottom: solid 1px $border-color;
                     }
                 }
                 &-form{
@@ -210,19 +192,19 @@
     &-detail{
         &-body{
             padding: 5vw;
-            color: #919191;
+            color: $main-color;
         }
         &-head{
             margin-bottom: 2vh;
 
             &-title{
-                border-bottom: solid 2px #707070;
+                border-bottom: solid 2px $border-color;
                 margin-bottom: 2vh;
                 padding-bottom: 1vh;
             }
         }
         &-info{
-            border-bottom: solid 2px #707070;
+            border-bottom: solid 2px $border-color;
 
             &-period{
                 flex: 1;
@@ -273,7 +255,7 @@
     }
 
     &-event-item{
-        border: solid 1px #707070;
+        border: solid 1px $border-color;
         margin-bottom: 1vh;
         &-title{
             font-size: 0.8rem;
@@ -306,8 +288,8 @@
 
 .el-switch.is-checked {
     .el-switch__core{
-        border: solid 1px #707070!important;
-        background: #707070!important;
+        border: solid 1px $border-color!important;
+        background: $border-color!important;
         &::after{
             background-color: #fff!important;
         }
@@ -315,7 +297,7 @@
 }
 .el-input__inner{
     background-color: transparent!important;
-    color: #919191!important;
+    color: $main-color!important;
     border: none!important;
 }
 .el-input--prefix .el-input__inner{

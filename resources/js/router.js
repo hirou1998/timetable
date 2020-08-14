@@ -6,6 +6,8 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Detail from './components/Detail'
 import Setting from './components/Setting'
+import SettingColor from './components/Course-color'
+import SettingPeriod from './components/Period-setting'
 import Calendar from './components/Calendar'
 import CalendarDetail from './components/Calendar-detail'
 
@@ -54,6 +56,16 @@ export default new Router({
             name: 'calendar-detail',
             component: CalendarDetail,
             props: true
+        },
+        {
+            path: '/setting/color',
+            name: 'setting-color',
+            component: SettingColor,
+        },
+        {
+            path: '/setting/period',
+            name: 'setting-period',
+            component: SettingPeriod
         }
     ]
 })

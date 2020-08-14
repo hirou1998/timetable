@@ -74,25 +74,21 @@
                         色を指定する
                     </div>
                 </div>
-                <div class="color-area">
-                    <div v-for="col in colorList" :key="col">
-                        <label 
-                            class="color-circle" :style="{backgroundColor: col}"
-                            :aria-checked="col === color ? true : false">
-                            <input type="radio" v-model="color" :value="col"
-                            class="color-circle-input"
-                            >
-                        </label>
-                    </div>
-                    <!-- <el-color-picker v-model="color1"></el-color-picker> -->
-                </div>
+                <color-lists
+                    v-model="color"
+                />
             </div>
         </div>
     </section>
 </template>
 
 <script>
+import ColorLists from './Color-lists'
+
 export default {
+    components: {
+        ColorLists,
+    },
     model: {
         prop: 'eventForm',
         event: 'change'

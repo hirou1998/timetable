@@ -1,23 +1,56 @@
 <template>
     <div>
-        <div class="setting-head">
-            <button class="setting-head-back" @click="backToTimetable">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <h2 class="setting-head-title">時間割設定</h2>
-        </div>
+        <setting-head
+            :name="auth.name"
+            link="timetable"
+        />
         <div class="setting-body">
-            <h3>カスタマイズ</h3>
-            <ul></ul>
+            <h3 class="setting-subtitle">カスタマイズ</h3>
+            <ul class="setting-list-container">
+                <li class="setting-list">
+                    <div class="setting-list-icon">
+                        <img src="/images/color.png" alt="カラーアイコン">
+                    </div>
+                    <div class="setting-list-name"><router-link to="/setting/color">授業カラー</router-link></div>
+                </li>
+                <li class="setting-list">
+                    <div class="setting-list-icon">
+                        <img src="/images/course-period.png" alt="時限数と授業時間">
+                    </div>
+                    <div class="setting-list-name"><router-link to="/setting/period">時限数と授業時間</router-link></div>
+                </li>
+                <!-- <li class="setting-list">
+                    <div class="setting-list-icon">
+                        <img src="/images/period-icon.png" alt="授業時間">
+                    </div>
+                    <div class="setting-list-name">授業時間</div>
+                </li> -->
+            </ul>
+            <h3 class="setting-subtitle">ユーザー設定の変更</h3>
+            <ul class="setting-list-container">
+                <li class="setting-list">
+                    <div class="setting-list-icon">
+                        <img src="/images/profile-colored.png" alt="ユーザー情報">
+                    </div>
+                    <div class="setting-list-name">ユーザー情報の変更</div>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
+import SettingHead from './modules/Setting-head'
+
 export default {
+    components: {
+        SettingHead
+    },
     methods: {
-        backToTimetable: function(){
-            this.$router.push('/timetable');
+    },
+    computed: {
+        auth(){
+            return __auth();
         }
     }
 }
