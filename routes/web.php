@@ -44,7 +44,14 @@ Route::middleware(['auth'])->group(function(){
     });
     Route::post('/course/update/{course}', 'CourseController@update');
     Route::post('/course/register/{user}', 'CourseController@store');
+    Route::put('/course/color/{course}', 'CourseController@changeColor');
     Route::delete('/period/{period}', 'PeriodController@destroy');
     Route::resource('/{course}/assignment', 'AssignmentController');
     Route::resource('/{user}/event', 'EventController');
+    Route::get('/setting/color', function(){
+        return view('timetable.index');
+    });
+    Route::get('/setting/period', function(){
+        return view('timetable.index');
+    });
 });

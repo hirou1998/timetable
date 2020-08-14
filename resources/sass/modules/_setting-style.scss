@@ -1,14 +1,15 @@
 .setting{
     &-head{
-        background-color: #919191;
+        background-color: $main-color;
         color: #fff;
-        padding: 2vh 0 0;
+        padding: 2vh 0;
         position: relative;
 
         &-back{
             position: absolute;
-            top: 0;
+            top: 40%;
             left: 0;
+            color: #fff;
         }
         &-title{
             margin: 0;
@@ -16,4 +17,58 @@
             text-align: center;
         }
     }
+}
+.setting-body{
+    background-color: $light-color;
+}
+.setting-subtitle{
+    color: $main-color;
+    font-size: 1.2rem;
+    padding-left: 2vw;
+    margin: 2vh 0;
+}
+.setting-list-container{
+    background-color: #fff;
+    border: solid 1px $text-color;
+}
+.setting-list{
+    display: flex;
+    align-items: center;
+}
+.setting-list-icon{
+    display: block;
+    flex: 1;
+    text-align: center;
+
+    img{
+        width: 60%;
+    }
+}
+.setting-list-icon-circle{
+    width: 7vw;
+    height: 7vw;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+.setting-list-name{
+    flex: 8;
+    padding: 3vw 3vw 3vw 8vw;
+    color: $main-color;
+
+    a{
+        color: $main-color;
+    }
+}
+.setting-list-container  {
+    .setting-list:not(:last-child){
+        .setting-list-name{
+            border-bottom: solid 1px $text-color;
+        }
+    }
+}
+.setting-modal-confirm{
+    width: 40%;
+    margin: 2vh auto 0;
+    display: flex;
+    justify-content: space-around;
 }

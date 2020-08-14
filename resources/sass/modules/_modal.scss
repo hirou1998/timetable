@@ -1,0 +1,31 @@
+.modal-base{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    color: $main-color;
+
+    &::before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #EDEDED;
+        opacity: .5;
+        z-index: 0;
+    }
+}
+.modal-base-inner{
+    position: absolute;
+    width: 96%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #EDEDED;
+    border: solid 1px $border-color;
+    overflow-x: hidden;
+    padding: 2vh 0;
+    z-index: 1;
+}

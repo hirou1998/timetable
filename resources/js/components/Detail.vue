@@ -79,7 +79,7 @@
         <delete-modal
             v-show="deleteModalVisibility"
             :info="course"
-            type="時間割"
+            type="course"
             @close="deleteModalVisibility = false"
             @delete="deleteCourse"
         />
