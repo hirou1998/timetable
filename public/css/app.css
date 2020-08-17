@@ -15864,8 +15864,8 @@ a:hover {
 .setting-subtitle {
   color: #919191;
   font-size: 1.2rem;
-  padding-left: 2vw;
-  margin: 2vh 0;
+  padding: 2vh 0 2vh 2vw;
+  margin: 0;
 }
 
 .setting-list-container {
@@ -15882,6 +15882,7 @@ a:hover {
   display: block;
   flex: 1;
   text-align: center;
+  color: #888282;
 }
 
 .setting-list-icon img {
@@ -15899,6 +15900,7 @@ a:hover {
   flex: 8;
   padding: 3vw 3vw 3vw 8vw;
   color: #919191;
+  margin: 0;
 }
 
 .setting-list-name a {
@@ -15914,6 +15916,23 @@ a:hover {
   margin: 2vh auto 0;
   display: flex;
   justify-content: space-around;
+}
+
+.setting-edit-block {
+  margin: 1vh 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.setting-edit-block-inner {
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.setting-end-form {
+  display: flex;
+  align-items: center;
 }
 
 .calendar {
