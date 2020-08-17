@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/user/setting/{user}', 'Api\SettingController@index');
 Route::group(['middleware' => ['auth:api']], function(){
     Route::get('/user', function(Request $request){
         return $request->user();
@@ -21,6 +20,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('period/{user}', 'Api\PeriodController@index');
     Route::get('course/detail', 'Api\CourseController@index');
     Route::get('course/assignments', 'Api\AssignmentController@index');
+    Route::get('/user/setting/{user}', 'Api\SettingController@index');
 });
 
 Route::get('events/{user}', 'Api\EventController@index');
