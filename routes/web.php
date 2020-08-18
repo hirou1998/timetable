@@ -54,4 +54,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/setting/period', function(){
         return view('timetable.index');
     });
+    Route::put('/setting/period/{user}', 'SettingController@update');
 });
