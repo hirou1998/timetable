@@ -15,10 +15,6 @@
             <li class="navbar-hamburger-menu-item" :class="isCurrentPage('calendar') ? 'current' : ''" @click="toggleHamburger">
                 <router-link to="/calendar">カレンダー</router-link>
             </li>
-            <template v-if="isCurrentPage('detail')">
-                <li class="navbar-hamburger-menu-item btn-info" @click="toggleHamburger(); editCourse()">内容を編集</li>
-                <li class="navbar-hamburger-menu-item btn-danger" @click="toggleHamburger(); deleteCourse()">この時間割を消す</li>
-            </template>
         </ul>
         <div class="navbar-hamburger-menu-logout navbar-hamburger-menu-big d-flex align-items-center" @click="toggleHamburger">
             <i class="fas fa-lock-open"></i>
