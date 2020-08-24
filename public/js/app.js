@@ -4626,6 +4626,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -4703,7 +4704,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (!params.course) {
                   _this.isEditing = true;
-                  _this.isAdding = _this.$set(_this.formData, 'periods', [{
+
+                  _this.$set(_this.formData, 'periods', [{
                     'day_of_week': params.day,
                     'period': params.period
                   }]);
@@ -4713,7 +4715,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   axios.get("/api/course/detail/?course=".concat(params.course)).then(function (_ref) {
                     var data = _ref.data;
                     _this.course = data[0];
-                    _this.formData = data[0];
+                    _this.formData = _this.course;
                     _this.isAlreadyRegistered = true;
                     _this.periodInfo = _this.findPeriod()[0];
 
@@ -4832,6 +4834,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     save: function save() {
       var _this3 = this;
 
+      this.formData.teacher = this.$refs['teacherName'].value;
+      this.formData.type = this.$refs['courseType'].value;
+      this.formData.name = this.$refs['courseName'].value;
+      this.formData.periods = this.formData.periods.map(function (period, index) {
+        var dKey = 'dayOfWeek' + index;
+        var pKey = 'period' + index;
+        return _objectSpread(_objectSpread({}, period), {}, {
+          day_of_week: Array.from(_this3.$refs[dKey])[0].value,
+          period: Array.from(_this3.$refs[pKey])[0].value
+        });
+      });
       axios.post("/course/update/".concat(this.course.id), {
         'name': this.formData.name,
         'teacher': this.formData.teacher,
@@ -4839,11 +4852,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'periods': this.formData.periods
       }).then(function (_ref3) {
         var data = _ref3.data;
-        console.log(data);
         _this3.isEditing = false;
       });
     },
     register: function register() {
+      var _this4 = this;
+
       axios.post("/course/register/".concat(this.auth.id), {
         'name': this.formData.name,
         'teacher': this.formData.teacher,
@@ -4851,26 +4865,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'periods': this.formData.periods
       }).then(function (_ref4) {
         var data = _ref4.data;
-        console.log(data);
+
+        _this4.backToTimetable();
       })["catch"](function (err) {
         console.log(err);
       });
     },
     findPeriod: function findPeriod() {
-      var _this4 = this;
+      var _this5 = this;
 
       return this.course.periods.filter(function (p) {
-        return p.day_of_week === _this4.selected.day && p.period === _this4.selected.period;
+        return p.day_of_week === _this5.selected.day && p.period === _this5.selected.period;
       });
     },
     toggleDeleteModal: function toggleDeleteModal() {
       this.deleteModalVisibility = !this.deleteModalVisibility;
     },
+    backToTimetable: function backToTimetable() {
+      this.$router.push('/timetable');
+    },
     deleteCourse: function deleteCourse() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios["delete"]("/period/".concat(this.periodInfo.id)).then(function () {
-        _this5.$router.push('/timetable');
+        _this6.backToTimetable();
       });
     },
     addAssignment: function addAssignment(date) {
@@ -4893,12 +4911,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     updateAssignment: function updateAssignment(data) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.assignments = this.assignments.map(function (a) {
         if (a.id === data.id) {
           return a = _objectSpread(_objectSpread({}, data), {}, {
-            'date': _this6.getDateOfAssignment(data.date)
+            'date': _this7.getDateOfAssignment(data.date)
           });
         } else {
           return a;
@@ -4917,7 +4935,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this7 = this;
+    var _this8 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -4925,14 +4943,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return axios.get("/api/user/setting/".concat(_this7.auth.id)).then(function (_ref5) {
+              return axios.get("/api/user/setting/".concat(_this8.auth.id)).then(function (_ref5) {
                 var data = _ref5.data;
-                _this7.setting = data;
+                _this8.setting = data;
               });
 
             case 2:
               _context2.next = 4;
-              return _this7.getCourse();
+              return _this8.getCourse();
 
             case 4:
             case "end":
@@ -107393,25 +107411,10 @@ var render = function() {
             )
           : _c("div", { staticClass: "form-group" }, [
               _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.formData.name,
-                    expression: "formData.name"
-                  }
-                ],
+                ref: "courseName",
                 staticClass: "form-control",
                 attrs: { type: "text", placeholder: "科目名" },
-                domProps: { value: _vm.formData.name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.formData, "name", $event.target.value)
-                  }
-                }
+                domProps: { value: _vm.formData.name }
               })
             ]),
         _vm._v(" "),
@@ -107446,10 +107449,22 @@ var render = function() {
                     "button",
                     {
                       staticClass:
-                        "btn btn-success btn-sm course-detail-body-info-cancel",
+                        "btn btn-success btn-sm course-detail-body-info-edit",
                       on: { click: _vm.register }
                     },
                     [_vm._v("登録")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isEditing && !_vm.isAlreadyRegistered
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-danger btn-sm course-detail-body-info-cancel",
+                      on: { click: _vm.backToTimetable }
+                    },
+                    [_vm._v("取消")]
                   )
                 : _vm._e(),
               _vm._v(" "),
@@ -107464,29 +107479,10 @@ var render = function() {
                     ])
                   : _c("div", { staticClass: "form-group" }, [
                       _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.formData.teacher,
-                            expression: "formData.teacher"
-                          }
-                        ],
+                        ref: "teacherName",
                         staticClass: "form-control",
                         attrs: { type: "text", placeholder: "先生の名前" },
-                        domProps: { value: _vm.formData.teacher },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.formData,
-                              "teacher",
-                              $event.target.value
-                            )
-                          }
-                        }
+                        domProps: { value: _vm.formData.teacher }
                       })
                     ])
               ]),
@@ -107505,35 +107501,10 @@ var render = function() {
                         _c(
                           "select",
                           {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.formData.type,
-                                expression: "formData.type"
-                              }
-                            ],
+                            ref: "courseType",
                             staticClass: "form-control",
                             attrs: { "data-live-search": "true" },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.formData,
-                                  "type",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
+                            domProps: { value: _vm.formData.type }
                           },
                           _vm._l(_vm.courseType, function(type) {
                             return _c(
@@ -107608,7 +107579,7 @@ var render = function() {
                     : _c(
                         "ul",
                         [
-                          _vm._l(_vm.formData.periods, function(period) {
+                          _vm._l(_vm.formData.periods, function(period, index) {
                             return _c(
                               "li",
                               {
@@ -107620,37 +107591,10 @@ var render = function() {
                                 _c(
                                   "select",
                                   {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: period.day_of_week,
-                                        expression: "period.day_of_week"
-                                      }
-                                    ],
+                                    ref: "dayOfWeek" + index,
+                                    refInFor: true,
                                     staticClass: "form-control",
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          period,
-                                          "day_of_week",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
+                                    domProps: { value: period.day_of_week }
                                   },
                                   _vm._l(_vm.weekOfDay, function(day, index) {
                                     return _c(
@@ -107668,37 +107612,10 @@ var render = function() {
                                 _c(
                                   "select",
                                   {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: period.period,
-                                        expression: "period.period"
-                                      }
-                                    ],
+                                    ref: "period" + index,
+                                    refInFor: true,
                                     staticClass: "form-control",
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          period,
-                                          "period",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
+                                    domProps: { value: period.period }
                                   },
                                   _vm._l(_vm.periodOptions, function(item) {
                                     return _c(
@@ -109534,7 +109451,7 @@ var render = function() {
               staticClass: "btn btn-success btn-sm",
               on: { click: _vm.closeModal }
             },
-            [_vm._v("キャンセル")]
+            [_vm._v("取消")]
           )
         ])
       ],

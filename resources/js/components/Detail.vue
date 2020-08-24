@@ -13,17 +13,18 @@
 				</span>
 			</h2>
 			<div class="form-group" v-else>
-				<input type="text" class="form-control" v-model="formData.name" placeholder="科目名">
+				<input type="text" class="form-control" ref="courseName" :value="formData.name" placeholder="科目名">
 			</div>
 			<div class="course-detail-body-info" v-if="isInfoOpen">
 				<button class="btn btn-info btn-sm course-detail-body-info-edit" @click="save" v-if="isEditing && isAlreadyRegistered">保存</button>
 				<button class="btn btn-danger btn-sm course-detail-body-info-cancel" @click="edit" v-if="isEditing && isAlreadyRegistered">取消</button>
-				<button class="btn btn-success btn-sm course-detail-body-info-cancel" @click="register" v-if="isEditing && !isAlreadyRegistered">登録</button>
+				<button class="btn btn-success btn-sm course-detail-body-info-edit" @click="register" v-if="isEditing && !isAlreadyRegistered">登録</button>
+                <button class="btn btn-danger btn-sm course-detail-body-info-cancel" @click="backToTimetable" v-if="isEditing && !isAlreadyRegistered">取消</button>
 				<div class="course-detail-body-info-item">
 					<img src="/images/teacher-icon.png" alt="">
 					<p class="course-detail-body-text" v-if="!isEditing">{{course.teacher}} 先生</p>
 					<div class="form-group" v-else>
-						<input type="text" class="form-control" v-model="formData.teacher" placeholder="先生の名前">
+						<input type="text" class="form-control" ref="teacherName" :value="formData.teacher" placeholder="先生の名前">
 					</div>
 				</div>
 				<div class="course-detail-body-info-item">
@@ -31,7 +32,7 @@
 					<div>
 						<p class="course-detail-body-text" v-if="!isEditing">{{course.type}}</p>
 						<div class="form-group" v-else>
-							<select v-model="formData.type" class="form-control" data-live-search="true">
+							<select ref="courseType" :value="formData.type" class="form-control" data-live-search="true">
 								<option v-for="type in courseType" :value="type" :key="type">{{type}}</option>
 							</select>
 						</div>
@@ -50,11 +51,11 @@
 							</li>
 						</ul>
 						<ul v-else>
-							<li class="form-group course-detail-body-info-select-flex" v-for="period in formData.periods" :key="period.day_of_week + '-' + period.period">
-								<select v-model="period.day_of_week" class="form-control">
+							<li class="form-group course-detail-body-info-select-flex" v-for="(period, index) in formData.periods" :key="period.day_of_week + '-' + period.period">
+								<select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control">
 									<option v-for="(day, index) in weekOfDay" :value="index + 1" :key="day">{{day}}</option>
 								</select>
-								<select v-model="period.period" class="form-control">
+								<select :ref="'period' + index" :value="period.period" class="form-control">
 									<option :value="item" v-for="item in periodOptions" :key="item">{{item}}</option>
 								</select>
 							</li>
@@ -157,14 +158,13 @@ export default {
         },
         thisYear: function(){
             return new Date().getFullYear();
-        }
+        },
     },
     methods: {
         async getCourse(){
             const params = await this.splitParams(location.search.substring(1));
             if(!params.course){
                 this.isEditing = true;
-                this.isAdding =
                 this.$set(this.formData, 'periods', [
                     {
                         'day_of_week' : params.day,
@@ -176,7 +176,7 @@ export default {
                 axios.get(`/api/course/detail/?course=${params.course}`)
                 .then(({data}) => {
                     this.course = data[0];
-                    this.formData = data[0];
+                    this.formData = this.course;
                     this.isAlreadyRegistered = true;
                     this.periodInfo = this.findPeriod()[0];
                     this.getAssignments();
@@ -275,13 +275,20 @@ export default {
             });
         },
         save: function(){
+            this.formData.teacher = this.$refs['teacherName'].value;
+            this.formData.type = this.$refs['courseType'].value;
+            this.formData.name = this.$refs['courseName'].value;
+            this.formData.periods = this.formData.periods.map((period, index) => {
+                var dKey = 'dayOfWeek' + index;
+                var pKey = 'period' + index;
+                return {...period, day_of_week: Array.from(this.$refs[dKey])[0].value, period: Array.from(this.$refs[pKey])[0].value}
+            });
             axios.post(`/course/update/${this.course.id}`, {
                 'name': this.formData.name,
                 'teacher': this.formData.teacher,
                 'type': this.formData.type,
                 'periods': this.formData.periods
             }).then(({data}) => {
-                console.log(data);
                 this.isEditing = false;
             });
         },
@@ -292,7 +299,7 @@ export default {
                 'type': this.formData.type,
                 'periods': this.formData.periods
             }).then(({data}) => {
-                console.log(data)
+                this.backToTimetable();
             }).catch((err) => {
                 console.log(err);
             })
@@ -303,10 +310,13 @@ export default {
         toggleDeleteModal(){
             this.deleteModalVisibility = !this.deleteModalVisibility
         },
+        backToTimetable(){
+            this.$router.push('/timetable');
+        },
         deleteCourse: function(){
             axios.delete(`/period/${this.periodInfo.id}`)
                 .then(() => {
-                    this.$router.push('/timetable');
+                    this.backToTimetable();
                 })
         },
         addAssignment: function(date){
