@@ -15511,6 +15511,10 @@ a:hover {
   color: #919191;
 }
 
+.text-red {
+  color: red;
+}
+
 .course {
   width: 90%;
   margin: 2vw auto;
@@ -15607,6 +15611,7 @@ a:hover {
 .course-detail-body-title {
   border-bottom: solid 2px #707070;
   margin-bottom: 2vh;
+  position: relative;
 }
 
 .course-detail-body-info-item {
@@ -15727,6 +15732,14 @@ a:hover {
   font-size: 0.5rem;
   padding: 0.5vh 0;
   color: #fff;
+}
+
+.course-setting-button {
+  position: absolute;
+  top: 50%;
+  right: 3vw;
+  transform: translate(0, -50%);
+  color: #888282;
 }
 
 .navbar {
@@ -16345,6 +16358,51 @@ a:hover {
   overflow-x: hidden;
   padding: 2vh 0;
   z-index: 1;
+}
+
+.detail-option-window {
+  position: absolute;
+  width: 96%;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, 0);
+  padding-bottom: 1vh;
+}
+
+.detail-option-block {
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.detail-option {
+  padding: 1vh 0;
+  text-align: center;
+}
+
+.detail-option:not(:last-child) {
+  border-bottom: solid 1px #F0F0F0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transform: translate(-50%, 0);
+  transition: transform 0.3s;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translate(-50%, 100%);
 }
 
 .color-area {

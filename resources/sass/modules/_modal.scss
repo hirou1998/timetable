@@ -29,3 +29,41 @@
     padding: 2vh 0;
     z-index: 1;
 }
+
+.detail-option-overlay{
+
+}
+.detail-option-window{
+    position: absolute;
+    width: 96%;
+    bottom: 0;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, 0);
+    padding-bottom: 1vh;
+}
+.detail-option-block{
+    background-color: #fff;
+    border-radius: 5px;
+}
+.detail-option{
+    padding: 1vh 0;
+    text-align: center;
+    &:not(:last-child){
+        border-bottom: solid 1px $light-color;
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to{
+    opacity: 0;
+}
+.slide-enter-active, .slide-leave-active{
+    transform: translate(-50%, 0);
+    transition: transform .3s;
+}
+.slide-enter, .slide-leave-to{
+    transform: translate(-50%, 100%);
+}
