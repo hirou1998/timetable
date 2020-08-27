@@ -22,7 +22,7 @@ export default {
     props: ['color'],
     data(){
         return{
-            colorList: ['#B6ABE4', '#B5179D', '#ABC9E3', '#F2EFAC', '#B8EDE1'],
+            colorList: ['#B6ABE4', '#B5179D', '#ABC9E3', '#F2EFAC', '#B8EDE1', '#03A9F4', '#FFA7C5', '#ECC181'],
         }
     },
     computed: {

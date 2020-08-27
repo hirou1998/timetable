@@ -8,6 +8,8 @@ import Detail from './components/Detail'
 import Setting from './components/Setting'
 import SettingColor from './components/Course-color'
 import SettingPeriod from './components/Period-setting'
+import PasswordReset from './components/Reset'
+import MyPage from './components/MyPage'
 import Calendar from './components/Calendar'
 import CalendarDetail from './components/Calendar-detail'
 
@@ -66,6 +68,16 @@ export default new Router({
             path: '/setting/period',
             name: 'setting-period',
             component: SettingPeriod
+        },
+        {
+            path: '/setting/user/password-reset',
+            name: 'password-reset',
+            component: PasswordReset
+        },
+        {
+            path: '/setting/mypage',
+            name: 'mypage',
+            component: MyPage
         }
     ]
 })

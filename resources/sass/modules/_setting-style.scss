@@ -18,8 +18,16 @@
 		}
 	}
 }
+.setting-head-edit{
+	position: absolute;
+	color: #fff;
+	top: 40%;
+	right: 0;
+}
 .setting-body{
   background-color: $light-color;
+  height: 100vh;
+  position: relative;
 }
 .setting-subtitle{
 	color: $main-color;
@@ -75,9 +83,9 @@
 	justify-content: space-around;
 }
 .setting-edit-block{
-	margin: 1vh 0;
 	display: flex;
 	justify-content: flex-end;
+	padding: 1vh 0;
 }
 .setting-edit-block-inner{
 	width: 30%;
@@ -87,4 +95,20 @@
 .setting-end-form{
 	display: flex;
 	align-items: center;
+}
+.user-info-item{
+	flex: 1;
+}
+.user-info{
+	flex: 2;
+}
+.btn-password-reset-container{
+	position: absolute;
+	left: 50%;
+	bottom: 20%;
+	transform: translate(-50%, 0);
+}
+.btn-password-reset{
+	display: block;
+	margin: 0 auto;
 }
