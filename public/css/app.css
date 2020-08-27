@@ -15870,8 +15870,17 @@ a:hover {
   text-align: center;
 }
 
+.setting-head-edit {
+  position: absolute;
+  color: #fff;
+  top: 40%;
+  right: 0;
+}
+
 .setting-body {
   background-color: #F0F0F0;
+  height: 100vh;
+  position: relative;
 }
 
 .setting-subtitle {
@@ -15932,9 +15941,9 @@ a:hover {
 }
 
 .setting-edit-block {
-  margin: 1vh 0;
   display: flex;
   justify-content: flex-end;
+  padding: 1vh 0;
 }
 
 .setting-edit-block-inner {
@@ -15946,6 +15955,26 @@ a:hover {
 .setting-end-form {
   display: flex;
   align-items: center;
+}
+
+.user-info-item {
+  flex: 1;
+}
+
+.user-info {
+  flex: 2;
+}
+
+.btn-password-reset-container {
+  position: absolute;
+  left: 50%;
+  bottom: 20%;
+  transform: translate(-50%, 0);
+}
+
+.btn-password-reset {
+  display: block;
+  margin: 0 auto;
 }
 
 .calendar {
@@ -16407,7 +16436,7 @@ a:hover {
 
 .color-area {
   display: flex;
-  width: 40%;
+  width: 50%;
   flex-wrap: wrap;
   margin: 0 auto;
   justify-content: space-around;

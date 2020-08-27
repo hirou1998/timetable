@@ -19,12 +19,6 @@
                     </div>
                     <div class="setting-list-name"><router-link to="/setting/period">時限数と授業時間</router-link></div>
                 </li>
-                <!-- <li class="setting-list">
-                    <div class="setting-list-icon">
-                        <img src="/images/period-icon.png" alt="授業時間">
-                    </div>
-                    <div class="setting-list-name">授業時間</div>
-                </li> -->
             </ul>
             <h3 class="setting-subtitle">ユーザー設定の変更</h3>
             <ul class="setting-list-container">
@@ -32,7 +26,9 @@
                     <div class="setting-list-icon">
                         <img src="/images/profile-colored.png" alt="ユーザー情報">
                     </div>
-                    <div class="setting-list-name">ユーザー情報の変更</div>
+                    <div class="setting-list-name">
+                        <router-link to="/setting/mypage">ユーザー情報</router-link>
+                    </div>
                 </li>
             </ul>
         </div>
