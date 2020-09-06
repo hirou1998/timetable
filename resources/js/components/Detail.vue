@@ -185,8 +185,9 @@ export default {
             }
         },
         getAssignments: function(){
-            axios.get(`/api/course/assignments?course=${this.course.id}`)
+            axios.get(`/api/course/assignments/c/${this.course.id}`)
                 .then(({data}) => {
+                    console.log(data)
                     data.forEach(da => {
                         this.assignments.push({
                             ...da,

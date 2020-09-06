@@ -6,19 +6,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Assignment;
 use App\Course;
+use App\User;
 
 class AssignmentController extends Controller
 {
-    public function index(Assignment $assignment, Course $course, Request $request)
+    public function sortByCourse(Assignment $assignment, Course $course)
     {
-        if($request->course){
-            $courseId = $request->course;
-            return $assignment->where('course_id', $courseId)->orderby('date')->get();
-        }elseif($request->user){
-            $userId = $request->user;
-            return $assignment->where('user_id', $userId)->orderby('date')->get();
-        }else{
-            return response()->json([]);
+        return $assignment->where('course_id', $course->id)->orderby('date')->get();
+    }
+
+    public function sortByUser(Assignment $assignment, User $user, Request $request)
+    {
+        if($request){ //特定の日時のassignmentsを返す場合
+            $date = date('Y-m-d', mktime(0, 0, 0, $request->month, $request->day, $request->year));
+            return $assignment->where('date', $date)->get();
         }
+        return $assignment->where('user_id', $user->id)->orderby('date')->get();
     }
 }

@@ -143,7 +143,7 @@ export default {
             //this.$router.push({name: 'calendar-detail', params: {courses: items, day: day, month: this.currentMonth, year: this.currentYear, assignments: assignments, events: events}});
         },
         getAssignments: function(){
-            axios.get(`/api/course/assignments?user=${this.auth.id}`)
+            axios.get(`/api/course/assignments/u/${this.auth.id}`)
                 .then(({data}) => {
                     var items = data.filter(d => d.done_flg === 1);
                     items.forEach(d => {

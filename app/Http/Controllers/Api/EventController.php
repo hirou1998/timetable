@@ -25,7 +25,7 @@ class EventController extends Controller
             ->whereBetween('start_day', [$requestStart, $requestEnd])
             ->orWhereBetween('end_day', [$requestStart, $requestEnd])
             ->orderby('start_day')->get();
-        //$events = $user->events()->orderby('start_day')->get();
+            
         return $events;
     }
 }

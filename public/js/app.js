@@ -3841,11 +3841,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     EventAddButton: _modules_Event_add_button__WEBPACK_IMPORTED_MODULE_5__["default"],
     MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
-  //props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
   data: function data() {
     return {
-      assignments: {},
-      courses: {},
+      assignments: [],
+      courses: [],
       day: '',
       deleteModalVisibility: false,
       defaultEventForm: {
@@ -3908,11 +3907,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         console.log(err);
       });
     },
-    findAssignment: function findAssignment(month, date) {
-      return this.assignments.filter(function (a) {
-        return a.month === month && a.date === date;
-      });
-    },
     deleteEvent: function deleteEvent() {
       var _this2 = this;
 
@@ -3961,7 +3955,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getAssignments: function getAssignments() {
       var _this4 = this;
 
-      axios.get("/api/course/assignments?user=".concat(this.auth.id)).then(function (_ref3) {
+      axios.get("/api/course/assignments/u/".concat(this.auth.id, "/?year=").concat(this.year, "&month=").concat(this.month, "&day=").concat(this.day)).then(function (_ref3) {
         var data = _ref3.data;
         var items = data.filter(function (d) {
           return d.done_flg === 1;
@@ -3972,7 +3966,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             date: _this4.getDate(d.date)
           }));
         });
-        _this4.assignments = _this4.findAssignment(_this4.currentMonth, _this4.day);
       });
     },
     getCourses: function getCourses() {
@@ -3980,8 +3973,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       axios.get("/api/period/".concat(this.auth.id, "/?day_of_week=").concat(this.remainder)).then(function (_ref4) {
         var data = _ref4.data;
-        console.log(data);
         _this5.courses = data;
+        !_this5.courses.length ? _this5.infoVisibility = false : _this5.infoVisibility = true;
       });
     },
     getEvents: function getEvents(year, month) {
@@ -4089,10 +4082,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _this9.currentMonth = _this9.month;
               _this9.remainder = params.remainder; // this.getEvents(this.year, this.month);
 
-              _this9.getCourses(); // this.getAssignments();
+              _this9.getCourses();
 
-
-              !_this9.courses.length ? _this9.infoVisibility = false : _this9.infoVisibility = true;
+              _this9.getAssignments();
 
             case 15:
             case "end":
@@ -4297,7 +4289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getAssignments: function getAssignments() {
       var _this2 = this;
 
-      axios.get("/api/course/assignments?user=".concat(this.auth.id)).then(function (_ref2) {
+      axios.get("/api/course/assignments/u/".concat(this.auth.id)).then(function (_ref2) {
         var data = _ref2.data;
         var items = data.filter(function (d) {
           return d.done_flg === 1;
@@ -4827,8 +4819,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getAssignments: function getAssignments() {
       var _this2 = this;
 
-      axios.get("/api/course/assignments?course=".concat(this.course.id)).then(function (_ref2) {
+      axios.get("/api/course/assignments/c/".concat(this.course.id)).then(function (_ref2) {
         var data = _ref2.data;
+        console.log(data);
         data.forEach(function (da) {
           _this2.assignments.push(_objectSpread(_objectSpread({}, da), {}, {
             'date': _this2.getDateOfAssignment(da.date)

@@ -89,11 +89,10 @@ export default {
         EventAddButton,
         MyHeader,
     },
-    //props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
     data: function(){
         return{
-            assignments: {},
-            courses: {},
+            assignments: [],
+            courses: [],
             day: '',
             deleteModalVisibility: false,
             defaultEventForm: {
@@ -153,9 +152,6 @@ export default {
                 console.log(err);
             })
         },
-        findAssignment: function(month, date){
-            return this.assignments.filter(a => a.month === month && a.date === date);
-        },
         deleteEvent(){
             var target = this.deleteInfo.id
             axios.delete(`/${this.auth.id}/event/${target}`)
@@ -197,7 +193,7 @@ export default {
             }
         },
         getAssignments: function(){
-            axios.get(`/api/course/assignments?user=${this.auth.id}`)
+            axios.get(`/api/course/assignments/u/${this.auth.id}/?year=${this.year}&month=${this.month}&day=${this.day}`)
                 .then(({data}) => {
                     var items = data.filter(d => d.done_flg === 1);
                     items.forEach(d => {
@@ -207,14 +203,13 @@ export default {
                             date: this.getDate(d.date)
                         })
                     })
-                    this.assignments = this.findAssignment(this.currentMonth, this.day);
                 })
         },
         getCourses: function(){
             axios.get(`/api/period/${this.auth.id}/?day_of_week=${this.remainder}`)
                 .then(({data}) => {
-                    console.log(data);
                     this.courses = data;
+                    !this.courses.length ? this.infoVisibility = false : this.infoVisibility = true;
                 })
         },
         getEvents: function(year, month){
@@ -292,9 +287,8 @@ export default {
 
         // this.getEvents(this.year, this.month);
         this.getCourses();
-        // this.getAssignments();
+        this.getAssignments();
 
-        !this.courses.length ? this.infoVisibility = false : this.infoVisibility = true;
     }
 }
 </script>
