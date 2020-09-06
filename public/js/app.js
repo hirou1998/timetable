@@ -3734,6 +3734,24 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3823,13 +3841,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     EventAddButton: _modules_Event_add_button__WEBPACK_IMPORTED_MODULE_5__["default"],
     MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
-  props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
   data: function data() {
     return {
-      weeks: ['日', '月', '火', '水', '木', '金', '土'],
-      setting: {},
-      infoVisibility: false,
-      modalVisibility: false,
+      assignments: [],
+      courses: [],
+      day: '',
       deleteModalVisibility: false,
       defaultEventForm: {
         title: '',
@@ -3841,9 +3857,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         location: '',
         color: '#B6ABE4'
       },
+      deleteInfo: {},
+      events: {},
       eventForm: {},
       eventsInfo: this.events,
-      deleteInfo: {}
+      infoVisibility: false,
+      modalVisibility: false,
+      month: '',
+      remainder: '',
+      setting: {},
+      weeks: ['日', '月', '火', '水', '木', '金', '土'],
+      year: ''
     };
   },
   computed: {
@@ -3928,25 +3952,81 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.addEvent(form);
       }
     },
+    getAssignments: function getAssignments() {
+      var _this4 = this;
+
+      axios.get("/api/course/assignments/u/".concat(this.auth.id, "/?year=").concat(this.year, "&month=").concat(this.month, "&day=").concat(this.day)).then(function (_ref3) {
+        var data = _ref3.data;
+        var items = data.filter(function (d) {
+          return d.done_flg === 1;
+        });
+        items.forEach(function (d) {
+          _this4.assignments.push(_objectSpread(_objectSpread({}, d), {}, {
+            month: _this4.getMonth(d.date),
+            date: _this4.getDate(d.date)
+          }));
+        });
+      });
+    },
+    getCourses: function getCourses() {
+      var _this5 = this;
+
+      axios.get("/api/period/".concat(this.auth.id, "/?day_of_week=").concat(this.remainder)).then(function (_ref4) {
+        var data = _ref4.data;
+        _this5.courses = data;
+        !_this5.courses.length ? _this5.infoVisibility = false : _this5.infoVisibility = true;
+      });
+    },
+    getEvents: function getEvents(year, month) {
+      var _this6 = this;
+
+      this.events = [];
+      axios.get("/api/events/".concat(this.auth.id, "?year=").concat(year, "&month=").concat(month)).then(function (_ref5) {
+        var _this6$events;
+
+        var data = _ref5.data;
+
+        (_this6$events = _this6.events).push.apply(_this6$events, _toConsumableArray(data));
+      });
+    },
     getDateOfEvent: function getDateOfEvent(date) {
       var item = new Date(date);
       var month = item.getMonth() + 1;
       return item.getFullYear() + '/' + month + '/' + item.getDate();
     },
+    getMonth: function getMonth(item) {
+      var date = new Date(item);
+      return date.getMonth() + 1;
+    },
+    getDate: function getDate(item) {
+      var date = new Date(item);
+      return date.getDate();
+    },
     getSetting: function getSetting() {
-      var _this4 = this;
+      var _this7 = this;
 
-      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref3) {
-        var data = _ref3.data;
-        _this4.setting = data;
+      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref6) {
+        var data = _ref6.data;
+        _this7.setting = data;
       });
     },
     getPeriodTime: function getPeriodTime() {
-      var _this5 = this;
+      var _this8 = this;
 
       return this.courses.map(function (course) {
-        return _this5.setting.periods[course.period - 1];
+        return _this8.setting.periods[course.period - 1];
       });
+    },
+    splitParams: function splitParams(param) {
+      param = param.split('&');
+      var obj = {};
+
+      for (var i = 0; i < param.length; i++) {
+        var item = param[i].split('=');
+        obj[item[0]] = item[1];
+      }
+
+      return obj;
     },
     toggleInfoVisibility: function toggleInfoVisibility() {
       this.infoVisibility = !this.infoVisibility;
@@ -3968,32 +4048,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this6 = this;
+    var _this9 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var params;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(!_this6.day || !_this6.month)) {
-                _context.next = 4;
+              _context.next = 2;
+              return _this9.getSetting();
+
+            case 2:
+              _context.next = 4;
+              return _this9.splitParams(location.search.substring(1));
+
+            case 4:
+              params = _context.sent;
+
+              if (!(!params.month || !params.year)) {
+                _context.next = 8;
                 break;
               }
 
-              _this6.$router.push('/calendar');
+              _this9.$router.push('/calendar');
 
-              _context.next = 8;
-              break;
-
-            case 4:
-              _context.next = 6;
-              return _this6.getSetting();
-
-            case 6:
-              _this6.currentMonth = _this6.month;
-              !_this6.courses.length ? _this6.infoVisibility = false : _this6.infoVisibility = true;
+              return _context.abrupt("return");
 
             case 8:
+              _this9.month = params.month;
+              _this9.year = params.year;
+              _this9.day = params.day;
+              _this9.currentMonth = _this9.month;
+              _this9.remainder = params.remainder; // this.getEvents(this.year, this.month);
+
+              _this9.getCourses();
+
+              _this9.getAssignments();
+
+            case 15:
             case "end":
               return _context.stop();
           }
@@ -4191,22 +4284,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       var assignments = this.findAssignment(this.currentMonth, day);
       var events = this.findEvent(day);
-      this.$router.push({
-        name: 'calendar-detail',
-        params: {
-          courses: items,
-          day: day,
-          month: this.currentMonth,
-          year: this.currentYear,
-          assignments: assignments,
-          events: events
-        }
-      });
+      this.$router.push("/calendar/detail?year=".concat(this.currentYear, "&month=").concat(this.currentMonth, "&day=").concat(day, "&remainder=").concat(remainder)); //this.$router.push({name: 'calendar-detail', params: {courses: items, day: day, month: this.currentMonth, year: this.currentYear, assignments: assignments, events: events}});
     },
     getAssignments: function getAssignments() {
       var _this2 = this;
 
-      axios.get("/api/course/assignments?user=".concat(this.auth.id)).then(function (_ref2) {
+      axios.get("/api/course/assignments/u/".concat(this.auth.id)).then(function (_ref2) {
         var data = _ref2.data;
         var items = data.filter(function (d) {
           return d.done_flg === 1;
@@ -4736,8 +4819,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getAssignments: function getAssignments() {
       var _this2 = this;
 
-      axios.get("/api/course/assignments?course=".concat(this.course.id)).then(function (_ref2) {
+      axios.get("/api/course/assignments/c/".concat(this.course.id)).then(function (_ref2) {
         var data = _ref2.data;
+        console.log(data);
         data.forEach(function (da) {
           _this2.assignments.push(_objectSpread(_objectSpread({}, da), {}, {
             'date': _this2.getDateOfAssignment(da.date)
@@ -107017,12 +107101,24 @@ var render = function() {
                               staticClass: "calendar-detail-info-course-block",
                               style: { backgroundColor: course.course.color }
                             }),
-                            _vm._v(
-                              "\n                                " +
-                                _vm._s(course.course.name) +
-                                "\n                            "
+                            _vm._v(" "),
+                            _c(
+                              "router-link",
+                              {
+                                attrs: {
+                                  to:
+                                    "/timetable/detail?course=" +
+                                    course.course.id +
+                                    "&day=" +
+                                    course.day_of_week +
+                                    "&period=" +
+                                    course.period
+                                }
+                              },
+                              [_vm._v(_vm._s(course.course.name))]
                             )
-                          ]
+                          ],
+                          1
                         )
                       ])
                     ])

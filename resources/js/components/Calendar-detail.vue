@@ -26,7 +26,7 @@
                                 </p>
                                 <p class="calendar-detail-info-course">
                                     <span class="calendar-detail-info-course-block" :style="{backgroundColor: course.course.color}"></span>
-                                    {{course.course.name}}
+                                    <router-link :to="'/timetable/detail?course=' + course.course.id + '&day=' + course.day_of_week + '&period=' + course.period">{{course.course.name}}</router-link>
                                 </p>
                             </div>
                         </li>
@@ -89,13 +89,11 @@ export default {
         EventAddButton,
         MyHeader,
     },
-    props: ['day', 'month', 'year', 'courses', 'assignments', 'events'],
     data: function(){
         return{
-            weeks: ['日', '月', '火', '水', '木', '金', '土'],
-            setting: {},
-            infoVisibility: false,
-            modalVisibility: false,
+            assignments: [],
+            courses: [],
+            day: '',
             deleteModalVisibility: false,
             defaultEventForm: {
                 title: '',
@@ -107,9 +105,17 @@ export default {
                 location: '',
                 color: '#B6ABE4'
             },
+            deleteInfo: {},
+            events: {},
             eventForm: {},
             eventsInfo: this.events,
-            deleteInfo: {}
+            infoVisibility: false,
+            modalVisibility: false,
+            month: '',
+            remainder: '',
+            setting: {},
+            weeks: ['日', '月', '火', '水', '木', '金', '土'],
+            year: '',
         }
     },
     computed: {
@@ -186,10 +192,45 @@ export default {
                 this.addEvent(form);
             }
         },
+        getAssignments: function(){
+            axios.get(`/api/course/assignments/u/${this.auth.id}/?year=${this.year}&month=${this.month}&day=${this.day}`)
+                .then(({data}) => {
+                    var items = data.filter(d => d.done_flg === 1);
+                    items.forEach(d => {
+                        this.assignments.push({
+                            ...d,
+                            month: this.getMonth(d.date),
+                            date: this.getDate(d.date)
+                        })
+                    })
+                })
+        },
+        getCourses: function(){
+            axios.get(`/api/period/${this.auth.id}/?day_of_week=${this.remainder}`)
+                .then(({data}) => {
+                    this.courses = data;
+                    !this.courses.length ? this.infoVisibility = false : this.infoVisibility = true;
+                })
+        },
+        getEvents: function(year, month){
+            this.events = [];
+            axios.get(`/api/events/${this.auth.id}?year=${year}&month=${month}`)
+            .then(({data}) => {
+                this.events.push(...data);
+            })
+        },
         getDateOfEvent: function(date){
             var item = new Date(date);
             var month = item.getMonth() + 1;
             return item.getFullYear() + '/' + month + '/' + item.getDate();
+        },
+        getMonth: function(item){
+            var date = new Date(item);
+            return date.getMonth() + 1;
+        },
+        getDate: function(item){
+            var date = new Date(item);
+            return date.getDate();
         },
         getSetting: function(){
             axios.get(`/api/user/setting/${this.auth.id}`).then(({data}) => {
@@ -200,6 +241,15 @@ export default {
             return this.courses.map(course => {
                 return this.setting.periods[course.period - 1];
             });
+        },
+        splitParams: function(param){
+            param = param.split('&');
+            var obj = {};
+            for(var i = 0; i < param.length; i++){
+                var item = param[i].split('=');
+                obj[item[0]] = item[1];
+            }
+            return obj;
         },
         toggleInfoVisibility: function(){
             this.infoVisibility = !this.infoVisibility;
@@ -221,13 +271,24 @@ export default {
         }
     },
     async mounted(){
-        if(!this.day || !this.month){
+        await this.getSetting();
+        const params = await this.splitParams(location.search.substring(1));
+
+        if(!params.month || !params.year){
             this.$router.push('/calendar');
-        }else{
-            await this.getSetting();
-            this.currentMonth = this.month;
-            !this.courses.length ? this.infoVisibility = false : this.infoVisibility = true;
+            return;
         }
+
+        this.month = params.month;
+        this.year = params.year;
+        this.day = params.day;
+        this.currentMonth = this.month;
+        this.remainder = params.remainder;
+
+        // this.getEvents(this.year, this.month);
+        this.getCourses();
+        this.getAssignments();
+
     }
 }
 </script>

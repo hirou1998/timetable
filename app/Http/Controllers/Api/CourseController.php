@@ -9,11 +9,6 @@ use App\User;
 
 class CourseController extends Controller
 {
-    // public function index(Course $course, User $user)
-    // {
-    //     return $course->where('user_id', $user->id)->orderby('period')->orderby('day_of_week')->get();
-    // }
-
     public function index(Course $course, Request $request)
     {
         $courseId = $request->course;
