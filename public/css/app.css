@@ -16209,6 +16209,10 @@ a:hover {
   border-bottom: solid 2px #707070;
 }
 
+.calendar-detail-info a {
+  color: #888282;
+}
+
 .calendar-detail-info-period {
   flex: 1;
   margin-bottom: 0;
