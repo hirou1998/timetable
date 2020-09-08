@@ -14,6 +14,17 @@ class EventController extends Controller
     {
         if(!$request->month || !$request->year){
             return response()->json([]);
+        }else{
+            if($request->day){
+                $date = date('Y-m-d', mktime(0, 0, 0, $request->month, $request->day, $request->year));
+
+                return $user->events()
+                        ->where(function($query) use ($date){
+                            $query->where('start_day', $date)
+                            ->orWhere('end_day', $date);
+                        })
+                        ->orderby('start_day')->get();
+            }
         }
 
         $nextMonth = intval($request->month) + 1;

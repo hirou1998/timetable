@@ -116,7 +116,7 @@ export default {
                 'location': form.location
             })
             .then(({data}) => {
-                console.log(data);
+                console.log(data);Ω
                 this.events.push(data);
                 this.modalVisibility = false;
             })

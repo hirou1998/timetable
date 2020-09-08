@@ -3860,7 +3860,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       deleteInfo: {},
       events: {},
       eventForm: {},
-      eventsInfo: this.events,
       infoVisibility: false,
       modalVisibility: false,
       month: '',
@@ -3900,7 +3899,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var data = _ref.data;
         console.log(data);
 
-        _this.eventsInfo.push(data);
+        _this.events.push(data);
 
         _this.modalVisibility = false;
       })["catch"](function (err) {
@@ -3913,7 +3912,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var target = this.deleteInfo.id;
       axios["delete"]("/".concat(this.auth.id, "/event/").concat(target)).then(function (data) {
         console.log(data);
-        _this2.eventsInfo = _this2.eventsInfo.filter(function (event) {
+        _this2.events = _this2.events.filter(function (event) {
           return event.id !== target;
         });
         _this2.deleteModalVisibility = false;
@@ -3937,7 +3936,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           'location': form.location
         }).then(function (_ref2) {
           var data = _ref2.data;
-          _this3.eventsInfo = _this3.eventsInfo.map(function (event) {
+          _this3.events = _this3.events.map(function (event) {
             if (event.id === data.id) {
               return data;
             } else {
@@ -3977,16 +3976,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         !_this5.courses.length ? _this5.infoVisibility = false : _this5.infoVisibility = true;
       });
     },
-    getEvents: function getEvents(year, month) {
+    getEvents: function getEvents(year, month, day) {
       var _this6 = this;
 
       this.events = [];
-      axios.get("/api/events/".concat(this.auth.id, "?year=").concat(year, "&month=").concat(month)).then(function (_ref5) {
+      axios.get("/api/events/".concat(this.auth.id, "?year=").concat(year, "&month=").concat(month, "&day=").concat(day)).then(function (_ref5) {
         var _this6$events;
 
         var data = _ref5.data;
 
         (_this6$events = _this6.events).push.apply(_this6$events, _toConsumableArray(data));
+
+        console.log(data);
       });
     },
     getDateOfEvent: function getDateOfEvent(date) {
@@ -4080,13 +4081,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _this9.year = params.year;
               _this9.day = params.day;
               _this9.currentMonth = _this9.month;
-              _this9.remainder = params.remainder; // this.getEvents(this.year, this.month);
+              _this9.remainder = params.remainder;
+
+              _this9.getEvents(_this9.year, _this9.month, _this9.day);
 
               _this9.getCourses();
 
               _this9.getAssignments();
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
@@ -4255,6 +4258,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).then(function (_ref) {
         var data = _ref.data;
         console.log(data);
+        Ω;
 
         _this.events.push(data);
 
@@ -107144,7 +107148,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "ul",
-            _vm._l(_vm.eventsInfo, function(event) {
+            _vm._l(_vm.events, function(event) {
               return _c("calendar-item", {
                 key: event.id,
                 attrs: { event: event },

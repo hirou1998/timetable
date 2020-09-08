@@ -44,7 +44,7 @@
                 </ul>
                 <ul>
                     <calendar-item 
-                        v-for="event in eventsInfo"
+                        v-for="event in events"
                         :key="event.id"
                         :event="event"
                         @open="toggleModal"
@@ -108,7 +108,6 @@ export default {
             deleteInfo: {},
             events: {},
             eventForm: {},
-            eventsInfo: this.events,
             infoVisibility: false,
             modalVisibility: false,
             month: '',
@@ -145,7 +144,7 @@ export default {
             })
             .then(({data}) => {
                 console.log(data);
-                this.eventsInfo.push(data);
+                this.events.push(data);
                 this.modalVisibility = false;
             })
             .catch((err) => {
@@ -157,7 +156,7 @@ export default {
             axios.delete(`/${this.auth.id}/event/${target}`)
             .then((data) => {
                 console.log(data);
-                this.eventsInfo = this.eventsInfo.filter(event => event.id !== target);
+                this.events = this.events.filter(event => event.id !== target);
                 this.deleteModalVisibility = false;
                 this.deleteInfo = {};
             })
@@ -176,7 +175,7 @@ export default {
                     'location': form.location
                 })
                 .then(({data}) => {
-                    this.eventsInfo = this.eventsInfo.map(event => {
+                    this.events = this.events.map(event => {
                         if(event.id === data.id){
                             return data
                         }else{
@@ -212,11 +211,12 @@ export default {
                     !this.courses.length ? this.infoVisibility = false : this.infoVisibility = true;
                 })
         },
-        getEvents: function(year, month){
+        getEvents: function(year, month, day){
             this.events = [];
-            axios.get(`/api/events/${this.auth.id}?year=${year}&month=${month}`)
+            axios.get(`/api/events/${this.auth.id}?year=${year}&month=${month}&day=${day}`)
             .then(({data}) => {
                 this.events.push(...data);
+                console.log(data)
             })
         },
         getDateOfEvent: function(date){
@@ -285,7 +285,7 @@ export default {
         this.currentMonth = this.month;
         this.remainder = params.remainder;
 
-        // this.getEvents(this.year, this.month);
+        this.getEvents(this.year, this.month, this.day);
         this.getCourses();
         this.getAssignments();
 
