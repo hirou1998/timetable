@@ -3897,7 +3897,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'location': form.location
       }).then(function (_ref) {
         var data = _ref.data;
-        console.log(data);
 
         _this.events.push(data);
 
@@ -3911,7 +3910,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var target = this.deleteInfo.id;
       axios["delete"]("/".concat(this.auth.id, "/event/").concat(target)).then(function (data) {
-        console.log(data);
         _this2.events = _this2.events.filter(function (event) {
           return event.id !== target;
         });
@@ -3986,8 +3984,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var data = _ref5.data;
 
         (_this6$events = _this6.events).push.apply(_this6$events, _toConsumableArray(data));
-
-        console.log(data);
       });
     },
     getDateOfEvent: function getDateOfEvent(date) {
@@ -4257,8 +4253,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'location': form.location
       }).then(function (_ref) {
         var data = _ref.data;
-        console.log(data);
-        Ω;
 
         _this.events.push(data);
 
@@ -4825,7 +4819,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       axios.get("/api/course/assignments/c/".concat(this.course.id)).then(function (_ref2) {
         var data = _ref2.data;
-        console.log(data);
         data.forEach(function (da) {
           _this2.assignments.push(_objectSpread(_objectSpread({}, da), {}, {
             'date': _this2.getDateOfAssignment(da.date)
@@ -4919,7 +4912,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'period': ''
       });
     },
-    save: function save() {
+    getFormData: function getFormData() {
       var _this3 = this;
 
       this.formData.teacher = this.$refs['teacherName'].value;
@@ -4933,6 +4926,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           period: Array.from(_this3.$refs[pKey])[0].value
         });
       });
+    },
+    save: function save() {
+      var _this4 = this;
+
+      this.getFormData();
       axios.post("/course/update/".concat(this.course.id), {
         'name': this.formData.name,
         'teacher': this.formData.teacher,
@@ -4940,12 +4938,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'periods': this.formData.periods
       }).then(function (_ref3) {
         var data = _ref3.data;
-        _this3.isEditing = false;
+        _this4.isEditing = false;
       });
     },
     register: function register() {
-      var _this4 = this;
+      var _this5 = this;
 
+      this.getFormData();
       axios.post("/course/register/".concat(this.auth.id), {
         'name': this.formData.name,
         'teacher': this.formData.teacher,
@@ -4954,16 +4953,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).then(function (_ref4) {
         var data = _ref4.data;
 
-        _this4.backToTimetable();
+        _this5.backToTimetable();
       })["catch"](function (err) {
         console.log(err);
       });
     },
     findPeriod: function findPeriod() {
-      var _this5 = this;
+      var _this6 = this;
 
       return this.course.periods.filter(function (p) {
-        return p.day_of_week === _this5.selected.day && p.period === _this5.selected.period;
+        return p.day_of_week === _this6.selected.day && p.period === _this6.selected.period;
       });
     },
     toggleDeleteModal: function toggleDeleteModal() {
@@ -4973,10 +4972,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$router.push('/timetable');
     },
     deleteCourse: function deleteCourse() {
-      var _this6 = this;
+      var _this7 = this;
 
       axios["delete"]("/period/".concat(this.periodInfo.id)).then(function () {
-        _this6.backToTimetable();
+        _this7.backToTimetable();
       });
     },
     addAssignment: function addAssignment(date) {
@@ -4999,12 +4998,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     updateAssignment: function updateAssignment(data) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.assignments = this.assignments.map(function (a) {
         if (a.id === data.id) {
           return a = _objectSpread(_objectSpread({}, data), {}, {
-            'date': _this7.getDateOfAssignment(data.date)
+            'date': _this8.getDateOfAssignment(data.date)
           });
         } else {
           return a;
@@ -5023,7 +5022,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this8 = this;
+    var _this9 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5031,14 +5030,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return axios.get("/api/user/setting/".concat(_this8.auth.id)).then(function (_ref5) {
+              return axios.get("/api/user/setting/".concat(_this9.auth.id)).then(function (_ref5) {
                 var data = _ref5.data;
-                _this8.setting = data;
+                _this9.setting = data;
               });
 
             case 2:
               _context2.next = 4;
-              return _this8.getCourse();
+              return _this9.getCourse();
 
             case 4:
             case "end":
@@ -5790,10 +5789,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     findCourse: function findCourse(day_index, period) {
       return this.courses.find(function (course) {
-        return course.day_of_week === day_index + 1 && course.period === period;
+        return course.day_of_week === day_index && course.period === period;
       });
     },
-    exitsCourse: function exitsCourse(day_index, period) {
+    existsCourse: function existsCourse(day_index, period) {
       return this.findCourse(day_index, period) ? true : false;
     },
     registerCourse: function registerCourse(day, period) {
@@ -109182,14 +109181,14 @@ var render = function() {
                 _vm._v(" "),
                 _vm._l(_vm.dayOfWeek, function(day, day_index) {
                   return [
-                    _vm.exitsCourse(day_index, period)
+                    _vm.existsCourse(day_index + 1, period)
                       ? _c(
                           "td",
                           { key: day + period, staticClass: "course-panel" },
                           [
                             _c("course", {
                               attrs: {
-                                course: _vm.findCourse(day_index, period)
+                                course: _vm.findCourse(day_index + 1, period)
                               }
                             })
                           ],
@@ -109200,7 +109199,7 @@ var render = function() {
                           staticClass: "course-panel",
                           on: {
                             click: function($event) {
-                              return _vm.registerCourse(day_index, period)
+                              return _vm.registerCourse(day_index + 1, period)
                             }
                           }
                         })

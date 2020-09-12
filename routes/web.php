@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function(){
         return view('timetable.index');
     })->name('calendar.detail');
     Route::post('/course/update/{course}', 'CourseController@update');
-    Route::post('/course/register/{user}', 'CourseController@store')->name('course.store');
+    Route::post('/course/register/{user}', 'CourseController@store');
     Route::put('/course/color/{course}', 'CourseController@changeColor');
     Route::delete('/period/{period}', 'PeriodController@destroy');
     Route::resource('/{course}/assignment', 'AssignmentController');

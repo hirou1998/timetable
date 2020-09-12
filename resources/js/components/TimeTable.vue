@@ -17,15 +17,15 @@
                 <td class="course-period-panel">{{period}}</td>
                 <template v-for="(day, day_index) in dayOfWeek">
                     <td 
-                        v-if="exitsCourse(day_index, period)" 
+                        v-if="existsCourse(day_index + 1, period)" 
                         :key="day + period" 
                         class="course-panel">
-                        <course :course="findCourse(day_index, period)" />
+                        <course :course="findCourse(day_index + 1, period)" />
                     </td>
                     <td 
                         v-else 
                         :key="day + period"  
-                        @click="registerCourse(day_index, period)"
+                        @click="registerCourse(day_index + 1, period)"
                         class="course-panel"></td>
                 </template>
             </tr>
@@ -59,9 +59,9 @@ export default {
     },
     methods: {
         findCourse: function(day_index, period){
-            return this.courses.find(course => course.day_of_week === day_index + 1 && course.period === period);
+            return this.courses.find(course => course.day_of_week === day_index && course.period === period);
         },
-        exitsCourse: function(day_index, period){
+        existsCourse: function(day_index, period){
             return this.findCourse(day_index, period) ? true : false;
         },
         registerCourse: function(day, period){

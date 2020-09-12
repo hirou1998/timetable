@@ -15560,9 +15560,14 @@ a:hover {
 }
 
 .course-panel-name {
-  text-align: center;
-  font-size: 0.8rem;
+  overflow: hidden;
+  text-align: left;
+  font-size: 0.6rem;
   margin: 0;
+  height: 9.2vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .course-panel-color-label {
