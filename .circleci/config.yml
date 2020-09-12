@@ -9,4 +9,10 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.3-node-browsers
     steps:
-      - run: echo "Hello World"
+      - checkout
+      - run: composer install -n --prefer-dist
+      - run: npm ci
+      - run: npm run dev
+      - run:
+        name: php test
+        command: vendor/bin/phpunit
