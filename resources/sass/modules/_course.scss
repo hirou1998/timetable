@@ -40,9 +40,14 @@
 			background: #fff;
 		}
 		&-name{
-			text-align: center;
-			font-size: .8rem;
+			overflow: hidden;
+			text-align: left;
+			font-size: .6rem;
 			margin: 0;
+			height: 9.2vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 		&-color-label{
 			position: absolute;

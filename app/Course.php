@@ -23,6 +23,11 @@ class Course extends Model
 
     public function updatePeriod($course, $request)
     {
+
+        if(!$request){
+            return false;
+        }
+        
         $periodsCount = $course->getPeriodsCountAttribute();
         $requestPeriodCount = count($request->periods);
 

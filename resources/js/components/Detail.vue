@@ -187,7 +187,6 @@ export default {
         getAssignments: function(){
             axios.get(`/api/course/assignments/c/${this.course.id}`)
                 .then(({data}) => {
-                    console.log(data)
                     data.forEach(da => {
                         this.assignments.push({
                             ...da,
@@ -275,7 +274,7 @@ export default {
                 'period': ''
             });
         },
-        save: function(){
+        getFormData(){
             this.formData.teacher = this.$refs['teacherName'].value;
             this.formData.type = this.$refs['courseType'].value;
             this.formData.name = this.$refs['courseName'].value;
@@ -284,6 +283,9 @@ export default {
                 var pKey = 'period' + index;
                 return {...period, day_of_week: Array.from(this.$refs[dKey])[0].value, period: Array.from(this.$refs[pKey])[0].value}
             });
+        },
+        save: function(){
+            this.getFormData();
             axios.post(`/course/update/${this.course.id}`, {
                 'name': this.formData.name,
                 'teacher': this.formData.teacher,
@@ -294,6 +296,7 @@ export default {
             });
         },
         register: function(){
+            this.getFormData();
             axios.post(`/course/register/${this.auth.id}`, {
                 'name': this.formData.name,
                 'teacher': this.formData.teacher,

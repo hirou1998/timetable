@@ -143,7 +143,6 @@ export default {
                 'location': form.location
             })
             .then(({data}) => {
-                console.log(data);
                 this.events.push(data);
                 this.modalVisibility = false;
             })
@@ -155,7 +154,6 @@ export default {
             var target = this.deleteInfo.id
             axios.delete(`/${this.auth.id}/event/${target}`)
             .then((data) => {
-                console.log(data);
                 this.events = this.events.filter(event => event.id !== target);
                 this.deleteModalVisibility = false;
                 this.deleteInfo = {};
@@ -216,7 +214,6 @@ export default {
             axios.get(`/api/events/${this.auth.id}?year=${year}&month=${month}&day=${day}`)
             .then(({data}) => {
                 this.events.push(...data);
-                console.log(data)
             })
         },
         getDateOfEvent: function(date){
