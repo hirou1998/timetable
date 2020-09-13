@@ -1,0 +1,70 @@
+.main-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.top-container{
+    width: 90%;
+    margin: 0 auto;
+}
+.top-image{
+    margin: 5vh 0;
+    text-align: center;
+
+    img{
+        transform: translate(-4vw, 0);
+        width: 40%;
+    }
+}
+.top-title{
+    font-size: 1.6rem;
+    font-weight: normal;
+    text-align: center;
+    color: $text-color;
+    margin-bottom: 5vh;
+}
+.top-button{
+    display: block;
+    border-radius: 20px;
+    box-shadow: 0 6px 10px #b3b3b3;
+    margin: 2vh auto;
+    border: none;
+    text-align: center;
+}
+.top-signup{
+    background-color: #fff;
+    width: 90%;
+    padding: 2vh 0;
+}
+.top-login{
+    background-color: $main-color;
+    color: #fff;
+    width: 90%;
+    padding: 2vh 0;
+}
+
+.form-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: $off-white;
+}
+.submit-button{
+    display: block;
+    background-color: $main-color;
+    color: #fff;
+    padding: 1vh 10vw;
+}
+.form-block{
+    width: 90%;
+}
+.form-button-block{
+    margin-top: 5vh;
+}
+.register-text{
+    font-size: .8rem;
+    color: $text-color;
+    margin-bottom: 5vh;
+}

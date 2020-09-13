@@ -5157,10 +5157,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 Object(vee_validate__WEBPACK_IMPORTED_MODULE_1__["extend"])('required', _objectSpread(_objectSpread({}, vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__["required"]), {}, {
@@ -5251,6 +5247,32 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5556,9 +5578,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 
 
 Object(vee_validate__WEBPACK_IMPORTED_MODULE_1__["extend"])('required', _objectSpread(_objectSpread({}, vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__["required"]), {}, {
@@ -5666,7 +5685,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
-//
 //
 //
 //
@@ -5820,6 +5838,21 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -107984,271 +108017,206 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("main", [
-      _c("div", { staticClass: "container" }, [
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-            _c("div", { staticClass: "card mt-3" }, [
-              _c("div", { staticClass: "card-header text-center" }, [
-                _vm._v("ログイン")
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "card-body" },
-                [
-                  _c("ValidationObserver", {
-                    ref: "observer",
-                    staticClass: "form-horizontal",
-                    attrs: {
-                      action: "/login",
-                      id: "login",
-                      method: "post",
-                      tag: "form"
-                    },
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.login()
-                      }
-                    },
-                    scopedSlots: _vm._u([
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var invalid = ref.invalid
-                          return [
-                            _c("input", {
-                              attrs: { type: "hidden", name: "_token" },
-                              domProps: { value: _vm.csrf }
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
+      _c(
+        "div",
+        { staticClass: "container form-container" },
+        [
+          _c("ValidationObserver", {
+            ref: "observer",
+            staticClass: "form-block",
+            attrs: {
+              action: "/login",
+              id: "login",
+              method: "post",
+              tag: "form"
+            },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.login()
+              }
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "default",
+                fn: function(ref) {
+                  var invalid = ref.invalid
+                  return [
+                    _c("input", {
+                      attrs: { type: "hidden", name: "_token" },
+                      domProps: { value: _vm.csrf }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: {
+                              name: "メールアドレス",
+                              rules: "required|email"
+                            },
+                            scopedSlots: _vm._u(
+                              [
                                 {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "email" }
-                                },
-                                [_vm._v("メールアドレス")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "メールアドレス",
-                                      rules: "required|email"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
-                                        {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value: _vm.email,
-                                                    expression: "email"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "email",
-                                                  type: "email"
-                                                },
-                                                domProps: { value: _vm.email },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.email =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
-                                          }
-                                        }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "password" }
-                                },
-                                [_vm._v("パスワード")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "パスワード",
-                                      rules: "required"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
-                                        {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value: _vm.password,
-                                                    expression: "password"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "password",
-                                                  type: "password"
-                                                },
-                                                domProps: {
-                                                  value: _vm.password
-                                                },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.password =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
-                                          }
-                                        }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6 col-md-offset-4" },
-                                [
-                                  _c("div", { staticClass: "checkbox" }, [
-                                    _c("label", [
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
                                       _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.email,
+                                            expression: "email"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
                                         attrs: {
-                                          type: "checkbox",
-                                          name: "remember"
+                                          name: "email",
+                                          type: "email",
+                                          placeholder: "メールアドレス"
+                                        },
+                                        domProps: { value: _vm.email },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.email = $event.target.value
+                                          }
                                         }
                                       }),
-                                      _vm._v(
-                                        " ログインを継続する\n                      "
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
                                       )
-                                    ])
-                                  ])
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "div",
-                                { staticClass: "col-md-8 col-md-offset-4" },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-primary",
-                                      attrs: { type: "submit" }
-                                    },
-                                    [_vm._v("ログイン")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "btn btn-link",
-                                      attrs: { href: "" }
-                                    },
-                                    [_vm._v("パスワードをお忘れですか?")]
-                                  )
-                                ]
-                              )
-                            ])
-                          ]
-                        }
-                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: { name: "パスワード", rules: "required" },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.password,
+                                            expression: "password"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
+                                        attrs: {
+                                          name: "password",
+                                          type: "password",
+                                          placeholder: "パスワード"
+                                        },
+                                        domProps: { value: _vm.password },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.password = $event.target.value
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group form-button-block" }, [
+                      _c("div", { staticClass: "col-md-8 col-md-offset-4" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn submit-button top-button",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("ログイン")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "text-center" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-link",
+                              attrs: { href: "" }
+                            },
+                            [_vm._v("パスワードをお忘れですか?")]
+                          )
+                        ])
+                      ])
                     ])
-                  })
-                ],
-                1
-              )
+                  ]
+                }
+              }
             ])
-          ])
-        ])
-      ])
+          })
+        ],
+        1
+      )
     ])
   ])
 }
@@ -108303,14 +108271,14 @@ var render = function() {
     [
       _c("setting-head", {
         attrs: {
-          name: "ユーザー情報",
+          name: "マイページ",
           link: "setting",
           "option-button-visibility": !_vm.isEditing
         },
         on: { edit: _vm.toggleEditing }
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "setting-body" }, [
+      _c("div", { staticClass: "setting-body mypage-body" }, [
         _c("div", { staticClass: "setting-edit-block" }, [
           _c(
             "div",
@@ -108342,80 +108310,89 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c("ul", { staticClass: "setting-list-container" }, [
-          _c(
-            "li",
-            { staticClass: "setting-list setting-list-name" },
-            [
-              _c("div", { staticClass: "user-info-item" }, [
-                _vm._v("ユーザー名")
-              ]),
-              _vm._v(" "),
-              [
-                !_vm.isEditing
-                  ? _c("div", { staticClass: "user-info" }, [
-                      _vm._v(_vm._s(_vm.userInfo.name))
-                    ])
-                  : _c("input", {
-                      ref: "username",
-                      staticClass: "form-control user-info",
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.userInfo.name }
-                    })
-              ]
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            { staticClass: "setting-list setting-list-name" },
-            [
-              _c("div", { staticClass: "user-info-item" }, [
-                _vm._v("メールアドレス")
-              ]),
-              _vm._v(" "),
-              [
-                !_vm.isEditing
-                  ? _c("div", { staticClass: "user-info" }, [
-                      _vm._v(_vm._s(_vm.userInfo.email))
-                    ])
-                  : _c("input", {
-                      ref: "email",
-                      staticClass: "form-control user-info",
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.userInfo.email }
-                    })
-              ]
-            ],
-            2
-          )
+        _c("div", { staticClass: "mypage-head" }, [
+          _c("h2", { staticClass: "mypage-name" }, [
+            _vm._v(_vm._s(_vm.userInfo.name))
+          ])
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "btn-password-reset-container" },
-          [
+        _c("ul", { staticClass: "setting-list-container" }, [
+          _c("li", { staticClass: "setting-list" }, [
+            _vm._m(0),
+            _vm._v(" "),
             _c(
-              "router-link",
-              { attrs: { to: "/setting/user/password-reset" } },
+              "div",
+              { staticClass: "setting-list-name" },
               [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-danger btn-password-reset" },
-                  [_vm._v("パスワードを変更する")]
-                )
-              ]
+                _c("router-link", { attrs: { to: "" } }, [
+                  _vm._v("\n            年度/学期切替\n          ")
+                ])
+              ],
+              1
             )
-          ],
-          1
-        )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "setting-list" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "setting-list-name" },
+              [
+                _c("router-link", { attrs: { to: "" } }, [
+                  _vm._v("\n            プロフィール詳細編集\n          ")
+                ])
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "setting-list" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "setting-list-name" },
+              [
+                _c("router-link", { attrs: { to: "" } }, [
+                  _vm._v("\n            メモ\n          ")
+                ])
+              ],
+              1
+            )
+          ])
+        ])
       ])
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "setting-list-icon" }, [
+      _c("img", { attrs: { src: "/images/reverse.png", alt: "" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "setting-list-icon" }, [
+      _c("img", { attrs: { src: "/images/setting-colored.png", alt: "" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "setting-list-icon" }, [
+      _c("img", { attrs: { src: "/images/memo.png", alt: "" } })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -108537,413 +108514,346 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("main", [
-      _c("div", { staticClass: "container" }, [
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-            _c("div", { staticClass: "card mt-3" }, [
-              _c("div", { staticClass: "card-header text-center" }, [
-                _vm._v("ユーザー登録")
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "card-body" },
-                [
-                  _c("ValidationObserver", {
-                    ref: "observer",
-                    staticClass: "form-horizontal",
-                    attrs: {
-                      action: "/register",
-                      id: "register",
-                      method: "post",
-                      tag: "form"
-                    },
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.register()
-                      }
-                    },
-                    scopedSlots: _vm._u([
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var invalid = ref.invalid
-                          return [
-                            _c("input", {
-                              attrs: { type: "hidden", name: "_token" },
-                              domProps: { value: _vm.csrf }
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
+      _c(
+        "div",
+        { staticClass: "container form-container" },
+        [
+          _c("ValidationObserver", {
+            ref: "observer",
+            staticClass: "form-block",
+            attrs: {
+              action: "/register",
+              id: "register",
+              method: "post",
+              tag: "form"
+            },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.register()
+              }
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "default",
+                fn: function(ref) {
+                  var invalid = ref.invalid
+                  return [
+                    _c("input", {
+                      attrs: { type: "hidden", name: "_token" },
+                      domProps: { value: _vm.csrf }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "register-text" }, [
+                      _vm._v("時間割アプリへようこそ")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: { name: "名前", rules: "required|max:20" },
+                            scopedSlots: _vm._u(
+                              [
                                 {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "name" }
-                                },
-                                [_vm._v("名前")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "名前",
-                                      rules: "required|max:20"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
-                                        {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value: _vm.name,
-                                                    expression: "name"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "name",
-                                                  type: "text"
-                                                },
-                                                domProps: { value: _vm.name },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.name =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.name,
+                                            expression: "name"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
+                                        attrs: {
+                                          name: "name",
+                                          type: "text",
+                                          placeholder: "ユーザー名"
+                                        },
+                                        domProps: { value: _vm.name },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.name = $event.target.value
                                           }
                                         }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "email" }
-                                },
-                                [_vm._v("メールアドレス")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "メールアドレス",
-                                      rules: "required|email"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
                                         {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value: _vm.email,
-                                                    expression: "email"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "email",
-                                                  type: "email"
-                                                },
-                                                domProps: { value: _vm.email },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.email =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: {
+                              name: "メールアドレス",
+                              rules: "required|email"
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.email,
+                                            expression: "email"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
+                                        attrs: {
+                                          name: "email",
+                                          type: "email",
+                                          placeholder: "メールアドレス"
+                                        },
+                                        domProps: { value: _vm.email },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.email = $event.target.value
                                           }
                                         }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "password" }
-                                },
-                                [_vm._v("パスワード")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "パスワード",
-                                      rules:
-                                        "required|min:8|confirmed:password_confirmation"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
                                         {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value: _vm.password,
-                                                    expression: "password"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "password",
-                                                  type: "password"
-                                                },
-                                                domProps: {
-                                                  value: _vm.password
-                                                },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.password =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: {
+                              name: "パスワード",
+                              rules:
+                                "required|min:8|confirmed:password_confirmation"
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.password,
+                                            expression: "password"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
+                                        attrs: {
+                                          name: "password",
+                                          type: "password",
+                                          placeholder: "パスワード"
+                                        },
+                                        domProps: { value: _vm.password },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.password = $event.target.value
                                           }
                                         }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "col-md-4 control-label",
-                                  attrs: { for: "password-confirm" }
-                                },
-                                [_vm._v("パスワード再確認")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6" },
-                                [
-                                  _c("validation-provider", {
-                                    attrs: {
-                                      name: "パスワード再確認",
-                                      rules: "required|min:8",
-                                      vid: "password_confirmation"
-                                    },
-                                    scopedSlots: _vm._u(
-                                      [
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
                                         {
-                                          key: "default",
-                                          fn: function(ref) {
-                                            var errors = ref.errors
-                                            return [
-                                              _c("input", {
-                                                directives: [
-                                                  {
-                                                    name: "model",
-                                                    rawName: "v-model",
-                                                    value:
-                                                      _vm.password_confirmation,
-                                                    expression:
-                                                      "password_confirmation"
-                                                  }
-                                                ],
-                                                staticClass: "form-control",
-                                                attrs: {
-                                                  name: "password_confirmation",
-                                                  type: "password"
-                                                },
-                                                domProps: {
-                                                  value:
-                                                    _vm.password_confirmation
-                                                },
-                                                on: {
-                                                  input: function($event) {
-                                                    if (
-                                                      $event.target.composing
-                                                    ) {
-                                                      return
-                                                    }
-                                                    _vm.password_confirmation =
-                                                      $event.target.value
-                                                  }
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                {
-                                                  directives: [
-                                                    {
-                                                      name: "show",
-                                                      rawName: "v-show",
-                                                      value: errors[0],
-                                                      expression: "errors[0]"
-                                                    }
-                                                  ],
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [_vm._v(_vm._s(errors[0]))]
-                                              )
-                                            ]
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6" },
+                        [
+                          _c("validation-provider", {
+                            attrs: {
+                              name: "パスワード再確認",
+                              rules: "required|min:8",
+                              vid: "password_confirmation"
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "default",
+                                  fn: function(ref) {
+                                    var errors = ref.errors
+                                    return [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.password_confirmation,
+                                            expression: "password_confirmation"
+                                          }
+                                        ],
+                                        staticClass: "form-control top-button",
+                                        attrs: {
+                                          name: "password_confirmation",
+                                          type: "password",
+                                          placeholder: "パスワード再確認"
+                                        },
+                                        domProps: {
+                                          value: _vm.password_confirmation
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.password_confirmation =
+                                              $event.target.value
                                           }
                                         }
-                                      ],
-                                      null,
-                                      true
-                                    )
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "div",
-                                { staticClass: "col-md-6 col-md-offset-4" },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-primary",
-                                      attrs: { type: "submit" }
-                                    },
-                                    [_vm._v("登録")]
-                                  )
-                                ]
-                              )
-                            ])
-                          ]
-                        }
-                      }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: errors[0],
+                                              expression: "errors[0]"
+                                            }
+                                          ],
+                                          staticClass: "alert alert-danger"
+                                        },
+                                        [_vm._v(_vm._s(errors[0]))]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group form-button-block" }, [
+                      _c("div", { staticClass: "col-md-6 col-md-offset-4" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn submit-button top-button",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("登録")]
+                        )
+                      ])
                     ])
-                  })
-                ],
-                1
-              )
+                  ]
+                }
+              }
             ])
-          ])
-        ])
-      ])
+          })
+        ],
+        1
+      )
     ])
   ])
 }
@@ -109060,11 +108970,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("h3", { staticClass: "setting-subtitle" }, [
-          _vm._v("ユーザー設定の変更")
-        ]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "setting-list-container" }, [
+        _c("ul", { staticClass: "setting-list-container mt-5" }, [
           _c("li", { staticClass: "setting-list" }, [
             _vm._m(2),
             _vm._v(" "),
@@ -109073,7 +108979,7 @@ var render = function() {
               { staticClass: "setting-list-name" },
               [
                 _c("router-link", { attrs: { to: "/setting/mypage" } }, [
-                  _vm._v("ユーザー情報")
+                  _vm._v("マイページ")
                 ])
               ],
               1
@@ -109238,9 +109144,43 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("top")])
+  return _c("main", { staticClass: "main-container" }, [
+    _c("div", { staticClass: "top-container" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("h1", { staticClass: "top-title" }, [_vm._v("時間割")]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "top-button-container" },
+        [
+          _c("router-link", { attrs: { to: "/register" } }, [
+            _c("button", { staticClass: "top-button top-signup" }, [
+              _vm._v("登録")
+            ])
+          ]),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/login" } }, [
+            _c("button", { staticClass: "top-button top-login" }, [
+              _vm._v("ログイン")
+            ])
+          ])
+        ],
+        1
+      )
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "top-image" }, [
+      _c("img", { attrs: { src: "/images/top.png", alt: "" } })
+    ])
+  }
+]
 render._withStripped = true
 
 

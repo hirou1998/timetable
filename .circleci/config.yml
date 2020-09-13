@@ -9,4 +9,14 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.3-node-browsers
     steps:
-      - run: echo "Hello World"
+      - checkout
+      - restore_cache: 
+          key: composer-v1-{{ checksum "composer.lock" }}
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - run: npm ci
+      - run: npm run dev
+      - run: vendor/bin/phpunit
