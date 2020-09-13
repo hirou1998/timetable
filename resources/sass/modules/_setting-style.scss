@@ -37,7 +37,8 @@
 }
 .setting-list-container{
 	background-color: #fff;
-	border: solid 1px $text-color;
+	border-top: solid 1px $text-color;
+	border-bottom: solid 1px $text-color;
 }
 .setting-list{
 	display: flex;
@@ -50,7 +51,7 @@
 	color: $text-color;
 
 	img{
-		width: 60%;
+		width: 50%;
 	}
 }
 .setting-list-icon-circle{
@@ -111,4 +112,8 @@
 .btn-password-reset{
 	display: block;
 	margin: 0 auto;
+}
+
+.mypage-body{
+	background-color: #fff;
 }
