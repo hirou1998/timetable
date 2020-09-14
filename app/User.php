@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Color::class);
     }
+
+    public function semesters()
+    {
+        return $this->hasMany(Semester::class);
+    }
 }

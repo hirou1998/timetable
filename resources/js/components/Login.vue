@@ -21,6 +21,13 @@
         >
           <input type="hidden" name="_token" :value="csrf" />
 
+          <div class="top-image">
+            <router-link to="/">
+              <img src="/images/top.png" alt="">
+            </router-link>
+          </div>
+          <h1 class="top-title">時間割</h1>
+
           <div class="form-group">
             <div class="col-md-6">
               <validation-provider

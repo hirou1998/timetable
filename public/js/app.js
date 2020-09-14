@@ -5157,6 +5157,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 Object(vee_validate__WEBPACK_IMPORTED_MODULE_1__["extend"])('required', _objectSpread(_objectSpread({}, vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__["required"]), {}, {
@@ -5471,6 +5478,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -108047,6 +108060,21 @@ var render = function() {
                       domProps: { value: _vm.csrf }
                     }),
                     _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "top-image" },
+                      [
+                        _c("router-link", { attrs: { to: "/" } }, [
+                          _c("img", {
+                            attrs: { src: "/images/top.png", alt: "" }
+                          })
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("h1", { staticClass: "top-title" }, [_vm._v("時間割")]),
+                    _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
                       _c(
                         "div",
@@ -108543,6 +108571,21 @@ var render = function() {
                       attrs: { type: "hidden", name: "_token" },
                       domProps: { value: _vm.csrf }
                     }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "top-image" },
+                      [
+                        _c("router-link", { attrs: { to: "/" } }, [
+                          _c("img", {
+                            attrs: { src: "/images/top.png", alt: "" }
+                          })
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("h1", { staticClass: "top-title" }, [_vm._v("時間割")]),
                     _vm._v(" "),
                     _c("p", { staticClass: "register-text" }, [
                       _vm._v("時間割アプリへようこそ")

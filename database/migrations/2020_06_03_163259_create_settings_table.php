@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->uuid('user_id');
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('edited')->default(false);
             $table->time('first_start_time');
             $table->time('first_end_time');
             $table->time('second_start_time');

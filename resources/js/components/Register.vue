@@ -22,6 +22,12 @@
               >
                 <input type="hidden" name="_token" :value="csrf">
 
+                <div class="top-image">
+                    <router-link to="/">
+                    <img src="/images/top.png" alt="">
+                    </router-link>
+                </div>
+                <h1 class="top-title">時間割</h1>
                 <p class="register-text">時間割アプリへようこそ</p>
 
                 <div class="form-group">
