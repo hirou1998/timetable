@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if($exception instanceof TokenMismatchExecption){
-            return redirect('/login')->with('message', 'セッションの有効期限が切れました。再度ログインしてください');
+            return redirect('/')->with('message', 'セッションの有効期限が切れました。再度ログインしてください');
         }
         return parent::render($request, $exception);
     }

@@ -44,9 +44,10 @@ export default {
     },
     data: function(){
         return{
+            courses: [],
             dayOfWeek: ['月', '火', '水', '木', '金', '土'],
             periods: [1 ,2, 3, 4, 5, 6],
-            courses: [],
+            setting: {}
         }
     },
     computed: {
@@ -58,6 +59,19 @@ export default {
         }
     },
     methods: {
+        async getCourses(semesterId){
+            axios.get(`api/period/${this.auth.id}/${semesterId}`)
+                .then(({data}) => {
+                    this.courses = data;
+                });
+        },
+        async getSetting(){
+            axios.get(`api/user/setting/${this.auth.id}`)
+                .then(({data}) => {
+                    this.setting = data;
+                    this.getCourses(data.semester_id);
+                });
+        },
         findCourse: function(day_index, period){
             return this.courses.find(course => course.day_of_week === day_index && course.period === period);
         },
@@ -69,10 +83,7 @@ export default {
         }
     },
     mounted(){
-        axios.get(`/api/period/${this.auth.id}`)
-            .then(({data}) => {
-                this.courses = data;
-            })
+        this.getSetting();
     }
 }
 </script>
