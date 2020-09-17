@@ -12,8 +12,9 @@ $factory->define(Setting::class, function (Faker $faker) {
         'user_id' => function(){
             return factory(User::class)->create()->id;
         },
-        'start_date' => '2020-04-07',
-        'end_date' => '2020-08-04',
+        'edited' => true,
+        'current_year' => '2020',
+        'current_semester' => '2学期',
         'first_start_time' => '09:00:00',
         'first_end_time' => '10:30:00',
         'second_start_time' => '10:40:00',
@@ -26,5 +27,7 @@ $factory->define(Setting::class, function (Faker $faker) {
         'fifth_end_time' => '18:00:00',
         'sixth_start_time' => '18:15:00',
         'sixth_end_time' => '19:45:00',
+        'enter_year' => '2017',
+        'graduation_year' => '2021'
     ];
 });

@@ -5758,8 +5758,16 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _modules_Course__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Course */ "./resources/js/components/modules/Course.vue");
-/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_Course__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Course */ "./resources/js/components/modules/Course.vue");
+/* harmony import */ var _modules_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/Header */ "./resources/js/components/modules/Header.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -5799,14 +5807,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Course: _modules_Course__WEBPACK_IMPORTED_MODULE_0__["default"],
-    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Course: _modules_Course__WEBPACK_IMPORTED_MODULE_1__["default"],
+    MyHeader: _modules_Header__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
+      courses: [],
       dayOfWeek: ['月', '火', '水', '木', '金', '土'],
       periods: [1, 2, 3, 4, 5, 6],
-      courses: []
+      setting: {}
     };
   },
   computed: {
@@ -5818,6 +5827,50 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    getCourses: function getCourses(semesterId) {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                axios.get("api/period/".concat(_this.auth.id, "/").concat(semesterId)).then(function (_ref) {
+                  var data = _ref.data;
+                  _this.courses = data;
+                });
+
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    getSetting: function getSetting() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                axios.get("api/user/setting/".concat(_this2.auth.id)).then(function (_ref2) {
+                  var data = _ref2.data;
+                  _this2.setting = data;
+
+                  _this2.getCourses(data.semester_id);
+                });
+
+              case 1:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
     findCourse: function findCourse(day_index, period) {
       return this.courses.find(function (course) {
         return course.day_of_week === day_index && course.period === period;
@@ -5831,12 +5884,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var _this = this;
-
-    axios.get("/api/period/".concat(this.auth.id)).then(function (_ref) {
-      var data = _ref.data;
-      _this.courses = data;
-    });
+    this.getSetting();
   }
 });
 

@@ -12,9 +12,11 @@ class SettingController extends Controller
     public function index(Setting $setting, User $user)
     {
         $settingData = $setting->where('user_id', $user->id)->get()->first();
+        $semesterId = $settingData->getCurrentSemesterId($settingData);
         return [
             'id' => $settingData->id,
             'user_id' => $settingData->user_id,
+            'edited' => $settingData->edited,
             'periods' => [
                 [
                     date('G:i', strtotime($settingData->first_start_time)), 
@@ -41,8 +43,17 @@ class SettingController extends Controller
                     date('G:i', strtotime($settingData->sixth_end_time))
                 ],
             ],
-            'start_date' => $settingData->start_date,
-            'end_date' => $settingData->end_date,
+            'enter_year' => $settingData->enter_year,
+            'graduation_year' => $settingData->graduation_year,
+            'semester_id' => $semesterId
         ];
     }
+
+    // public function getSemesterId(Setting $setting, User $user)
+    // {
+    //     $settingData = $setting->where('user_id', $user->id)->get()->first();
+    //     $semesterId = $settingData->getCurrentSemesterId($settingData);
+        
+    //     return $semesterId;
+    // }
 }

@@ -17,6 +17,7 @@ class CreatePeriodsTable extends Migration
             $table->uuid('id');
             $table->uuid('course_id');
             $table->uuid('user_id');
+            $table->uuid('semester_id');
             $table->integer('day_of_week');
             $table->integer('period');
             $table->timestamps();

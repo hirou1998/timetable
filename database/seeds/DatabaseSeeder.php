@@ -6,6 +6,7 @@ use App\Course;
 use App\Period;
 use App\Setting;
 use App\Assignment;
+use App\Semester;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,81 +21,94 @@ class DatabaseSeeder extends Seeder
             'name' => 'hiromu',
             'email' => 'tanahi1025@gmail.com'
         ]);
-        $user2 = factory(User::class)->create([
-            'name' => 'hana',
-            'email' => 'hana@hana.com'
-        ]);
-        $user3 = factory(User::class)->create([
-            'name' => 'shotaro',
-            'email' => 'taro@taro.com'
-        ]);
+        // $user2 = factory(User::class)->create([
+        //     'name' => 'hana',
+        //     'email' => 'hana@hana.com'
+        // ]);
+        // $user3 = factory(User::class)->create([
+        //     'name' => 'shotaro',
+        //     'email' => 'taro@taro.com'
+        // ]);
 
         $course1 = factory(Course::class)->create([
-            'name' => 'Spanish01',
+            'name' => '東アジア論',
             'user_id' => $user1->id,
         ]);
 
         $course2 = factory(Course::class)->create([
-            'name' => 'British studies',
+            'name' => '比較行政学',
             'user_id' => $user1->id,
         ]);
 
         $course3 = factory(Course::class)->create([
-            'name' => 'Administration',
+            'name' => 'データで読み解く国際紛争',
             'user_id' => $user1->id,
         ]);
 
         $course4 = factory(Course::class)->create([
-            'name' => 'Internatinal Politics',
+            'name' => '科学技術を考える',
             'user_id' => $user1->id,
         ]);
 
-        $course5 = factory(Course::class)->create([
-            'name' => 'European politics',
+        // $course5 = factory(Course::class)->create([
+        //     'name' => 'European politics',
+        //     'user_id' => $user1->id,
+        // ]);
+
+        $semester1 = factory(Semester::class)->create([
             'user_id' => $user1->id,
+            'year' => '2020',
+            'type' => '2学期',
+            'start_date' => '2020/09/25',
+            'end_date' => '2021/02/01'
         ]);
 
         $period1 = factory(Period::class)->create([
             'course_id' => $course1->id,
             'user_id' => $user1->id,
-            'day_of_week' => 1,
+            'semester_id' => $semester1->id,
+            'day_of_week' => 2,
             'period' => 2,
         ]);
 
         $period2 = factory(Period::class)->create([
             'course_id' => $course2->id,
             'user_id' => $user1->id,
-            'day_of_week' => 1,
-            'period' => 4,
+            'semester_id' => $semester1->id,
+            'day_of_week' => 2,
+            'period' => 3,
         ]);
 
         $period3 = factory(Period::class)->create([
-            'course_id' => $course3->id,
+            'course_id' => $course2->id,
             'user_id' => $user1->id,
-            'day_of_week' => 2,
-            'period' => 2,
+            'semester_id' => $semester1->id,
+            'day_of_week' => 4,
+            'period' => 3,
         ]);
 
         $period4 = factory(Period::class)->create([
-            'course_id' => $course4->id,
+            'course_id' => $course3->id,
             'user_id' => $user1->id,
+            'semester_id' => $semester1->id,
             'day_of_week' => 4,
-            'period' => 4,
+            'period' => 2,
         ]);
 
         $period5 = factory(Period::class)->create([
             'course_id' => $course4->id,
             'user_id' => $user1->id,
-            'day_of_week' => 3,
-            'period' => 3,
+            'semester_id' => $semester1->id,
+            'day_of_week' => 4,
+            'period' => 4,
         ]);
 
-        $period6 = factory(Period::class)->create([
-            'course_id' => $course1->id,
-            'user_id' => $user1->id,
-            'day_of_week' => 3,
-            'period' => 2,
-        ]);
+        // $period6 = factory(Period::class)->create([
+        //     'course_id' => $course1->id,
+        //     'user_id' => $user1->id,
+        //     'day_of_week' => 3,
+        //     'period' => 2,
+        // ]);
 
         $setting1 = factory(Setting::class)->create([
             'user_id' => $user1->id
