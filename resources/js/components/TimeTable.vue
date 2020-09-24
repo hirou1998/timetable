@@ -69,7 +69,7 @@ export default {
             axios.get(`api/user/setting/${this.auth.id}`)
                 .then(({data}) => {
                     this.setting = data;
-                    this.getCourses(data.semester_id);
+                    this.getCourses(data.semester.id);
                 });
         },
         findCourse: function(day_index, period){

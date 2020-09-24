@@ -33,6 +33,7 @@ class CreateSettingsTable extends Migration
             $table->time('sixth_end_time')->default('19:45');
             $table->year('enter_year')->nullable();
             $table->year('graduation_year')->nullable();
+            $table->string('university')->nullable();
             $table->timestamps();
         });
     }

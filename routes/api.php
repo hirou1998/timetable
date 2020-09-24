@@ -23,6 +23,8 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('course/assignments/u/{user}', 'Api\AssignmentController@sortByUser');
     Route::get('/user/setting/{user}', 'Api\SettingController@index');
     Route::get('events/{user}', 'Api\EventController@index');
+    Route::get('setting/semester/detail/{user}', 'Api\SemesterController@index');
+    Route::get('setting/semester/enum', 'Api\SemesterController@semesterEnum');
 });
 
-Route::get('setting/semester/{user}', 'Api\SettingController@getSemesterId');
+Route::get('setting/semester/current/{user}', 'Api\SemesterController@currentSemester');

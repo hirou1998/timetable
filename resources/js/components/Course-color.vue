@@ -1,10 +1,10 @@
 <template>
     <div>
-        <setting-head
-            name="授業カラー"
-            link="setting"
-        />
         <div class="setting-body">
+            <setting-head
+                name="授業カラー"
+                link="setting"
+            />
             <template v-for="(courseList, index) in arrangedCourses">
                 <template v-if="courseList.length > 0">
                     <h3 class="setting-subtitle" :key="dayOfWeek[index]">{{dayOfWeek[index]}}</h3>
@@ -46,6 +46,7 @@ export default {
             currentColor: '',
             currentId: '',
             dayOfWeek: ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'],
+            setting: {}
         }
     },
     methods: {
@@ -76,13 +77,20 @@ export default {
                 console.log(err);
             })
         },
-        getCourses(){
-            axios.get(`/api/period/${this.auth.id}`)
+        getCourses(semesterId){
+          axios.get(`/api/period/${this.auth.id}/${semesterId}`)
             .then(({data}) => {
-                data.sort(this.sortCourses)
-                this.courses = data;
-                this.splitCourses();
+              data.sort(this.sortCourses)
+              this.courses = data;
+              this.splitCourses();
             })
+        },
+        getSetting(){
+          axios.get(`/api/user/setting/${this.auth.id}`)
+            .then(({data}) => {
+              this.setting = data;
+              this.getCourses(data.semester.id);
+            });
         },
         toggleColorModal(arg){
             this.colorModalVisibility = !this.colorModalVisibility;
@@ -120,7 +128,7 @@ export default {
         }
     },
     mounted(){
-        this.getCourses();
+        this.getSetting();
     }
 }
 </script>

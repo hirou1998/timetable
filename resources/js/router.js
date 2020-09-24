@@ -12,6 +12,7 @@ import PasswordReset from './components/Reset'
 import MyPage from './components/MyPage'
 import Calendar from './components/Calendar'
 import CalendarDetail from './components/Calendar-detail'
+import Semester from './components/Semester'
 
 Vue.use(Router)
 
@@ -78,6 +79,11 @@ export default new Router({
             path: '/setting/mypage',
             name: 'mypage',
             component: MyPage
+        },
+        {
+            path: '/setting/mypage/semester',
+            name: 'semester',
+            component: Semester
         }
     ]
 })

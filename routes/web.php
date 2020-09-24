@@ -64,4 +64,7 @@ Route::middleware(['auth'])->group(function(){
         return view('timetable.index');
     })->name('setting.mypage');
     Route::put('/setting/period/{user}', 'SettingController@update');
+    Route::get('/setting/mypage/semester', function(){
+        return view('timetable.index');
+    })->name('setting.semester');
 });
