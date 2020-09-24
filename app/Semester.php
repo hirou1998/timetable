@@ -13,4 +13,16 @@ class Semester extends Model
     {
         return $this->hasMany(Period::class);
     }
+
+    public function currentSemester($setting, $userId)
+    {
+        $currentSemester = $this->where('user_id', $userId)->where('year', $setting->current_year)->where('type', $setting->current_semester)->get()->first();
+
+        return $currentSemester;
+    }
+
+    public function semesterEnum(){
+        $semesterList = ['1学期', '2学期', '3学期', '通年'];
+        return $semesterList;
+    }
 }

@@ -117,3 +117,36 @@
 .mypage-body{
 	background-color: #fff;
 }
+.mypage-head{
+	width: 86%;
+	margin: 0 auto;
+	color: $main-color;
+}
+.mypage-info{
+	font-size: .75rem;
+	margin-bottom: .2rem;
+}
+.mypage-info-block{
+	margin: 1rem 0 3rem;
+}
+.setting-semester-form{
+	width: 86%;
+	padding: 2rem;
+}
+.setting-semester-form-block{
+	margin-bottom: 1rem;
+}
+.setting-semester-form-text{
+	font-size: 1rem;
+	margin-bottom: .2rem;
+}
+
+.setting-semester-save{
+	position: absolute;
+	width: 100vw;
+	background-color: $current-blue;
+	left: 0;
+	bottom: 0;
+	padding: 1vh 0;
+	font-size: 1rem;
+}

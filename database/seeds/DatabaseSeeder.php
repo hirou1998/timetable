@@ -111,7 +111,8 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $setting1 = factory(Setting::class)->create([
-            'user_id' => $user1->id
+            'user_id' => $user1->id,
+            'university' => '早稲田'
         ]);
 
         $assignment1 = factory(Assignment::class)->create([

@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Setting;
 use App\User;
+use App\Semester;
 
 class SettingController extends Controller
 {
     public function index(Setting $setting, User $user)
     {
         $settingData = $setting->where('user_id', $user->id)->get()->first();
-        $semesterId = $settingData->getCurrentSemesterId($settingData);
+        $semester = $settingData->getCurrentSemester($settingData);
         return [
             'id' => $settingData->id,
             'user_id' => $settingData->user_id,
@@ -45,15 +46,8 @@ class SettingController extends Controller
             ],
             'enter_year' => $settingData->enter_year,
             'graduation_year' => $settingData->graduation_year,
-            'semester_id' => $semesterId
+            'university' => $settingData->university,
+            'semester' => $semester
         ];
     }
-
-    // public function getSemesterId(Setting $setting, User $user)
-    // {
-    //     $settingData = $setting->where('user_id', $user->id)->get()->first();
-    //     $semesterId = $settingData->getCurrentSemesterId($settingData);
-        
-    //     return $semesterId;
-    // }
 }

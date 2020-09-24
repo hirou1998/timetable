@@ -28,6 +28,7 @@ $factory->define(Setting::class, function (Faker $faker) {
         'sixth_start_time' => '18:15:00',
         'sixth_end_time' => '19:45:00',
         'enter_year' => '2017',
-        'graduation_year' => '2021'
+        'graduation_year' => '2021',
+        'university' => $faker->sentence(6)
     ];
 });

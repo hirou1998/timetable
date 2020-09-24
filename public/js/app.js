@@ -4484,7 +4484,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       colorModalVisibility: false,
       currentColor: '',
       currentId: '',
-      dayOfWeek: ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日']
+      dayOfWeek: ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'],
+      setting: {}
     };
   },
   methods: {
@@ -4518,15 +4519,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         console.log(err);
       });
     },
-    getCourses: function getCourses() {
+    getCourses: function getCourses(semesterId) {
       var _this2 = this;
 
-      axios.get("/api/period/".concat(this.auth.id)).then(function (_ref2) {
+      axios.get("/api/period/".concat(this.auth.id, "/").concat(semesterId)).then(function (_ref2) {
         var data = _ref2.data;
         data.sort(_this2.sortCourses);
         _this2.courses = data;
 
         _this2.splitCourses();
+      });
+    },
+    getSetting: function getSetting() {
+      var _this3 = this;
+
+      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.setting = data;
+
+        _this3.getCourses(data.semester.id);
       });
     },
     toggleColorModal: function toggleColorModal(arg) {
@@ -4573,7 +4584,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
-    this.getCourses();
+    this.getSetting();
   }
 });
 
@@ -5320,8 +5331,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -5329,17 +5338,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      setting: {},
       userInfo: {},
       isEditing: false
     };
   },
+  computed: {
+    auth: function auth() {
+      return __auth();
+    }
+  },
   methods: {
-    getUserInfo: function getUserInfo() {
+    getSetting: function getSetting() {
       var _this = this;
 
-      axios.get('/api/user').then(function (_ref) {
+      axios.get("/api/user/setting/".concat(this.auth.id)).then(function (_ref) {
         var data = _ref.data;
-        _this.userInfo = data;
+        _this.setting = data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getUserInfo: function getUserInfo() {
+      var _this2 = this;
+
+      axios.get('/api/user').then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.userInfo = data;
       });
     },
     toggleEditing: function toggleEditing() {
@@ -5348,6 +5373,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.getUserInfo();
+    this.getSetting();
   }
 });
 
@@ -5364,8 +5390,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Period_setting_item__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Period-setting-item */ "./resources/js/components/modules/Period-setting-item.vue");
 /* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
-//
-//
 //
 //
 //
@@ -5688,6 +5712,97 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Semester.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Semester.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    SettingHead: _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      semesters: {},
+      startYear: 2010,
+      endYear: 2050
+    };
+  },
+  computed: {
+    auth: function auth() {
+      return __auth();
+    },
+    years: function years() {
+      var yearNum = this.endYear - this.startYear;
+      var yearsArray = [];
+
+      for (var i = 0; i < yearNum; i++) {
+        var item = this.startYear + i;
+        yearsArray.push(this.startYear + i);
+      }
+
+      return yearsArray;
+    }
+  },
+  methods: {
+    // getCurrentSemester(){
+    //   axios.get(`/api/setting/semester`)
+    // },
+    getSemesters: function getSemesters() {
+      var _this = this;
+
+      axios.get("/api/setting/semester/detail/".concat(this.auth.id)).then(function (_ref) {
+        var data = _ref.data;
+        _this.semesters = data;
+      });
+    },
+    getSemesterEnum: function getSemesterEnum() {
+      var _this2 = this;
+
+      axios.get("/api/setting/semester/enum").then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.semesterEnum = data;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getSemesters(); //this.getSemesterEnum();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Setting.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Setting.vue?vue&type=script&lang=js& ***!
@@ -5698,8 +5813,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
-//
-//
 //
 //
 //
@@ -5860,7 +5973,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   var data = _ref2.data;
                   _this2.setting = data;
 
-                  _this2.getCourses(data.semester_id);
+                  _this2.getCourses(data.semester.id);
                 });
 
               case 1:
@@ -107527,130 +107640,126 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("setting-head", { attrs: { name: "授業カラー", link: "setting" } }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "setting-body" },
-        [
-          _vm._l(_vm.arrangedCourses, function(courseList, index) {
-            return [
-              courseList.length > 0
-                ? [
-                    _c(
-                      "h3",
-                      {
-                        key: _vm.dayOfWeek[index],
-                        staticClass: "setting-subtitle"
-                      },
-                      [_vm._v(_vm._s(_vm.dayOfWeek[index]))]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ul",
-                      { key: index, staticClass: "setting-list-container" },
-                      _vm._l(courseList, function(course) {
-                        return _c("course-color-item", {
-                          key: course.course.id,
-                          staticClass: "setting-list",
-                          attrs: { item: course },
-                          on: { open: _vm.toggleColorModal }
-                        })
-                      }),
-                      1
-                    )
-                  ]
-                : _vm._e()
-            ]
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.colorModalVisibility,
-              expression: "colorModalVisibility"
-            }
-          ],
-          staticClass: "modal-base",
-          on: {
-            click: function($event) {
-              return _vm.toggleColorModal({ color: "", id: "" })
-            }
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "setting-body" },
+      [
+        _c("setting-head", { attrs: { name: "授業カラー", link: "setting" } }),
+        _vm._v(" "),
+        _vm._l(_vm.arrangedCourses, function(courseList, index) {
+          return [
+            courseList.length > 0
+              ? [
+                  _c(
+                    "h3",
+                    {
+                      key: _vm.dayOfWeek[index],
+                      staticClass: "setting-subtitle"
+                    },
+                    [_vm._v(_vm._s(_vm.dayOfWeek[index]))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "ul",
+                    { key: index, staticClass: "setting-list-container" },
+                    _vm._l(courseList, function(course) {
+                      return _c("course-color-item", {
+                        key: course.course.id,
+                        staticClass: "setting-list",
+                        attrs: { item: course },
+                        on: { open: _vm.toggleColorModal }
+                      })
+                    }),
+                    1
+                  )
+                ]
+              : _vm._e()
+          ]
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.colorModalVisibility,
+            expression: "colorModalVisibility"
           }
-        },
-        [
-          _c(
-            "div",
-            {
-              staticClass: "modal-base-inner",
-              on: {
-                click: function($event) {
-                  $event.stopPropagation()
-                }
+        ],
+        staticClass: "modal-base",
+        on: {
+          click: function($event) {
+            return _vm.toggleColorModal({ color: "", id: "" })
+          }
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-base-inner",
+            on: {
+              click: function($event) {
+                $event.stopPropagation()
               }
-            },
-            [
-              _c("p", { staticClass: "setting-list-name" }, [
-                _vm._v("授業カラーを選択")
-              ]),
-              _vm._v(" "),
-              _c("color-lists", {
-                model: {
-                  value: _vm.currentColor,
-                  callback: function($$v) {
-                    _vm.currentColor = $$v
-                  },
-                  expression: "currentColor"
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "setting-modal-confirm" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-danger",
-                    on: {
-                      click: function($event) {
-                        $event.stopPropagation()
-                        return _vm.toggleColorModal({ color: "", id: "" })
-                      }
+            }
+          },
+          [
+            _c("p", { staticClass: "setting-list-name" }, [
+              _vm._v("授業カラーを選択")
+            ]),
+            _vm._v(" "),
+            _c("color-lists", {
+              model: {
+                value: _vm.currentColor,
+                callback: function($$v) {
+                  _vm.currentColor = $$v
+                },
+                expression: "currentColor"
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "setting-modal-confirm" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm btn-danger",
+                  on: {
+                    click: function($event) {
+                      $event.stopPropagation()
+                      return _vm.toggleColorModal({ color: "", id: "" })
                     }
-                  },
-                  [_vm._v("取消")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-success",
-                    on: {
-                      click: function($event) {
-                        $event.stopPropagation()
-                        return _vm.changeColor($event)
-                      }
+                  }
+                },
+                [_vm._v("取消")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm btn-success",
+                  on: {
+                    click: function($event) {
+                      $event.stopPropagation()
+                      return _vm.changeColor($event)
                     }
-                  },
-                  [_vm._v("変更")]
-                )
-              ])
-            ],
-            1
-          )
-        ]
-      )
-    ],
-    1
-  )
+                  }
+                },
+                [_vm._v("変更")]
+              )
+            ])
+          ],
+          1
+        )
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -108344,6 +108453,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "setting-body mypage-body" },
     [
       _c("setting-head", {
         attrs: {
@@ -108354,89 +108464,101 @@ var render = function() {
         on: { edit: _vm.toggleEditing }
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "setting-body mypage-body" }, [
-        _c("div", { staticClass: "setting-edit-block" }, [
+      _c("div", { staticClass: "setting-edit-block" }, [
+        _c(
+          "div",
+          { staticClass: "setting-edit-block-inner" },
+          [
+            _vm.isEditing
+              ? [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      on: { click: _vm.toggleEditing }
+                    },
+                    [_vm._v("取消")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-success",
+                      on: { click: _vm.changePeriod }
+                    },
+                    [_vm._v("保存")]
+                  )
+                ]
+              : _vm._e()
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "mypage-head" }, [
+        _c("h2", { staticClass: "mypage-name" }, [
+          _vm._v(_vm._s(_vm.userInfo.name))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mypage-info-block" }, [
+          _c("p", { staticClass: "mypage-info" }, [
+            _vm._v(_vm._s(_vm.setting.university) + "大学")
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "mypage-info" }, [
+            _vm._v(_vm._s(_vm.setting.enter_year) + "年度入学")
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "mypage-info" }, [
+            _vm._v(_vm._s(_vm.setting.graduation_year) + "年度3月卒業予定")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "setting-list-container" }, [
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(0),
+          _vm._v(" "),
           _c(
             "div",
-            { staticClass: "setting-edit-block-inner" },
+            { staticClass: "setting-list-name" },
             [
-              _vm.isEditing
-                ? [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-danger",
-                        on: { click: _vm.toggleEditing }
-                      },
-                      [_vm._v("取消")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-success",
-                        on: { click: _vm.changePeriod }
-                      },
-                      [_vm._v("保存")]
-                    )
-                  ]
-                : _vm._e()
+              _c("router-link", { attrs: { to: "/setting/mypage/semester" } }, [
+                _vm._v("\n            年度/学期切替\n          ")
+              ])
             ],
-            2
+            1
           )
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "mypage-head" }, [
-          _c("h2", { staticClass: "mypage-name" }, [
-            _vm._v(_vm._s(_vm.userInfo.name))
-          ])
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "setting-list-name" },
+            [
+              _c("router-link", { attrs: { to: "" } }, [
+                _vm._v("\n            プロフィール詳細編集\n          ")
+              ])
+            ],
+            1
+          )
         ]),
         _vm._v(" "),
-        _c("ul", { staticClass: "setting-list-container" }, [
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "" } }, [
-                  _vm._v("\n            年度/学期切替\n          ")
-                ])
-              ],
-              1
-            )
-          ]),
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(2),
           _vm._v(" "),
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(1),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "" } }, [
-                  _vm._v("\n            プロフィール詳細編集\n          ")
-                ])
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "" } }, [
-                  _vm._v("\n            メモ\n          ")
-                ])
-              ],
-              1
-            )
-          ])
+          _c(
+            "div",
+            { staticClass: "setting-list-name" },
+            [
+              _c("router-link", { attrs: { to: "" } }, [
+                _vm._v("\n            メモ\n          ")
+              ])
+            ],
+            1
+          )
         ])
       ])
     ],
@@ -108492,6 +108614,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "setting-body" },
     [
       _c("setting-head", {
         attrs: {
@@ -108502,66 +108625,64 @@ var render = function() {
         on: { edit: _vm.toggleEditing }
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "setting-body" }, [
-        _c("div", { staticClass: "setting-edit-block" }, [
-          _c(
-            "div",
-            { staticClass: "setting-edit-block-inner" },
-            [
-              _vm.isEditing
-                ? [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-danger",
-                        on: { click: _vm.toggleEditing }
-                      },
-                      [_vm._v("取消")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-success",
-                        on: { click: _vm.changePeriod }
-                      },
-                      [_vm._v("保存")]
-                    )
-                  ]
-                : _vm._e()
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
+      _c("div", { staticClass: "setting-edit-block" }, [
         _c(
-          "ul",
-          { staticClass: "setting-list-container" },
+          "div",
+          { staticClass: "setting-edit-block-inner" },
           [
-            _vm._l(_vm.periods, function(period, index) {
-              return [
-                _c("period-setting-item", {
-                  key: index,
-                  staticClass: "setting-list",
-                  attrs: {
-                    period: period,
-                    num: index,
-                    "is-editing": _vm.isEditing
-                  },
-                  model: {
-                    value: _vm.periods[index],
-                    callback: function($$v) {
-                      _vm.$set(_vm.periods, index, $$v)
+            _vm.isEditing
+              ? [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      on: { click: _vm.toggleEditing }
                     },
-                    expression: "periods[index]"
-                  }
-                })
-              ]
-            })
+                    [_vm._v("取消")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-success",
+                      on: { click: _vm.changePeriod }
+                    },
+                    [_vm._v("保存")]
+                  )
+                ]
+              : _vm._e()
           ],
           2
         )
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "setting-list-container" },
+        [
+          _vm._l(_vm.periods, function(period, index) {
+            return [
+              _c("period-setting-item", {
+                key: index,
+                staticClass: "setting-list",
+                attrs: {
+                  period: period,
+                  num: index,
+                  "is-editing": _vm.isEditing
+                },
+                model: {
+                  value: _vm.periods[index],
+                  callback: function($$v) {
+                    _vm.$set(_vm.periods, index, $$v)
+                  },
+                  expression: "periods[index]"
+                }
+              })
+            ]
+          })
+        ],
+        2
+      )
     ],
     1
   )
@@ -109006,6 +109127,137 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "setting-body" },
+    [
+      _c("setting-head", {
+        attrs: {
+          name: "年度/学期切替",
+          link: "setting/mypage",
+          "option-button-visibility": "false"
+        }
+      }),
+      _vm._v(" "),
+      _c("form", { staticClass: "setting-semester-form" }, [
+        _c("div", { staticClass: "setting-semester-form-block" }, [
+          _c("p", { staticClass: "setting-semester-form-text" }, [
+            _vm._v("学期を選択")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.type,
+                  expression: "semesters.current.type"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.semesters.current,
+                    "type",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                }
+              }
+            },
+            _vm._l(_vm.semesters.semesterEnum, function(item, index) {
+              return _c("option", { key: index, domProps: { value: item } }, [
+                _vm._v(_vm._s(item))
+              ])
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "setting-semester-form-block" }, [
+          _c("p", { staticClass: "setting-semester-form-text" }, [
+            _vm._v("年度を選択")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.year,
+                  expression: "semesters.current.year"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.semesters.current,
+                    "year",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                }
+              }
+            },
+            _vm._l(_vm.years, function(year) {
+              return _c("option", { key: year, domProps: { value: year } }, [
+                _vm._v(_vm._s(year))
+              ])
+            }),
+            0
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("button", { staticClass: "setting-semester-save" }, [
+        _vm._v("変更を保存する")
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Setting.vue?vue&type=template&id=5f96e096&":
 /*!**********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Setting.vue?vue&type=template&id=5f96e096& ***!
@@ -109023,59 +109275,58 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "setting-body" },
     [
       _c("setting-head", { attrs: { name: _vm.auth.name, link: "timetable" } }),
       _vm._v(" "),
-      _c("div", { staticClass: "setting-body" }, [
-        _c("h3", { staticClass: "setting-subtitle" }, [_vm._v("カスタマイズ")]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "setting-list-container" }, [
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "/setting/color" } }, [
-                  _vm._v("授業カラー")
-                ])
-              ],
-              1
-            )
-          ]),
+      _c("h3", { staticClass: "setting-subtitle" }, [_vm._v("カスタマイズ")]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "setting-list-container" }, [
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(0),
           _vm._v(" "),
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(1),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "/setting/period" } }, [
-                  _vm._v("時限数と授業時間")
-                ])
-              ],
-              1
-            )
-          ])
+          _c(
+            "div",
+            { staticClass: "setting-list-name" },
+            [
+              _c("router-link", { attrs: { to: "/setting/color" } }, [
+                _vm._v("授業カラー")
+              ])
+            ],
+            1
+          )
         ]),
         _vm._v(" "),
-        _c("ul", { staticClass: "setting-list-container mt-5" }, [
-          _c("li", { staticClass: "setting-list" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "setting-list-name" },
-              [
-                _c("router-link", { attrs: { to: "/setting/mypage" } }, [
-                  _vm._v("マイページ")
-                ])
-              ],
-              1
-            )
-          ])
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "setting-list-name" },
+            [
+              _c("router-link", { attrs: { to: "/setting/period" } }, [
+                _vm._v("時限数と授業時間")
+              ])
+            ],
+            1
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "setting-list-container mt-5" }, [
+        _c("li", { staticClass: "setting-list" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "setting-list-name" },
+            [
+              _c("router-link", { attrs: { to: "/setting/mypage" } }, [
+                _vm._v("マイページ")
+              ])
+            ],
+            1
+          )
         ])
       ])
     ],
@@ -127601,6 +127852,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Semester.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/Semester.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Semester.vue?vue&type=template&id=24bdcaa3& */ "./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3&");
+/* harmony import */ var _Semester_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Semester.vue?vue&type=script&lang=js& */ "./resources/js/components/Semester.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Semester_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Semester.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Semester.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/Semester.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Semester_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Semester.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Semester.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Semester_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Semester.vue?vue&type=template&id=24bdcaa3& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Semester.vue?vue&type=template&id=24bdcaa3&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Semester_vue_vue_type_template_id_24bdcaa3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Setting.vue":
 /*!*********************************************!*\
   !*** ./resources/js/components/Setting.vue ***!
@@ -128798,6 +129118,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_MyPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/MyPage */ "./resources/js/components/MyPage.vue");
 /* harmony import */ var _components_Calendar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/Calendar */ "./resources/js/components/Calendar.vue");
 /* harmony import */ var _components_Calendar_detail__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/Calendar-detail */ "./resources/js/components/Calendar-detail.vue");
+/* harmony import */ var _components_Semester__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/Semester */ "./resources/js/components/Semester.vue");
+
 
 
 
@@ -128864,6 +129186,10 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     path: '/setting/mypage',
     name: 'mypage',
     component: _components_MyPage__WEBPACK_IMPORTED_MODULE_11__["default"]
+  }, {
+    path: '/setting/mypage/semester',
+    name: 'semester',
+    component: _components_Semester__WEBPACK_IMPORTED_MODULE_14__["default"]
   }]
 }));
 

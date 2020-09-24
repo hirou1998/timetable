@@ -15987,6 +15987,45 @@ a:hover {
   background-color: #fff;
 }
 
+.mypage-head {
+  width: 86%;
+  margin: 0 auto;
+  color: #919191;
+}
+
+.mypage-info {
+  font-size: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.mypage-info-block {
+  margin: 1rem 0 3rem;
+}
+
+.setting-semester-form {
+  width: 86%;
+  padding: 2rem;
+}
+
+.setting-semester-form-block {
+  margin-bottom: 1rem;
+}
+
+.setting-semester-form-text {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.setting-semester-save {
+  position: absolute;
+  width: 100vw;
+  background-color: #BBDEFF;
+  left: 0;
+  bottom: 0;
+  padding: 1vh 0;
+  font-size: 1rem;
+}
+
 .calendar {
   margin-top: 4vh;
   position: relative;
