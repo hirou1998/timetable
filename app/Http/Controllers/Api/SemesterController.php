@@ -21,14 +21,5 @@ class SemesterController extends Controller
             'semesterEnum' => $semesterEnum,
             'semesters' => $semesters
         ];
-    }
-
-    public function currentSemester(Semester $semester, User $user){
-
-        
-        
-        return $currentSemester;
-    }
-    
-    
+    }  
 }
