@@ -52,11 +52,11 @@
 						</ul>
 						<ul v-else>
 							<li class="form-group course-detail-body-info-select-flex" v-for="(period, index) in formData.periods" :key="period.day_of_week + '-' + period.period">
-								<select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control">
+								<select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control" @change="changePeriodOptions($event,index)">
 									<option v-for="(day, index) in weekOfDay" :value="index + 1" :key="day">{{day}}</option>
 								</select>
 								<select :ref="'period' + index" :value="period.period" class="form-control">
-									<option :value="item" v-for="item in periodOptions" :key="item">{{item}}</option>
+									<option :value="item" v-for="item in periodOptionsList[index]" :key="item">{{item}}</option>
 								</select>
 							</li>
 							<button class="btn btn-outline-info btn-sm" @click="addPeriodForm">曜日・時限を追加</button>
@@ -121,6 +121,7 @@ export default {
             courseType: ['対面', 'オンライン'],
             weekOfDay: ['月', '火', '水', '木', '金', '土'],
             periodOptions: [1, 2, 3, 4, 5, 6],
+            periodOptionsList: [],
             setting: {},
             isInfoOpen: true,
             isEditing: false,
@@ -130,6 +131,7 @@ export default {
                 period: undefined
             },
             periodInfo: {},
+            periodsList: [],
             dateList: [],
             assignments: [],
             modalAssignment: {
@@ -161,6 +163,33 @@ export default {
         },
     },
     methods: {
+        createValidOptions(dayOfWeek, period){
+            var alreadyList = this.periodsList.filter(p => {
+                if(p.day_of_week === Number(dayOfWeek) && p.period != period){
+                    return p
+                }
+            });
+            var removePeriods = alreadyList.map(a => a.period);
+            var options = this.periodOptions.filter(o => removePeriods.indexOf(o) === -1);
+            return options
+        },
+        changePeriodOptions(event, index){
+            var dayOfWeek = this.$refs['dayOfWeek' + index][0].value;
+            console.log(dayOfWeek)
+            var period = this.$refs['period' + index][0].value;
+            var options = this.createValidOptions(dayOfWeek, null);
+            //this.$refs['period' + index][0].value = '';
+            //this.$set(this.periodOptionsList, index, options)
+        },
+        edit: function(){
+            this.isEditing = !this.isEditing;
+            if(this.isEditing){
+                for(var i = 0; i < this.course.periods.length; i++){
+                    var options = this.createValidOptions(this.course.periods[i].day_of_week, this.course.periods[i].period);
+                    this.periodOptionsList.push(options);
+                }
+            }
+        },
         async getCourse(){
             const params = await this.splitParams(location.search.substring(1));
             if(!params.course){
@@ -203,8 +232,8 @@ export default {
             return this.assignments.find(a => a.date === date);
         },
         getDateList: function(){
-            var end = new Date(this.setting.end_date);
-            var start = new Date(this.setting.start_date);
+            var end = new Date(this.setting.semester.end_date);
+            var start = new Date(this.setting.semester.start_date);
             var diff = (end.getTime() - start.getTime())/ (1000*60*60*24);
             var startDay = start.getDay();
             var endDay = end.getDay();
@@ -214,7 +243,7 @@ export default {
                 for(var j = 0; j < this.course.periods.length; j++){
                     var num = this.course.periods[j].day_of_week + i - startDay * 2;
                     if(num > 0 && num <= diff){
-                        var origin = new Date(this.setting.start_date);
+                        var origin = new Date(this.setting.semester.start_date);
                         var date = new Date(origin.setDate(origin.getDate() + num));
                         var returnDate = date.getMonth() + 1 + '/' + date.getDate();
                         dateListArray.push(returnDate);
@@ -222,6 +251,17 @@ export default {
                 }
             }
             this.dateList = dateListArray;
+        },
+        getPeriods(){
+            axios.get(`/api/period/${this.auth.id}/${this.setting.semester.id}`)
+                .then(({data}) => {
+                    this.periodsList = data.map(p => {
+                        return {
+                            'day_of_week': p.day_of_week,
+                            'period': p.period
+                        }
+                    });
+                });
         },
         isNextDay: function(index){
             return this.indexOfNextDay() === index ? true : false;
@@ -264,9 +304,6 @@ export default {
         },
         toggleDetailOptionWindow(){
             this.detailOptionWindowVisibility = !this.detailOptionWindowVisibility;
-        },
-        edit: function(){
-            this.isEditing = !this.isEditing;
         },
         addPeriodForm: function(){
             this.formData.periods.push({
@@ -368,6 +405,9 @@ export default {
             this.setting = data;
         })
         await this.getCourse();
+        await this.getPeriods();
     }
 }
 </script>
+
+

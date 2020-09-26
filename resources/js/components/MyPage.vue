@@ -45,7 +45,7 @@
             </router-link>
           </div>
         </li>
-        <li class="setting-list">
+        <!-- <li class="setting-list">
           <div class="setting-list-icon">
             <img src="/images/memo.png" alt="">
           </div>
@@ -54,7 +54,7 @@
               メモ
             </router-link>
           </div>
-        </li>
+        </li> -->
       </ul>
       <!-- <div class="btn-password-reset-container">
         <router-link to="/setting/user/password-reset">
