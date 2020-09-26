@@ -25,4 +25,9 @@ class Semester extends Model
         $semesterList = ['1学期', '2学期', '3学期', '通年'];
         return $semesterList;
     }
+
+    public function doesExistSemester($userId, $year, $type){
+        $semester = $this->where('user_id', $userId)->where('year', $year)->where('type', $type)->get();
+        return count($semester) ? $semester->first() : false;
+    }
 }

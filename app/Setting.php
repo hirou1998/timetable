@@ -18,4 +18,13 @@ class Setting extends Model
 
         return $semester;
     }
+
+    public function changeCurrentSemester($userId, $newCurrentSemester)
+    {
+        $setting = $this->where('user_id', $userId)->get()->first();
+        $setting->update([
+            'current_year' => $newCurrentSemester->year,
+            'current_semester' => $newCurrentSemester->type
+        ]);
+    }
 }

@@ -5721,7 +5721,31 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
+/* harmony import */ var _modules_Loading__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/Loading */ "./resources/js/components/modules/Loading.vue");
+/* harmony import */ var _modules_Setting_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/Setting-head */ "./resources/js/components/modules/Setting-head.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5748,15 +5772,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    SettingHead: _modules_Setting_head__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Loading: _modules_Loading__WEBPACK_IMPORTED_MODULE_0__["default"],
+    SettingHead: _modules_Setting_head__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
       semesters: {},
       startYear: 2010,
-      endYear: 2050
+      endYear: 2050,
+      loadingVisibility: false
     };
   },
   computed: {
@@ -5776,28 +5803,90 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    // getCurrentSemester(){
-    //   axios.get(`/api/setting/semester`)
-    // },
+    changeCurrent: function changeCurrent() {
+      var year = this.$refs.year.value;
+      var semester = this.$refs.semester.value;
+      var target = this.semesters.semesters.filter(function (s) {
+        if (s.year == year && s.type == semester) {
+          return s;
+        }
+      });
+
+      if (target.length > 0) {
+        var startDate = this.getDateObj(target[0].start_date);
+        var endDate = this.getDateObj(target[0].end_date);
+        this.semesters.current = _objectSpread(_objectSpread({}, target[0]), {}, {
+          startDate: _objectSpread({}, startDate),
+          endDate: _objectSpread({}, endDate)
+        });
+      }
+    },
     getSemesters: function getSemesters() {
       var _this = this;
 
       axios.get("/api/setting/semester/detail/".concat(this.auth.id)).then(function (_ref) {
         var data = _ref.data;
-        _this.semesters = data;
+
+        var startDate = _this.getDateObj(data.current.start_date);
+
+        var endDate = _this.getDateObj(data.current.end_date);
+
+        _this.semesters = _objectSpread(_objectSpread({}, data), {}, {
+          current: _objectSpread(_objectSpread({}, data.current), {}, {
+            startDate: _objectSpread({}, startDate),
+            endDate: _objectSpread({}, endDate)
+          })
+        });
       });
     },
-    getSemesterEnum: function getSemesterEnum() {
+    getDate: function getDate(dateArg) {
+      return new Date(dateArg);
+    },
+    getYear: function getYear(dateArg) {
+      var date = this.getDate(dateArg);
+      var year = date.getFullYear();
+      return year;
+    },
+    getMonth: function getMonth(dateArg) {
+      var date = this.getDate(dateArg);
+      var month = date.getMonth() + 1;
+      return month;
+    },
+    getDay: function getDay(dateArg) {
+      var date = this.getDate(dateArg);
+      var day = date.getDate();
+      return day;
+    },
+    getDateObj: function getDateObj(dateArg) {
+      return {
+        'year': this.getYear(dateArg),
+        'month': this.getMonth(dateArg),
+        'day': this.getDay(dateArg)
+      };
+    },
+    formatDate: function formatDate(year, month, day) {
+      return year + '-' + month + '-' + day;
+    },
+    save: function save() {
       var _this2 = this;
 
-      axios.get("/api/setting/semester/enum").then(function (_ref2) {
+      this.loadingVisibility = true;
+      var formItem = this.semesters.current;
+      axios.post("/setting/mypage/semester/create/".concat(this.auth.id), {
+        'year': formItem.year,
+        'type': formItem.type,
+        'start_date': this.formatDate(formItem.startDate.year, formItem.startDate.month, formItem.startDate.day),
+        'end_date': this.formatDate(formItem.endDate.year, formItem.endDate.month, formItem.endDate.day)
+      }).then(function (_ref2) {
         var data = _ref2.data;
-        _this2.semesterEnum = data;
+        _this2.loadingVisibility = false;
+      })["catch"](function (err) {
+        console.log(err);
       });
     }
   },
   mounted: function mounted() {
-    this.getSemesters(); //this.getSemesterEnum();
+    this.getSemesters();
   }
 });
 
@@ -6817,6 +6906,27 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Loading.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modules/Loading.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -109157,50 +109267,6 @@ var render = function() {
       _c("form", { staticClass: "setting-semester-form" }, [
         _c("div", { staticClass: "setting-semester-form-block" }, [
           _c("p", { staticClass: "setting-semester-form-text" }, [
-            _vm._v("学期を選択")
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.semesters.current.type,
-                  expression: "semesters.current.type"
-                }
-              ],
-              staticClass: "form-control",
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.$set(
-                    _vm.semesters.current,
-                    "type",
-                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                  )
-                }
-              }
-            },
-            _vm._l(_vm.semesters.semesterEnum, function(item, index) {
-              return _c("option", { key: index, domProps: { value: item } }, [
-                _vm._v(_vm._s(item))
-              ])
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "setting-semester-form-block" }, [
-          _c("p", { staticClass: "setting-semester-form-text" }, [
             _vm._v("年度を選択")
           ]),
           _vm._v(" "),
@@ -109215,23 +109281,27 @@ var render = function() {
                   expression: "semesters.current.year"
                 }
               ],
+              ref: "year",
               staticClass: "form-control",
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.$set(
-                    _vm.semesters.current,
-                    "year",
-                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                  )
-                }
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.semesters.current,
+                      "year",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  },
+                  _vm.changeCurrent
+                ]
               }
             },
             _vm._l(_vm.years, function(year) {
@@ -109241,12 +109311,245 @@ var render = function() {
             }),
             0
           )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "setting-semester-form-block" }, [
+          _c("p", { staticClass: "setting-semester-form-text" }, [
+            _vm._v("学期を選択")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.type,
+                  expression: "semesters.current.type"
+                }
+              ],
+              ref: "semester",
+              staticClass: "form-control",
+              on: {
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.semesters.current,
+                      "type",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  },
+                  _vm.changeCurrent
+                ]
+              }
+            },
+            _vm._l(_vm.semesters.semesterEnum, function(item, index) {
+              return _c("option", { key: index, domProps: { value: item } }, [
+                _vm._v(_vm._s(item))
+              ])
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "setting-semester-form-block" }, [
+          _c("p", { staticClass: "setting-semester-form-text" }, [
+            _vm._v("学期開始日")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "d-flex" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.startDate.year,
+                  expression: "semesters.current.startDate.year"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.startDate.year },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.startDate,
+                    "year",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.startDate.month,
+                  expression: "semesters.current.startDate.month"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.startDate.month },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.startDate,
+                    "month",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.startDate.day,
+                  expression: "semesters.current.startDate.day"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.startDate.day },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.startDate,
+                    "day",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "setting-semester-form-block" }, [
+          _c("p", { staticClass: "setting-semester-form-text" }, [
+            _vm._v("学期終了日")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "d-flex" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.endDate.year,
+                  expression: "semesters.current.endDate.year"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.endDate.year },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.endDate,
+                    "year",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.endDate.month,
+                  expression: "semesters.current.endDate.month"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.endDate.month },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.endDate,
+                    "month",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.semesters.current.endDate.day,
+                  expression: "semesters.current.endDate.day"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.semesters.current.endDate.day },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.semesters.current.endDate,
+                    "day",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ])
         ])
       ]),
       _vm._v(" "),
-      _c("button", { staticClass: "setting-semester-save" }, [
-        _vm._v("変更を保存する")
-      ])
+      _c(
+        "button",
+        { staticClass: "setting-semester-save", on: { click: _vm.save } },
+        [_vm._v("変更を保存する")]
+      ),
+      _vm._v(" "),
+      _c("loading", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.loadingVisibility,
+            expression: "loadingVisibility"
+          }
+        ]
+      })
     ],
     1
   )
@@ -110458,6 +110761,41 @@ var staticRenderFns = [
       { staticClass: "navbar-button-bars navbar-button-icon" },
       [_c("i", { staticClass: "fas fa-bars" })]
     )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "loading" }, [
+      _c("div", { staticClass: "loading-box" }, [
+        _c("div", { staticClass: "loading-circle" })
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -128951,6 +129289,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Header_vue_vue_type_template_id_a4be4280___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Header_vue_vue_type_template_id_a4be4280___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Loading.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/modules/Loading.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Loading.vue?vue&type=template&id=96977dce& */ "./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce&");
+/* harmony import */ var _Loading_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Loading.vue?vue&type=script&lang=js& */ "./resources/js/components/modules/Loading.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Loading_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/modules/Loading.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Loading.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/modules/Loading.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Loading_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Loading.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Loading.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Loading_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Loading.vue?vue&type=template&id=96977dce& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modules/Loading.vue?vue&type=template&id=96977dce&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Loading_vue_vue_type_template_id_96977dce___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
