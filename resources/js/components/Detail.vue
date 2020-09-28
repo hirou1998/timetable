@@ -66,19 +66,19 @@
 			</div>
 		</div>
 		<div class="course-content-body">
-				<ul class="assignment-calendar" ref="assignments" id="assignment">
-						<assignment-block
-								v-for="(date, index) in dateList"
-								:class="isNextDay(index) ? 'next' : ''"
-								:id="isNextDay(index) ? 'next' : ''"
-								:key="date + index + Math.random()"
-								:date="date"
-								:assignment="findAssignment(date)" 
-								:is-next-day="isNextDay(index)"
-								@add="addAssignment"
-								ref="items" />
-				</ul>
-				<assignment-modal ref="modal" v-show="modalVisibility" @close="modalVisibility = false" :assignment="modalAssignment" @update="updateAssignment" @filter="filterItem" @add="addAssignmentByModal" />
+            <ul class="assignment-calendar" ref="assignments" id="assignment">
+                <assignment-block
+                    v-for="(date, index) in dateList"
+                    :class="isNextDay(index) ? 'next' : ''"
+                    :id="isNextDay(index) ? 'next' : ''"
+                    :key="date + index + Math.random()"
+                    :date="date"
+                    :assignment="findAssignment(date)" 
+                    :is-next-day="isNextDay(index)"
+                    @add="addAssignment"
+                    ref="items" />
+            </ul>
+            <assignment-modal ref="modal" v-show="modalVisibility" @close="modalVisibility = false" :assignment="modalAssignment" @update="updateAssignment" @filter="filterItem" @add="addAssignmentByModal" />
 		</div>
 		<delete-modal
 				v-show="deleteModalVisibility"
@@ -115,297 +115,299 @@ export default {
         MyHeader
     },
     data: function(){
-        return{
-            course: {},
-            formData: {},
-            courseType: ['対面', 'オンライン'],
-            weekOfDay: ['月', '火', '水', '木', '金', '土'],
-            periodOptions: [1, 2, 3, 4, 5, 6],
-            periodOptionsList: [],
-            setting: {},
-            isInfoOpen: true,
-            isEditing: false,
-            isAlreadyRegistered: false,
-            selected: {
-                day: undefined,
-                period: undefined
-            },
-            periodInfo: {},
-            periodsList: [],
-            dateList: [],
-            assignments: [],
-            modalAssignment: {
-                date: undefined,
-                body: '',
-                done_flg: false,
-                memo: '',
-                id: undefined
-            },
-            modalVisibility: false,
-            deleteModalVisibility: false,
-            detailOptionWindowVisibility: false
-        }
+      return{
+        course: {},
+        formData: {},
+        courseType: ['対面', 'オンライン'],
+        weekOfDay: ['月', '火', '水', '木', '金', '土'],
+        periodOptions: [1, 2, 3, 4, 5, 6],
+        periodOptionsList: [],
+        setting: {},
+        isInfoOpen: true,
+        isEditing: false,
+        isAlreadyRegistered: false,
+        selected: {
+          day: undefined,
+          period: undefined
+        },
+        periodInfo: {},
+        periodsList: [],
+        dateList: [],
+        assignments: [],
+        modalAssignment: {
+          date: undefined,
+          body: '',
+          done_flg: false,
+          memo: '',
+          id: undefined
+        },
+        modalVisibility: false,
+        deleteModalVisibility: false,
+        detailOptionWindowVisibility: false
+      }
     },
     computed: {
         auth: function(){
-            return __auth();
+          return __auth();
         },
         periodList: function(){
-            return this.course.periods.map(p => {
-                return p.day_of_week;
-            });
+          return this.course.periods.map(p => {
+            return p.day_of_week;
+          });
         },
         today: function(){
-            return new Date();
+          return new Date();
         },
         thisYear: function(){
-            return new Date().getFullYear();
+          return new Date().getFullYear();
         },
     },
     methods: {
         createValidOptions(dayOfWeek, period){
-            var alreadyList = this.periodsList.filter(p => {
-                if(p.day_of_week === Number(dayOfWeek) && p.period != period){
-                    return p
-                }
-            });
-            var removePeriods = alreadyList.map(a => a.period);
-            var options = this.periodOptions.filter(o => removePeriods.indexOf(o) === -1);
-            return options
+          var alreadyList = this.periodsList.filter(p => {
+            if(p.day_of_week === Number(dayOfWeek) && p.period !== Number(period)){
+              return p
+            }
+          });
+          var removePeriods = alreadyList.map(a => a.period);
+          var options = this.periodOptions.filter(o => removePeriods.indexOf(o) === -1);
+          return options
         },
         changePeriodOptions(event, index){
-            var dayOfWeek = this.$refs['dayOfWeek' + index][0].value;
-            console.log(dayOfWeek)
-            var period = this.$refs['period' + index][0].value;
-            var options = this.createValidOptions(dayOfWeek, null);
-            //this.$refs['period' + index][0].value = '';
-            //this.$set(this.periodOptionsList, index, options)
+          var dayOfWeek = this.$refs['dayOfWeek' + index][0].value;
+          var period = this.$refs['period' + index][0].value;
+          var options = this.createValidOptions(dayOfWeek, null);
+          //this.$set(this.periodOptionsList, index, options);
         },
         edit: function(){
-            this.isEditing = !this.isEditing;
-            if(this.isEditing){
-                for(var i = 0; i < this.course.periods.length; i++){
-                    var options = this.createValidOptions(this.course.periods[i].day_of_week, this.course.periods[i].period);
-                    this.periodOptionsList.push(options);
-                }
-            }
+          this.isEditing = !this.isEditing;
+          this.getPeriods();
         },
         async getCourse(){
-            const params = await this.splitParams(location.search.substring(1));
-            if(!params.course){
-                this.isEditing = true;
-                this.$set(this.formData, 'periods', [
-                    {
-                        'day_of_week' : params.day,
-                        'period': params.period,
-                    }
-                ]);
-                this.$set(this.formData, 'type', '対面');
-            }else{
-                axios.get(`/api/course/detail/?course=${params.course}`)
-                .then(({data}) => {
-                    this.course = data[0];
-                    this.formData = this.course;
-                    this.isAlreadyRegistered = true;
-                    this.periodInfo = this.findPeriod()[0];
-                    this.getAssignments();
-                    this.getDateList();
-                });
-            }
+          const params = await this.splitParams(location.search.substring(1));
+          if(!params.course){
+            this.isEditing = true;
+            this.$set(this.formData, 'periods', [
+              {
+                'day_of_week' : params.day,
+                'period': params.period,
+              }
+            ]);
+            this.$set(this.formData, 'type', '対面');
+          }else{
+            axios.get(`/api/course/detail/?course=${params.course}`)
+            .then(({data}) => {
+              this.course = data[0];
+              this.formData = this.course;
+              this.isAlreadyRegistered = true;
+              this.periodInfo = this.findPeriod()[0];
+              this.getAssignments();
+              this.getDateList();
+            });
+          }
         },
         getAssignments: function(){
-            axios.get(`/api/course/assignments/c/${this.course.id}`)
-                .then(({data}) => {
-                    data.forEach(da => {
-                        this.assignments.push({
-                            ...da,
-                            'date': this.getDateOfAssignment(da.date),
-                        });
-                    })
-                })
+          axios.get(`/api/course/assignments/c/${this.course.id}`)
+            .then(({data}) => {
+              data.forEach(da => {
+                this.assignments.push({
+                  ...da,
+                  'date': this.getDateOfAssignment(da.date),
+                });
+              })
+            })
         },
         getDateOfAssignment: function(date){
-            var item = new Date(date);
-            return item.getMonth() + 1 + '/' + item.getDate();
+          var item = new Date(date);
+          return item.getMonth() + 1 + '/' + item.getDate();
         },
         findAssignment: function(date){
-            return this.assignments.find(a => a.date === date);
+          return this.assignments.find(a => a.date === date);
         },
         getDateList: function(){
-            var end = new Date(this.setting.semester.end_date);
-            var start = new Date(this.setting.semester.start_date);
-            var diff = (end.getTime() - start.getTime())/ (1000*60*60*24);
-            var startDay = start.getDay();
-            var endDay = end.getDay();
-            var dateListArray = [];
+          var end = new Date(this.setting.semester.end_date);
+          var start = new Date(this.setting.semester.start_date);
+          var diff = (end.getTime() - start.getTime())/ (1000*60*60*24);
+          var startDay = start.getDay();
+          var endDay = end.getDay();
+          var dateListArray = [];
 
-            for(var i = startDay; i < diff + 7; i = i + 7){
-                for(var j = 0; j < this.course.periods.length; j++){
-                    var num = this.course.periods[j].day_of_week + i - startDay * 2;
-                    if(num > 0 && num <= diff){
-                        var origin = new Date(this.setting.semester.start_date);
-                        var date = new Date(origin.setDate(origin.getDate() + num));
-                        var returnDate = date.getMonth() + 1 + '/' + date.getDate();
-                        dateListArray.push(returnDate);
-                    }
-                }
+          for(var i = startDay; i < diff + 7; i = i + 7){
+            for(var j = 0; j < this.course.periods.length; j++){
+              var num = this.course.periods[j].day_of_week + i - startDay * 2;
+              if(num > 0 && num <= diff){
+                var origin = new Date(this.setting.semester.start_date);
+                var date = new Date(origin.setDate(origin.getDate() + num));
+                var returnDate = date.getMonth() + 1 + '/' + date.getDate();
+                dateListArray.push(returnDate);
+              }
             }
-            this.dateList = dateListArray;
+          }
+          this.dateList = dateListArray;
         },
         getPeriods(){
-            axios.get(`/api/period/${this.auth.id}/${this.setting.semester.id}`)
-                .then(({data}) => {
-                    this.periodsList = data.map(p => {
-                        return {
-                            'day_of_week': p.day_of_week,
-                            'period': p.period
-                        }
-                    });
-                });
+          axios.get(`/api/period/${this.auth.id}/${this.setting.semester.id}`)
+            .then(({data}) => {
+              this.periodsList = [];
+              this.periodsList = data.map(p => {
+                return {
+                  'day_of_week': p.day_of_week,
+                  'period': p.period
+                }
+              });
+              if(this.isEditing){
+                this.periodOptionsList = [];
+                for(var i = 0; i < this.course.periods.length; i++){
+                  var options = this.createValidOptions(this.course.periods[i].day_of_week, this.course.periods[i].period);
+                  this.periodOptionsList.push(options);
+                }
+              }
+            });
         },
         isNextDay: function(index){
-            return this.indexOfNextDay() === index ? true : false;
+          return this.indexOfNextDay() === index ? true : false;
         },
         indexOfNextDay: function(){
-            for(var i = 0; i < this.dateList.length; i++){
-                var date = new Date(this.dateList[i]);
-                date.setFullYear(this.thisYear);
-                date.setHours(23);
-                date.setMinutes(59);
-                var prev = new Date(this.dateList[i - 1]);
-                prev.setFullYear(this.thisYear);
-                prev.setHours(23);
-                prev.setMinutes(59);
-                if(this.today > prev && this.today <= date){
-                    return i;
-                    break;
-                }
+          for(var i = 0; i < this.dateList.length; i++){
+            var date = new Date(this.dateList[i]);
+            date.setFullYear(this.thisYear);
+            date.setHours(23);
+            date.setMinutes(59);
+            var prev = new Date(this.dateList[i - 1]);
+            prev.setFullYear(this.thisYear);
+            prev.setHours(23);
+            prev.setMinutes(59);
+            if(this.today > prev && this.today <= date){
+              return i;
+              break;
             }
+          }
         },
         splitParams: function(param){
-            param = param.split('&');
-            var obj = {};
-            for(var i = 0; i < param.length; i++){
-                var item = param[i].split('=');
-                obj[item[0]] = item[1];
-            }
-            this.selected.day = Number(obj.day);
-            this.selected.period = Number(obj.period);
-            return obj;
+          param = param.split('&');
+          var obj = {};
+          for(var i = 0; i < param.length; i++){
+            var item = param[i].split('=');
+            obj[item[0]] = item[1];
+          }
+          this.selected.day = Number(obj.day);
+          this.selected.period = Number(obj.period);
+          return obj;
         },
         getWeekOfDay: function(num){
-            return this.weekOfDay[num - 1];
+          return this.weekOfDay[num - 1];
         },
         getPeriodTime: function(period){
-            return this.setting.periods[period];
+          return this.setting.periods[period];
         },
         toggleInfo: function(){
-            this.isInfoOpen = !this.isInfoOpen;
+          this.isInfoOpen = !this.isInfoOpen;
         },
         toggleDetailOptionWindow(){
-            this.detailOptionWindowVisibility = !this.detailOptionWindowVisibility;
+          this.detailOptionWindowVisibility = !this.detailOptionWindowVisibility;
         },
         addPeriodForm: function(){
-            this.formData.periods.push({
-                'day_of_week': '',
-                'period': ''
-            });
+          this.formData.periods.push({
+            'day_of_week': '',
+            'period': ''
+          });
         },
         getFormData(){
-            this.formData.teacher = this.$refs['teacherName'].value;
-            this.formData.type = this.$refs['courseType'].value;
-            this.formData.name = this.$refs['courseName'].value;
-            this.formData.periods = this.formData.periods.map((period, index) => {
-                var dKey = 'dayOfWeek' + index;
-                var pKey = 'period' + index;
-                return {...period, day_of_week: Array.from(this.$refs[dKey])[0].value, period: Array.from(this.$refs[pKey])[0].value}
-            });
+          this.formData.teacher = this.$refs['teacherName'].value;
+          this.formData.type = this.$refs['courseType'].value;
+          this.formData.name = this.$refs['courseName'].value;
+          this.formData.periods = this.formData.periods.map((period, index) => {
+            var dKey = 'dayOfWeek' + index;
+            var pKey = 'period' + index;
+            console.log(this.$refs[dKey][0].value)
+            return {...period, day_of_week: this.$refs[dKey][0].value, period: this.$refs[pKey][0].value}
+          });
         },
         save: function(){
-            this.getFormData();
-            axios.post(`/course/update/${this.course.id}`, {
-                'name': this.formData.name,
-                'teacher': this.formData.teacher,
-                'type': this.formData.type,
-                'periods': this.formData.periods
-            }).then(({data}) => {
-                this.isEditing = false;
-            });
+          this.getFormData();
+          axios.post(`/course/update/${this.course.id}`, {
+            'name': this.formData.name,
+            'teacher': this.formData.teacher,
+            'type': this.formData.type,
+            'periods': this.formData.periods
+          }).then(({data}) => {
+            this.isEditing = false;
+          });
         },
         register: function(){
-            this.getFormData();
-            axios.post(`/course/register/${this.auth.id}`, {
-                'name': this.formData.name,
-                'teacher': this.formData.teacher,
-                'type': this.formData.type,
-                'periods': this.formData.periods
-            }).then(({data}) => {
-                this.backToTimetable();
-            }).catch((err) => {
-                console.log(err);
-            })
+          this.getFormData();
+          axios.post(`/course/register/${this.auth.id}`, {
+            'name': this.formData.name,
+            'teacher': this.formData.teacher,
+            'type': this.formData.type,
+            'periods': this.formData.periods
+          }).then(({data}) => {
+            this.backToTimetable();
+          }).catch((err) => {
+            console.log(err);
+          })
         },
         findPeriod: function(){
-            return this.course.periods.filter(p => p.day_of_week === this.selected.day && p.period === this.selected.period);
+          return this.course.periods.filter(p => p.day_of_week === this.selected.day && p.period === this.selected.period);
         },
         toggleDeleteModal(){
-            this.deleteModalVisibility = !this.deleteModalVisibility
+          this.deleteModalVisibility = !this.deleteModalVisibility
         },
         backToTimetable(){
-            this.$router.push('/timetable');
+          this.$router.push('/timetable');
         },
         deleteCourse: function(){
-            axios.delete(`/period/${this.periodInfo.id}`)
-                .then(() => {
-                    this.backToTimetable();
-                })
-        },
-        addAssignment: function(date){
-            this.modalVisibility = true;
-            this.modalAssignment.date = date;
-            var item = this.findAssignment(date);
-            if(item){
-                this.modalAssignment.body = item.body;
-                this.modalAssignment.done_flg = item.done_flg;
-                this.modalAssignment.memo = item.memo;
-                this.modalAssignment.id = item.id
-            }else{
-                this.modalAssignment.body = '';
-                this.modalAssignment.done_flg = false;
-                this.modalAssignment.memo = '';
-                this.modalAssignment.id = undefined;
-                this.$refs.modal.isEditing = true;
-                this.$refs.modal.isAdding = true;
-            }
-        },
-        updateAssignment: function(data){
-            this.assignments = this.assignments.map(a => {
-                if(a.id === data.id){
-                    return a = {
-                        ...data,
-                        'date': this.getDateOfAssignment(data.date),
-                    }
-                }else{
-                    return a;
-                }
+          axios.delete(`/period/${this.periodInfo.id}`)
+            .then(() => {
+              this.backToTimetable();
             })
         },
+        addAssignment: function(date){
+          this.modalVisibility = true;
+          this.modalAssignment.date = date;
+          var item = this.findAssignment(date);
+          if(item){
+            this.modalAssignment.body = item.body;
+            this.modalAssignment.done_flg = item.done_flg;
+            this.modalAssignment.memo = item.memo;
+            this.modalAssignment.id = item.id
+          }else{
+            this.modalAssignment.body = '';
+            this.modalAssignment.done_flg = false;
+            this.modalAssignment.memo = '';
+            this.modalAssignment.id = undefined;
+            this.$refs.modal.isEditing = true;
+            this.$refs.modal.isAdding = true;
+          }
+        },
+        updateAssignment: function(data){
+          this.assignments = this.assignments.map(a => {
+            if(a.id === data.id){
+              return a = {
+                ...data,
+                'date': this.getDateOfAssignment(data.date),
+              }
+            }else{
+              return a;
+            }
+          })
+        },
         filterItem: function(id){
-            this.assignments = this.assignments.filter(a => a.id !== id);
+          this.assignments = this.assignments.filter(a => a.id !== id);
         },
         addAssignmentByModal: function(item){
-            this.assignments.push({
-                ...item,
-                date: this.getDateOfAssignment(item.date)
-            });
+          this.assignments.push({
+            ...item,
+            date: this.getDateOfAssignment(item.date)
+          });
         },
     },
     async mounted(){
-        await axios.get(`/api/user/setting/${this.auth.id}`).then(({data}) => {
-            this.setting = data;
-        })
-        await this.getCourse();
-        await this.getPeriods();
+      await axios.get(`/api/user/setting/${this.auth.id}`).then(({data}) => {
+        this.setting = data;
+      })
+      await this.getCourse();
+      await this.getPeriods();
     }
 }
 </script>
