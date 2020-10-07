@@ -4739,6 +4739,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       courseType: ['対面', 'オンライン'],
       weekOfDay: ['月', '火', '水', '木', '金', '土'],
       periodOptions: [1, 2, 3, 4, 5, 6],
+      periodOptionsList: [],
       setting: {},
       isInfoOpen: true,
       isEditing: false,
@@ -4748,6 +4749,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         period: undefined
       },
       periodInfo: {},
+      periodsList: [],
       dateList: [],
       assignments: [],
       modalAssignment: {
@@ -4779,6 +4781,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
+    createValidOptions: function createValidOptions(dayOfWeek, period) {
+      var alreadyList = this.periodsList.filter(function (p) {
+        if (p.day_of_week === Number(dayOfWeek) && p.period !== Number(period)) {
+          return p;
+        }
+      });
+      var removePeriods = alreadyList.map(function (a) {
+        return a.period;
+      });
+      var options = this.periodOptions.filter(function (o) {
+        return removePeriods.indexOf(o) === -1;
+      });
+      return options;
+    },
+    changePeriodOptions: function changePeriodOptions(event, index) {
+      var dayOfWeek = this.$refs['dayOfWeek' + index][0].value;
+      var period = this.$refs['period' + index][0].value;
+      var options = this.createValidOptions(dayOfWeek, null); //this.$set(this.periodOptionsList, index, options);
+    },
+    edit: function edit() {
+      this.isEditing = !this.isEditing;
+      this.getPeriods();
+    },
     getCourse: function getCourse() {
       var _this = this;
 
@@ -4847,8 +4872,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     getDateList: function getDateList() {
-      var end = new Date(this.setting.end_date);
-      var start = new Date(this.setting.start_date);
+      var end = new Date(this.setting.semester.end_date);
+      var start = new Date(this.setting.semester.start_date);
       var diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
       var startDay = start.getDay();
       var endDay = end.getDay();
@@ -4859,7 +4884,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           var num = this.course.periods[j].day_of_week + i - startDay * 2;
 
           if (num > 0 && num <= diff) {
-            var origin = new Date(this.setting.start_date);
+            var origin = new Date(this.setting.semester.start_date);
             var date = new Date(origin.setDate(origin.getDate() + num));
             var returnDate = date.getMonth() + 1 + '/' + date.getDate();
             dateListArray.push(returnDate);
@@ -4868,6 +4893,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       this.dateList = dateListArray;
+    },
+    getPeriods: function getPeriods() {
+      var _this3 = this;
+
+      axios.get("/api/period/".concat(this.auth.id, "/").concat(this.setting.semester.id)).then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.periodsList = [];
+        _this3.periodsList = data.map(function (p) {
+          return {
+            'day_of_week': p.day_of_week,
+            'period': p.period
+          };
+        });
+
+        if (_this3.isEditing) {
+          _this3.periodOptionsList = [];
+
+          for (var i = 0; i < _this3.course.periods.length; i++) {
+            var options = _this3.createValidOptions(_this3.course.periods[i].day_of_week, _this3.course.periods[i].period);
+
+            _this3.periodOptionsList.push(options);
+          }
+        }
+      });
     },
     isNextDay: function isNextDay(index) {
       return this.indexOfNextDay() === index ? true : false;
@@ -4914,9 +4963,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     toggleDetailOptionWindow: function toggleDetailOptionWindow() {
       this.detailOptionWindowVisibility = !this.detailOptionWindowVisibility;
     },
-    edit: function edit() {
-      this.isEditing = !this.isEditing;
-    },
     addPeriodForm: function addPeriodForm() {
       this.formData.periods.push({
         'day_of_week': '',
@@ -4924,7 +4970,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     getFormData: function getFormData() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.formData.teacher = this.$refs['teacherName'].value;
       this.formData.type = this.$refs['courseType'].value;
@@ -4932,14 +4978,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.formData.periods = this.formData.periods.map(function (period, index) {
         var dKey = 'dayOfWeek' + index;
         var pKey = 'period' + index;
+        console.log(_this4.$refs[dKey][0].value);
         return _objectSpread(_objectSpread({}, period), {}, {
-          day_of_week: Array.from(_this3.$refs[dKey])[0].value,
-          period: Array.from(_this3.$refs[pKey])[0].value
+          day_of_week: _this4.$refs[dKey][0].value,
+          period: _this4.$refs[pKey][0].value
         });
       });
     },
     save: function save() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.getFormData();
       axios.post("/course/update/".concat(this.course.id), {
@@ -4947,13 +4994,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'teacher': this.formData.teacher,
         'type': this.formData.type,
         'periods': this.formData.periods
-      }).then(function (_ref3) {
-        var data = _ref3.data;
-        _this4.isEditing = false;
+      }).then(function (_ref4) {
+        var data = _ref4.data;
+        _this5.isEditing = false;
       });
     },
     register: function register() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.getFormData();
       axios.post("/course/register/".concat(this.auth.id), {
@@ -4961,19 +5008,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         'teacher': this.formData.teacher,
         'type': this.formData.type,
         'periods': this.formData.periods
-      }).then(function (_ref4) {
-        var data = _ref4.data;
+      }).then(function (_ref5) {
+        var data = _ref5.data;
 
-        _this5.backToTimetable();
+        _this6.backToTimetable();
       })["catch"](function (err) {
         console.log(err);
       });
     },
     findPeriod: function findPeriod() {
-      var _this6 = this;
+      var _this7 = this;
 
       return this.course.periods.filter(function (p) {
-        return p.day_of_week === _this6.selected.day && p.period === _this6.selected.period;
+        return p.day_of_week === _this7.selected.day && p.period === _this7.selected.period;
       });
     },
     toggleDeleteModal: function toggleDeleteModal() {
@@ -4983,10 +5030,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$router.push('/timetable');
     },
     deleteCourse: function deleteCourse() {
-      var _this7 = this;
+      var _this8 = this;
 
       axios["delete"]("/period/".concat(this.periodInfo.id)).then(function () {
-        _this7.backToTimetable();
+        _this8.backToTimetable();
       });
     },
     addAssignment: function addAssignment(date) {
@@ -5009,12 +5056,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     updateAssignment: function updateAssignment(data) {
-      var _this8 = this;
+      var _this9 = this;
 
       this.assignments = this.assignments.map(function (a) {
         if (a.id === data.id) {
           return a = _objectSpread(_objectSpread({}, data), {}, {
-            'date': _this8.getDateOfAssignment(data.date)
+            'date': _this9.getDateOfAssignment(data.date)
           });
         } else {
           return a;
@@ -5033,7 +5080,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this9 = this;
+    var _this10 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5041,16 +5088,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return axios.get("/api/user/setting/".concat(_this9.auth.id)).then(function (_ref5) {
-                var data = _ref5.data;
-                _this9.setting = data;
+              return axios.get("/api/user/setting/".concat(_this10.auth.id)).then(function (_ref6) {
+                var data = _ref6.data;
+                _this10.setting = data;
               });
 
             case 2:
               _context2.next = 4;
-              return _this9.getCourse();
+              return _this10.getCourse();
 
             case 4:
+              _context2.next = 6;
+              return _this10.getPeriods();
+
+            case 6:
             case "end":
               return _context2.stop();
           }
@@ -108122,7 +108173,15 @@ var render = function() {
                                     ref: "dayOfWeek" + index,
                                     refInFor: true,
                                     staticClass: "form-control",
-                                    domProps: { value: period.day_of_week }
+                                    domProps: { value: period.day_of_week },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.changePeriodOptions(
+                                          $event,
+                                          index
+                                        )
+                                      }
+                                    }
                                   },
                                   _vm._l(_vm.weekOfDay, function(day, index) {
                                     return _c(
@@ -108145,7 +108204,9 @@ var render = function() {
                                     staticClass: "form-control",
                                     domProps: { value: period.period }
                                   },
-                                  _vm._l(_vm.periodOptions, function(item) {
+                                  _vm._l(_vm.periodOptionsList[index], function(
+                                    item
+                                  ) {
                                     return _c(
                                       "option",
                                       { key: item, domProps: { value: item } },
@@ -108654,21 +108715,6 @@ var render = function() {
             ],
             1
           )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "setting-list" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "setting-list-name" },
-            [
-              _c("router-link", { attrs: { to: "" } }, [
-                _vm._v("\n            メモ\n          ")
-              ])
-            ],
-            1
-          )
         ])
       ])
     ],
@@ -108690,14 +108736,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "setting-list-icon" }, [
       _c("img", { attrs: { src: "/images/setting-colored.png", alt: "" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "setting-list-icon" }, [
-      _c("img", { attrs: { src: "/images/memo.png", alt: "" } })
     ])
   }
 ]
