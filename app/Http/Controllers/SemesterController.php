@@ -33,4 +33,10 @@ class SemesterController extends Controller
             return $newSemester;
         }
     }
+
+    public function destroy(Semester $semester)
+    {
+        $semester->delete();
+        return response()->json([]);
+    }
 }

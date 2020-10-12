@@ -3,58 +3,87 @@
     <setting-head
       name="年度/学期切替"
       link="setting/mypage"
-      option-button-visibility=false
+      :option-button-visibility=false
     />
-    <form class="setting-semester-form">
-      <div class="setting-semester-form-block">
-        <p class="setting-semester-form-text">年度を選択</p>
-        <select class="form-control" v-model="semesters.current.year" @change="changeCurrent" ref="year">
-          <option :value="year" v-for="year in years" :key="year">{{year}}</option>
-        </select>
+    <div class="semester-content-body">
+      <div class="semester-surface-body" :data-visibility="!listVisibility ? 'visible' : 'hidden'">
+        <p class="setting-text">時間割を表示させたい年度と学期を選択してください。<br>学期開始日と終了日を正しく入力しないとデータが正しく表示されないことがあります。</p>
+        <p class="setting-subtitle">選択中</p>
+        <semester-card 
+          :semester="semesters.current" 
+          @show="showOption"
+        />
+        <div class="semester-select-button" role="button" @click="toggleListVisibility">学期一覧から選択する</div>
       </div>
-      <div class="setting-semester-form-block">
-        <p class="setting-semester-form-text">学期を選択</p>
-        <select class="form-control" v-model="semesters.current.type" @change="changeCurrent" ref="semester">
-          <option :value="item" v-for="(item, index) in semesters.semesterEnum" :key="index">{{item}}</option>
-        </select>
+      <div class="semester-list-body" :data-visibility="listVisibility ? 'visible' : 'hidden'">
+        <semester-card
+          v-for="semester in semesters.semesters" 
+          :semester="semester" 
+          :key="semester.id"
+          :data-selected="semester.id === current.id ? 'selected' : 'non-selected'"
+          @select="selectSemester"
+          @show="showOption"
+        />
       </div>
-      <div class="setting-semester-form-block">
-        <p class="setting-semester-form-text">学期開始日</p>
-        <div class="d-flex">
-          <input class="form-control" type="text" v-model="semesters.current.startDate.year">
-          <input class="form-control" type="text" v-model="semesters.current.startDate.month">
-          <input class="form-control" type="text" v-model="semesters.current.startDate.day">
-        </div>
+      <div class="setting-semester-button-block" v-if="listVisibility">
+        <button class="setting-semester-button setting-semester-delete" @click="cancelChange">変更を取り消す</button>
+        <button class="setting-semester-button setting-semester-save" @click="save">変更を保存する</button>
       </div>
-      <div class="setting-semester-form-block">
-        <p class="setting-semester-form-text">学期終了日</p>
-        <div class="d-flex">
-          <input class="form-control" type="text" v-model="semesters.current.endDate.year">
-          <input class="form-control" type="text" v-model="semesters.current.endDate.month">
-          <input class="form-control" type="text" v-model="semesters.current.endDate.day">
-        </div>
-      </div>
-    </form>
-    <button class="setting-semester-save" @click="save">変更を保存する</button>
+    </div>
     <loading v-show="loadingVisibility" />
+    <transition name="fade">
+      <semester-option
+        v-show="optionVisibility" 
+        :visibility="optionVisibility" 
+        @close="optionVisibility = false"
+        @delete="showDeleteModal"
+        @edit="editSemester"
+      />
+    </transition>
+    <delete-modal 
+      v-show="deleteModalVisibility" 
+      :info="optionTargetSemester" 
+      type="semester" 
+      @close="deleteModalVisibility = false"
+      @delete="deleteSemester"
+    />
+    <semester-modal
+      :semester="optionTargetSemester"
+      v-show="editModalVisibility"
+      @cancel="editModalVisibility = false"
+    />
   </div>
 </template>
 
 <script>
+import DeleteModal from './modules/Delete-modal'
 import Loading from './modules/Loading'
 import SettingHead from './modules/Setting-head'
+import SemesterCard from './modules/SemesterCard'
+import SemesterModal from './modules/SemesterModal'
+import SemesterOption from './modules/SemesterOption'
 
 export default {
   components: {
+    DeleteModal,
     Loading,
-    SettingHead
+    SettingHead,
+    SemesterCard,
+    SemesterModal,
+    SemesterOption
   },
   data(){
     return {
+      current: {},
+      deleteModalVisibility: false,
+      editModalVisibility: false,
+      endYear: 2050,
+      listVisibility: false,
+      loadingVisibility: false,
+      optionVisibility: false,
       semesters: {},
       startYear: 2010,
-      endYear: 2050,
-      loadingVisibility: false
+      optionTargetSemester: {}
     }
   },
   computed: {
@@ -72,23 +101,27 @@ export default {
     },
   },
   methods: {
-    changeCurrent(){
-      var year = this.$refs.year.value;
-      var semester = this.$refs.semester.value;
-      var target = this.semesters.semesters.filter(s => {
-        if(s.year == year && s.type == semester){
-          return s;
-        }
+    changeCurrent(semester){
+      this.current = semester;
+    },
+    cancelChange(){
+      this.listVisibility = false;
+    },
+    deleteSemester(){
+      const deleteItemId = this.semesters.current.id;
+      axios.delete(`/setting/mypage/semester/delete/${this.semesters.current.id}`)
+      .then(({data}) => {
+        this.deleteModalVisibility = false;
+        this.semesters.semesters = this.semesters.semesters.filter(s => s.id !== deleteItemId);
+        this.save(this.semesters.semesters[0]);
       })
-      if(target.length > 0){
-        var startDate = this.getDateObj(target[0].start_date);
-        var endDate = this.getDateObj(target[0].end_date);
-        this.semesters.current = {
-          ...target[0],
-          startDate: {...startDate},
-          endDate: {...endDate}
-        }
-      }
+      .catch(err => {
+        console.log(err);
+      })
+    },
+    editSemester(){
+      this.editModalVisibility = true;
+      this.optionVisibility = false;
     },
     getSemesters(){
       axios.get(`/api/setting/semester/detail/${this.auth.id}`)
@@ -102,6 +135,11 @@ export default {
             startDate: {...startDate},
             endDate: {...endDate}
           }
+        }
+        this.current = {
+          ...data.current,
+          startDate: {...startDate},
+          endDate: {...endDate}
         }
       });
     },
@@ -135,19 +173,41 @@ export default {
     },
     save(){
       this.loadingVisibility = true;
-      var formItem = this.semesters.current;
+      var formItem = this.current;
+      var startDate = this.getDateObj(formItem.start_date);
+      var endDate = this.getDateObj(formItem.end_date);
       axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
         'year': formItem.year,
         'type': formItem.type,
-        'start_date': this.formatDate(formItem.startDate.year, formItem.startDate.month, formItem.startDate.day),
-        'end_date': this.formatDate(formItem.endDate.year, formItem.endDate.month, formItem.endDate.day)
+        'start_date': this.formatDate(startDate.year, startDate.month, startDate.day),
+        'end_date': this.formatDate(endDate.year, endDate.month, endDate.day)
       })
       .then(({data}) => {
         this.loadingVisibility = false;
+        this.listVisibility = false;
       })
       .catch(err => {
         console.log(err);
       })
+    },
+    selectSemester(semester){
+      let current = this.semesters.current;
+      this.changeCurrent(semester);
+    },
+    showDeleteModal(){
+      if(this.optionTargetSemester.id === this.current.id){
+        alert('選択中の学期は削除できません');
+        return
+      }
+      this.deleteModalVisibility = true;
+      this.optionVisibility = false;
+    },
+    showOption(semester){
+      this.optionTargetSemester = semester;
+      this.optionVisibility = true;
+    },
+    toggleListVisibility(){
+      this.listVisibility = !this.listVisibility;
     }
   },
   mounted(){

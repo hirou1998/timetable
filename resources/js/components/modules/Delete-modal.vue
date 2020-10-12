@@ -7,6 +7,9 @@
             <template v-if="type == 'course'">
                 {{info.name}}
             </template>
+            <template v-if="type == 'semester'">
+                {{info.year}} {{info.type}}
+            </template>
             を削除してもよろしいですか？
             <div class="delete-modal-buttons">
                 <button class="btn btn-danger btn-sm" @click="deleteEvent">削除</button>

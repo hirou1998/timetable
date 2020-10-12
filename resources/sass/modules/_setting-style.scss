@@ -28,12 +28,16 @@
   background-color: $light-color;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 .setting-subtitle{
 	color: $main-color;
 	font-size: 1.2rem;
-	padding: 2vh 0 2vh 2vw;
+	padding: 2vh 0 1vh 2vw;
 	margin: 0;
+}
+.setting-text{
+	color: $text-color;
 }
 .setting-list-container{
 	background-color: #fff;
@@ -129,6 +133,32 @@
 .mypage-info-block{
 	margin: 1rem 0 3rem;
 }
+.semester-content-body{
+	height: 90vh;
+	padding: 2vw 0;
+	position: relative;
+	&> div:not(:last-child){
+		transition: transform .5s;
+		padding: 0 2vw;
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100vw;
+	}
+}
+.semester-surface-body{
+	transform: translate(0, 0);
+	&[data-visibility="hidden"]{
+		transform: translate(-100%, 0);
+	}
+}
+.semester-list-body.semester-list-body{
+	transform: translate(100%, 0);
+	padding-top: 3vh;
+	&[data-visibility="visible"]{
+		transform: translate(0, 0);
+	}
+}
 .setting-semester-form{
 	width: 86%;
 	padding: 2rem;
@@ -140,13 +170,72 @@
 	font-size: 1rem;
 	margin-bottom: .2rem;
 }
-
-.setting-semester-save{
+.setting-semester-button-block{
 	position: absolute;
-	width: 100vw;
-	background-color: $current-blue;
 	left: 0;
-	bottom: 0;
+	bottom: -2vh;
+}
+.setting-semester-button{
+	width: 100vw;
 	padding: 1vh 0;
 	font-size: 1rem;
+}
+.setting-semester-save{
+	background-color: $current-blue;
+}
+.setting-semester-delete{
+	background-color: $red;
+}
+.setting-semester-card{
+	background-color: #fff;
+	width: 96%;
+	border-radius: 5px;
+	margin: 1vh auto;
+	padding: 2vw 4vw;
+	border: solid 1px $main-color;
+	color: $text-color;
+	position: relative;
+
+	&[data-selected="non-selected"]{
+		opacity: .5;
+	}
+}
+.semester-option-button{
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: $text-color;
+}
+.setting-semester-card-head{
+	font-size: 1.2rem;
+	margin-bottom: 1vh;
+}
+.setting-semester-card-icon{
+	width: 5%;
+	margin-right: 1vw;
+}
+.setting-semester-card-date{
+	align-items: flex-end;
+}
+.setting-semester-card-text{
+	line-height: 1;
+}
+.semester-select-button{
+	color: $text-color;
+	text-decoration: underline;
+	text-align: right;
+	margin-top: 1rem;
+}
+.semester-edit-window{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: #fff;
+	transform: translate(-50%, -50%);
+	width: 80%;
+	padding: 2vw;
+	border: solid $main-color 2px;
+}
+.semester-edit-inner{
+	margin-bottom: 2vh;
 }

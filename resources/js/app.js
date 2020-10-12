@@ -19,8 +19,8 @@ new Vue({
     watch: {
         '$route': function (to, from) {
             if (to.path !== from.path) {
-                document.getElementById('navbar-toggle-button').setAttribute('aria-expanded', 'false');
-                document.getElementById('navbarSupportedContent').classList.remove('show');
+                // document.getElementById('navbar-toggle-button').setAttribute('aria-expanded', 'false');
+                //document.getElementById('navbarSupportedContent').classList.remove('show');
             }
           }
     },

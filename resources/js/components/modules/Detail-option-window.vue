@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-base detail-option-overlay">
+    <div class="modal-base">
         <transition name="slide">
             <section class="detail-option-window" v-show="visibility">
                 <ul class="detail-options detail-option-block">

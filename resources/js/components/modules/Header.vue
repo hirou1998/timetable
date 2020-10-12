@@ -7,11 +7,6 @@
                 </span>
             </button>
             <p class="navbar-title">{{name}}</p>
-            <!-- <button type="button">
-                <span class="nabvar-button-setting navbar-button-icon">
-                    <i class="fas fa-cog"></i>
-                </span>
-            </button> -->
         </nav>
         <hamburger :visibility="hamburgerVisibility" :auth="auth" :page="routeName" :bk-color="bkColor" @delete="deleteCourse" @edit="editCourse" @toggle="toggleHamburger" />
     </article>
