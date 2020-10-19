@@ -7,6 +7,7 @@ use App\Period;
 use App\Setting;
 use App\Assignment;
 use App\Semester;
+use App\Type;
 
 class DatabaseSeeder extends Seeder
 {
@@ -130,5 +131,7 @@ class DatabaseSeeder extends Seeder
             'done_flg' => true,
             'memo' => 'words quiz'
         ]);
+        
+        factory(Type::class)->create([]);
     }
 }

@@ -3,7 +3,7 @@
     <setting-head
       name="年度/学期切替"
       link="setting/mypage"
-      :option-button-visibility=false
+      :option-button-visibility="optionButtonVisibility"
     />
     <div class="semester-content-body">
       <div class="semester-surface-body" :data-visibility="!listVisibility ? 'visible' : 'hidden'">
@@ -48,9 +48,10 @@
       @delete="deleteSemester"
     />
     <semester-modal
-      :semester="optionTargetSemester"
-      v-show="editModalVisibility"
+      v-model="optionTargetSemester"
+      v-if="editModalVisibility"
       @cancel="editModalVisibility = false"
+      :types="semesters.semesterType"
     />
   </div>
 </template>
@@ -83,21 +84,13 @@ export default {
       optionVisibility: false,
       semesters: {},
       startYear: 2010,
-      optionTargetSemester: {}
+      optionTargetSemester: {},
+      optionButtonVisibility: false
     }
   },
   computed: {
     auth(){
       return __auth();
-    },
-    years(){
-      var yearNum = this.endYear - this.startYear;
-      var yearsArray = [];
-      for(var i = 0; i < yearNum; i++){
-        var item = this.startYear + i;
-        yearsArray.push(this.startYear + i);
-      }
-      return yearsArray;
     },
   },
   methods: {

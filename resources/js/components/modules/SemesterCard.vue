@@ -21,6 +21,9 @@ export default {
         showOption(){
             this.$emit('show', this.semester);
         }
+    },
+    computed: {
+        
     }
 }
 </script>
