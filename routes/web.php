@@ -69,4 +69,5 @@ Route::middleware(['auth'])->group(function(){
     })->name('setting.semester');
     Route::post('/setting/mypage/semester/create/{user}', 'SemesterController@create');
     Route::delete('/setting/mypage/semester/delete/{semester}', 'SemesterController@destroy');
+    Route::put('/setting/mypage/semester/edit/{semester}', 'SemesterController@edit');
 });

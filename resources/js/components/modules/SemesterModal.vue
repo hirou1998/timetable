@@ -4,32 +4,50 @@
             <div class="semester-edit-inner">
                 <form>
                     <div class="semester-edit-block">
+                        <p class="setting-form-text">年度</p>
                         <select v-model="year" class="form-control">
                             <option :value="item" v-for="item in years" :key="item">{{item}}</option>
                         </select>
                     </div>
                     <div class="semester-edit-block">
+                        <p class="setting-form-text">学期</p>
                         <select v-model="type" class="form-control">
                             <option :value="item" v-for="item in types" :key="item">{{item}}</option>
                         </select>
                     </div>
-                    <div class="semester-edit-block d-flex">
-                        <select v-model="startDateYear" class="form-control">
-                            <option :value="item" v-for="item in years" :key="item">{{item}}</option>
-                        </select>
-                        <select v-model="startDateMonth" class="form-control">
-                            <option :value="item" v-for="item in 12" :key="item">{{item}}</option>
-                        </select>
-                        <select v-model="startDateDay" class="form-control">
-                            <option :value="item" v-for="item in 31" :key="item">{{item}}</option>
-                        </select>
+                    <div class="semester-edit-block">
+                        <p class="setting-form-text">開始日</p>
+                        <div class="d-flex">
+                            <select v-model="startDateYear" class="form-control">
+                                <option :value="item" v-for="item in years" :key="item">{{item}}</option>
+                            </select>
+                            <select v-model="startDateMonth" class="form-control">
+                                <option :value="item" v-for="item in 12" :key="item">{{item}}</option>
+                            </select>
+                            <select v-model="startDateDay" class="form-control">
+                                <option :value="item" v-for="item in days(startDateYear, startDateMonth)" :key="item">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="semester-edit-block">
+                        <p class="setting-form-text">終了日</p>
+                        <div class="d-flex">
+                            <select v-model="endDateYear" class="form-control">
+                                <option :value="item" v-for="item in years" :key="item">{{item}}</option>
+                            </select>
+                            <select v-model="endDateMonth" class="form-control">
+                                <option :value="item" v-for="item in 12" :key="item">{{item}}</option>
+                            </select>
+                            <select v-model="endDateDay" class="form-control">
+                                <option :value="item" v-for="item in days(endDateYear, endDateMonth)" :key="item">{{item}}</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
-            {{startDays()}}
             <div class="d-flex justify-content-space-around">
                 <button class="btn btn-sm btn-danger" @click="cancelEdit">キャンセル</button>
-                <button class="btn btn-sm btn-success">変更を保存</button>
+                <button class="btn btn-sm btn-success" @click="save">変更を保存</button>
             </div>
         </section>
     </div>
@@ -79,7 +97,6 @@ export default {
                 return this.semester.startDate.month;
             },
             set(month){
-                this.startDays();
                 let startDate = this.updateStartDate({month});
                 this.updateValue({startDate})
             }
@@ -93,6 +110,33 @@ export default {
                 this.updateValue({startDate})
             }
         },
+        endDateYear: {
+            get(){
+                return this.semester.endDate.year;
+            },
+            set(year){
+                let endDate = this.updatEendDate({year});
+                this.updateValue({endDate})
+            }
+        },
+        endDateMonth: {
+            get(){
+                return this.semester.endDate.month;
+            },
+            set(month){
+                let endDate = this.updateEndDate({month});
+                this.updateValue({endDate})
+            }
+        },
+        endDateDay: {
+            get(){
+                return this.semester.endDate.day;
+            },
+            set(day){
+                let endDate = this.updateEndDate({day});
+                this.updateValue({endDate})
+            }
+        },
         years(){
             var yearNum = this.endYear - this.startYear;
             var yearsArray = [];
@@ -102,18 +146,17 @@ export default {
             }
             return yearsArray;
         },
-        // startMonths(){
-        //     let date = new Date(2020, this.startDateMonth, 0);
-        //     return date;
-        // }
     },
     methods: {
         cancelEdit(){
             this.$emit('cancel');
         },
-        startDays(){
-            let date = new Date(this.year, this.startDateMonth, 0);
-            return this.startDateMonth;
+        days(year, month){
+            let date = new Date(year, month, 0);
+            return date.getDate();
+        },
+        save(){
+            this.$emit('edit');
         },
         updateValue(value){
             this.$emit('change', {...this.semester, ...value})

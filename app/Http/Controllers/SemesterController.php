@@ -34,6 +34,17 @@ class SemesterController extends Controller
         }
     }
 
+    public function edit(Semester $semester, Request $request)
+    {
+        return $semester->update([
+            'year' => $request->year,
+            'type' => $request->type,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        ]);
+        return $semester;
+    }
+
     public function destroy(Semester $semester)
     {
         $semester->delete();

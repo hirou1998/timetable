@@ -16139,6 +16139,15 @@ a:hover {
   margin-bottom: 2vh;
 }
 
+.setting-form-text {
+  color: #888282;
+  margin-bottom: 0.1vh;
+}
+
+.semester-edit-block {
+  margin-bottom: 1vh;
+}
+
 .calendar {
   margin-top: 4vh;
   position: relative;

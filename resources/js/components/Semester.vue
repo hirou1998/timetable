@@ -10,7 +10,7 @@
         <p class="setting-text">時間割を表示させたい年度と学期を選択してください。<br>学期開始日と終了日を正しく入力しないとデータが正しく表示されないことがあります。</p>
         <p class="setting-subtitle">選択中</p>
         <semester-card 
-          :semester="semesters.current" 
+          :semester="current" 
           @show="showOption"
         />
         <div class="semester-select-button" role="button" @click="toggleListVisibility">学期一覧から選択する</div>
@@ -49,8 +49,9 @@
     />
     <semester-modal
       v-model="optionTargetSemester"
-      v-if="editModalVisibility"
+      v-show="editModalVisibility"
       @cancel="editModalVisibility = false"
+      @edit="edit()"
       :types="semesters.semesterType"
     />
   </div>
@@ -112,6 +113,35 @@ export default {
         console.log(err);
       })
     },
+    edit(){
+      let editedStartDate = this.optionTargetSemester.startDate;
+      let editedEndDate = this.optionTargetSemester.endDate;
+      this.optionTargetSemester.start_date = this.formatDate(editedStartDate.year, editedStartDate.month, editedStartDate.day);
+      this.optionTargetSemester.end_date = this.formatDate(editedEndDate.year, editedEndDate.month, editedEndDate.day);
+      axios.put(`/setting/mypage/semester/edit/${this.optionTargetSemester.id}`, {
+        'year': this.optionTargetSemester.year,
+        'type': this.optionTargetSemester.type,
+        'start_date': this.optionTargetSemester.start_date,
+        'end_date': this.optionTargetSemester.end_date,
+      })
+      .then(() => {
+        let newSemesters = this.semesters.semesters.map(s => {
+          if(s.id == this.optionTargetSemester.id){
+            return this.optionTargetSemester
+          }else{
+            return s;
+          }
+        })
+        this.semesters.semesters = newSemesters;
+        if(this.current.id == this.optionTargetSemester.id){
+          this.current = this.optionTargetSemester
+        }
+        this.editModalVisibility = false;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    },
     editSemester(){
       this.editModalVisibility = true;
       this.optionVisibility = false;
@@ -119,15 +149,26 @@ export default {
     getSemesters(){
       axios.get(`/api/setting/semester/detail/${this.auth.id}`)
       .then(({data}) => {
+        console.log(data)
         var startDate = this.getDateObj(data.current.start_date);
         var endDate = this.getDateObj(data.current.end_date);
+        var shapedSemesters = data.semesters.map(s => {
+          var startDate = this.getDateObj(s.start_date);
+          var endDate = this.getDateObj(s.end_date);
+          return {
+            ...s,
+            startDate: {...startDate},
+            endDate: {...endDate}
+          }
+        });
         this.semesters = {
           ...data,
           current: {
             ...data.current,
             startDate: {...startDate},
             endDate: {...endDate}
-          }
+          },
+          semesters: shapedSemesters
         }
         this.current = {
           ...data.current,
@@ -165,23 +206,23 @@ export default {
       return year + '-' + month + '-' + day;
     },
     save(){
-      this.loadingVisibility = true;
-      var formItem = this.current;
-      var startDate = this.getDateObj(formItem.start_date);
-      var endDate = this.getDateObj(formItem.end_date);
-      axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
-        'year': formItem.year,
-        'type': formItem.type,
-        'start_date': this.formatDate(startDate.year, startDate.month, startDate.day),
-        'end_date': this.formatDate(endDate.year, endDate.month, endDate.day)
-      })
-      .then(({data}) => {
-        this.loadingVisibility = false;
-        this.listVisibility = false;
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      // this.loadingVisibility = true;
+      // var formItem = this.current;
+      // var startDate = this.getDateObj(formItem.start_date);
+      // var endDate = this.getDateObj(formItem.end_date);
+      // axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
+      //   'year': formItem.year,
+      //   'type': formItem.type,
+      //   'start_date': this.formatDate(startDate.year, startDate.month, startDate.day),
+      //   'end_date': this.formatDate(endDate.year, endDate.month, endDate.day)
+      // })
+      // .then(({data}) => {
+      //   this.loadingVisibility = false;
+      //   this.listVisibility = false;
+      // })
+      // .catch(err => {
+      //   console.log(err);
+      // })
     },
     selectSemester(semester){
       let current = this.semesters.current;
