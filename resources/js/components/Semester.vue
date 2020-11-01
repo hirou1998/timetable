@@ -132,6 +132,13 @@ export default {
   methods: {
     add(){
       this.formatOptionTargetSemester();
+      let sameSemester = this.semesters.semesters.filter(s => {
+        return s.year == this.optionTargetSemester.year && s.type == this.optionTargetSemester.type;
+      });
+      if(sameSemester){
+        alert('すでに登録されている学期は追加できません。');
+        return
+      }
       axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
         'year': this.optionTargetSemester.year,
         'type': this.optionTargetSemester.type,
@@ -139,12 +146,18 @@ export default {
         'end_date': this.optionTargetSemester.end_date
       })
       .then(({data}) => {
-        console.log(data)
-        this.semesters.semesters.push(data);
+        if(data.id){
+          this.semesters.semesters.push(data);
+        }
         this.editModalVisibility = false;
       })
-      .catch(err => {
-        console.log(err)
+      .catch((err, msg) => {
+        this.editModalVisibility = false;
+        if(err.response.data.error){
+          alert(err.response.data.error)
+        }else{
+          alert('予期せぬエラーが発生しました。')
+        }
       })
     },
     addSemester(){
@@ -163,18 +176,15 @@ export default {
       axios.delete(`/setting/mypage/semester/delete/${this.semesters.current.id}`)
       .then(({data}) => {
         this.deleteModalVisibility = false;
-        this.semesters.semesters = this.semesters.semesters.filter(s => s.id !== deleteItemId);
-        this.save(this.semesters.semesters[0]);
+        if(data.id){
+          this.semesters.semesters = this.semesters.semesters.filter(s => s.id !== deleteItemId);
+        }
       })
       .catch(err => {
         console.log(err);
       })
     },
     edit(){
-      // let editedStartDate = this.optionTargetSemester.startDate;
-      // let editedEndDate = this.optionTargetSemester.endDate;
-      // this.optionTargetSemester.start_date = this.formatDate(editedStartDate.year, editedStartDate.month, editedStartDate.day);
-      // this.optionTargetSemester.end_date = this.formatDate(editedEndDate.year, editedEndDate.month, editedEndDate.day);
       this.formatOptionTargetSemester();
       axios.put(`/setting/mypage/semester/edit/${this.optionTargetSemester.id}`, {
         'year': this.optionTargetSemester.year,

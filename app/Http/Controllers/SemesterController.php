@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Semester;
 use App\User;
 use App\Setting;
@@ -14,7 +15,8 @@ class SemesterController extends Controller
     {
         $inputYear = $request->year;
         $inputType = $request->type;
-        $alreadyExist = $semester->doesExistSemester($user->id, $inputYear, $inputYear);
+        $alreadyExist = $semester->doesExistSemester($user->id, $inputYear, $inputType);
+
         if(!$alreadyExist){
             $item = $semester->create([
                 'year' => $inputYear,
@@ -25,7 +27,7 @@ class SemesterController extends Controller
             ]);
             return $item;
         }else{
-            return 'すでに登録されている 年/学期 です';
+            return Response::json(['error' => 'すでに登録されている学期は追加できません。'], 400);
         }
     }
 

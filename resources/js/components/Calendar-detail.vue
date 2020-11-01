@@ -107,7 +107,16 @@ export default {
             },
             deleteInfo: {},
             events: {},
-            eventForm: {},
+            eventForm: {
+                title: '',
+                allday: false,
+                startDay: this.today,
+                startTime: '10:00',
+                endDay: this.today,
+                endTime: '11:00',
+                location: '',
+                color: '#B6ABE4'
+            },
             infoVisibility: false,
             modalVisibility: false,
             month: '',
