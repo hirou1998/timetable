@@ -21,6 +21,9 @@ class Setting extends Model
 
     public function changeCurrentSemester($userId, $newCurrentSemester)
     {
+        if(!$userId || !$newCurrentSemester){
+            return false;
+        }
         $setting = $this->where('user_id', $userId)->get()->first();
         $setting->update([
             'current_year' => $newCurrentSemester->year,

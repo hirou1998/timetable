@@ -13,8 +13,8 @@ $factory->define(Setting::class, function (Faker $faker) {
             return factory(User::class)->create()->id;
         },
         'edited' => true,
-        'current_year' => '2020',
-        'current_semester' => '2学期',
+        'current_year' => $faker->year(),
+        'current_semester' => $faker->randomElement(['1学期', '2学期', '3学期']),
         'first_start_time' => '09:00:00',
         'first_end_time' => '10:30:00',
         'second_start_time' => '10:40:00',
