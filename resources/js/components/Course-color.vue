@@ -45,7 +45,7 @@ export default {
             colorModalVisibility: false,
             currentColor: '',
             currentId: '',
-            dayOfWeek: ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'],
+            dayOfWeek: ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
             setting: {}
         }
     },
@@ -78,7 +78,7 @@ export default {
             })
         },
         getCourses(semesterId){
-          axios.get(`/api/period/${this.auth.id}/${semesterId}`)
+          axios.get(`/api/period/${this.auth.id}?year=${this.setting.semester.year}&type=${this.setting.semester.type}`)
             .then(({data}) => {
               data.sort(this.sortCourses)
               this.courses = data;
@@ -102,12 +102,10 @@ export default {
         },
         splitCourses(){
             this.arrangedCourses = [];
-            var mon = this.courses.filter(d => d.day_of_week === 1);
-            var tue = this.courses.filter(d => d.day_of_week === 2);
-            var wed = this.courses.filter(d => d.day_of_week === 3);
-            var thu = this.courses.filter(d => d.day_of_week === 4);
-            var fri = this.courses.filter(d => d.day_of_week === 5);
-            this.arrangedCourses.push(mon, tue, wed, thu, fri);
+            this.dayOfWeek.forEach((d, index) => {
+                var item = this.courses.filter(c => c.day_of_week === (index + 1));
+                this.arrangedCourses.push(item);
+            })
         }
     },
     computed: {

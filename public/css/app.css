@@ -15515,6 +15515,10 @@ a:hover {
   color: red;
 }
 
+.justify-content-space-around {
+  justify-content: space-around !important;
+}
+
 .course {
   width: 90%;
   margin: 2vw auto;
@@ -15617,6 +15621,7 @@ a:hover {
   border-bottom: solid 2px #707070;
   margin-bottom: 2vh;
   position: relative;
+  font-size: 1.5rem;
 }
 
 .course-detail-body-info-item {
@@ -15886,13 +15891,18 @@ a:hover {
   background-color: #F0F0F0;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .setting-subtitle {
   color: #919191;
   font-size: 1.2rem;
-  padding: 2vh 0 2vh 2vw;
+  padding: 2vh 0 1vh 2vw;
   margin: 0;
+}
+
+.setting-text {
+  color: #888282;
 }
 
 .setting-list-container {
@@ -16002,6 +16012,38 @@ a:hover {
   margin: 1rem 0 3rem;
 }
 
+.semester-content-body {
+  height: 90vh;
+  padding: 2vw 0;
+  position: relative;
+}
+
+.semester-content-body > div:not(:last-child) {
+  transition: transform 0.5s;
+  padding: 0 2vw;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+}
+
+.semester-surface-body {
+  transform: translate(0, 0);
+}
+
+.semester-surface-body[data-visibility=hidden] {
+  transform: translate(-100%, 0);
+}
+
+.semester-list-body.semester-list-body {
+  transform: translate(100%, 0);
+  padding-top: 3vh;
+}
+
+.semester-list-body.semester-list-body[data-visibility=visible] {
+  transform: translate(0, 0);
+}
+
 .setting-semester-form {
   width: 86%;
   padding: 2rem;
@@ -16016,14 +16058,106 @@ a:hover {
   margin-bottom: 0.2rem;
 }
 
-.setting-semester-save {
+.setting-semester-button-block {
   position: absolute;
-  width: 100vw;
-  background-color: #BBDEFF;
   left: 0;
-  bottom: 0;
+  bottom: -2vh;
+}
+
+.setting-semester-button {
+  width: 100vw;
   padding: 1vh 0;
   font-size: 1rem;
+}
+
+.setting-semester-save {
+  background-color: #BBDEFF;
+}
+
+.setting-semester-delete {
+  background-color: #e3342f;
+}
+
+.setting-semester-card {
+  background-color: #fff;
+  width: 96%;
+  border-radius: 5px;
+  margin: 1vh auto;
+  padding: 2vw 4vw;
+  border: solid 1px #919191;
+  color: #888282;
+  position: relative;
+}
+
+.setting-semester-card[data-selected=non-selected] {
+  opacity: 0.5;
+}
+
+.semester-option-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #888282;
+}
+
+.setting-semester-card-head {
+  font-size: 1.2rem;
+  margin-bottom: 1vh;
+}
+
+.setting-semester-card-icon {
+  width: 5%;
+  margin-right: 1vw;
+}
+
+.setting-semester-card-date {
+  align-items: flex-end;
+}
+
+.setting-semester-card-text {
+  line-height: 1;
+}
+
+.semester-select-button {
+  color: #888282;
+  text-decoration: underline;
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.semester-edit-window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #fff;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  padding: 2vw;
+  border: solid #919191 2px;
+}
+
+.semester-edit-inner {
+  margin-bottom: 2vh;
+}
+
+.setting-form-text {
+  color: #888282;
+  margin-bottom: 0.1vh;
+}
+
+.semester-edit-block {
+  margin-bottom: 1vh;
+}
+
+.semester-add-block {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.semester-add-button {
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #828282;
 }
 
 .calendar {

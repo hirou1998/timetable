@@ -52,7 +52,7 @@
                     </template>
                 </div>
             </div>
-            <event-add-button 
+            <add-button 
                 @open="toggleModal"
             />
         </section>
@@ -68,11 +68,11 @@
 <script>
 import MyHeader from './modules/Header'
 import CalendarModal from './modules/Calendar-modal'
-import EventAddButton from './modules/Event-add-button'
+import AddButton from './modules/AddButton'
 
 export default {
     components: {
-        EventAddButton,
+        AddButton,
         CalendarModal,
         MyHeader,
     },
@@ -100,6 +100,7 @@ export default {
                 location: '',
                 color: '#B6ABE4'
             },
+            semesters: []
         }
     },
     methods: {
@@ -154,7 +155,7 @@ export default {
                     })
                 })
         },
-        getCourses: function(){
+        getCourses: function(semesterId){
             axios.get(`/api/period/${this.auth.id}`)
                 .then(({data}) => {
                     this.courses = data;
@@ -179,6 +180,12 @@ export default {
             .then(({data}) => {
                 this.events.push(...data);
             })
+        },
+        getSemesters(){
+            axios.get(`/api/setting/semester/detail/${this.auth.id}`)
+                .then(({data}) => {
+                    this.semesters = data;
+                });
         },
         movePrev: function(){
             if(this.currentMonth === 1){
@@ -219,9 +226,22 @@ export default {
             var dayList = [...Array(this.lastDay)].map((d, i) => i + 1);
             return this.space.concat(dayList);
         },
+        currentSemesterId(){
+            var currentDate = new Date(this.currentYear, this.currentMonth - 1, 1);
+            console.log(currentDate)
+            var targetSemester = this.semesters.semesters.filter(s => {
+                var start = new Date(s.start_date);
+                var end = new Date(s.end_date);
+                return start < currentDate && end > currentDate;
+            })
+            return targetSemester;
+            return currentDate;
+            return this.semesters;
+        }
     },
     async mounted(){
         await this.getAssignments();
+        await this.getSemesters();
         await this.getCourses();
 
         var date = new Date();

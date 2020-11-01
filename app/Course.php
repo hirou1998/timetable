@@ -51,6 +51,8 @@ class Course extends Model
                     'day_of_week' => $add['day_of_week'],
                     'period' => $add['period'],
                     'user_id' => auth()->user()->id,
+                    'year' => $request->year,
+                    'type' => $request->semester_type
                 ]);
             }
         }

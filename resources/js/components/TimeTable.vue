@@ -1,6 +1,6 @@
 <template>
     <div>
-        <my-header name="時間割" :auth="auth" bk-color="#919191" />
+        <my-header :name="setting.semester.year + ' ' + setting.semester.type" :auth="auth" bk-color="#919191" />
         <table class="course">
             <tr class="course-day-head">
                 <th></th>
@@ -56,16 +56,16 @@ export default {
         },
         today: function(){
             return new Date().getDay();
-        }
+        },
     },
     methods: {
-        async getCourses(semesterId){
-            axios.get(`api/period/${this.auth.id}/${semesterId}`)
+        getCourses(semesterId){
+            axios.get(`api/period/${this.auth.id}?year=${this.setting.semester.year}&type=${this.setting.semester.type}`)
                 .then(({data}) => {
                     this.courses = data;
                 });
         },
-        async getSetting(){
+        getSetting(){
             axios.get(`api/user/setting/${this.auth.id}`)
                 .then(({data}) => {
                     this.setting = data;

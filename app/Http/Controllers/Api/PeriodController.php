@@ -16,6 +16,6 @@ class PeriodController extends Controller
             return $period->where('user_id', $user->id)->where('day_of_week', $request->day_of_week)->orderby('period')->get();
         }
 
-        return $period->where('user_id', $user->id)->where('semester_id', $semester->id)->orderby('period')->orderby('day_of_week')->get();
+        return $period->where('user_id', $user->id)->where('year', $request->year)->where('type', $request->type)->orderby('period')->orderby('day_of_week')->get();
     }
 }

@@ -66,7 +66,7 @@
             @close="deleteModalVisibility = false"
             @delete="deleteEvent"
         />
-        <event-add-button 
+        <add-button 
             @open="toggleModal"
         />
     </div>
@@ -77,7 +77,7 @@ import CalendarItem from './modules/Calendar-item'
 import CalendarCheckedItem from './modules/Calendar-checked-item'
 import CalendarModal from './modules/Calendar-modal'
 import DeleteModal from './modules/Delete-modal'
-import EventAddButton from './modules/Event-add-button'
+import AddButton from './modules/AddButton'
 import MyHeader from './modules/Header'
 
 export default {
@@ -86,7 +86,7 @@ export default {
         CalendarCheckedItem,
         CalendarModal,
         DeleteModal,
-        EventAddButton,
+        AddButton,
         MyHeader,
     },
     data: function(){
@@ -107,7 +107,16 @@ export default {
             },
             deleteInfo: {},
             events: {},
-            eventForm: {},
+            eventForm: {
+                title: '',
+                allday: false,
+                startDay: this.today,
+                startTime: '10:00',
+                endDay: this.today,
+                endTime: '11:00',
+                location: '',
+                color: '#B6ABE4'
+            },
             infoVisibility: false,
             modalVisibility: false,
             month: '',
