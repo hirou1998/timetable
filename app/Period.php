@@ -11,10 +11,10 @@ class Period extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function semester()
-    {
-        return $this->belongsTo(Semester::class);
-    }
+    // public function semester()
+    // {
+    //     return $this->belongsTo(Semester::class);
+    // }
 
     public function user()
     {

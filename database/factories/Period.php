@@ -16,10 +16,9 @@ $factory->define(Period::class, function (Faker $faker) {
         'user_id' => function(){
             return factory(User::class)->create()->id;
         },
-        'semester_id' => function(){
-            return factory(User::class)->create()->id;
-        },
         'day_of_week' => $faker->numberBetween(1, 6),
         'period' => $faker->numberBetween(1, 6),
+        'year' => $faker->year(),
+        'type' => '1学期'
     ];
 });

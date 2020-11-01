@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('/user', function(Request $request){
         return $request->user();
     });
-    Route::get('period/{user}/{semester}', 'Api\PeriodController@index');
+    Route::get('period/{user}', 'Api\PeriodController@index');
     Route::get('course/detail', 'Api\CourseController@index');
     Route::get('course/assignments/c/{course}', 'Api\AssignmentController@sortByCourse');
     Route::get('course/assignments/u/{user}', 'Api\AssignmentController@sortByUser');

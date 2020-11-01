@@ -16,7 +16,7 @@ class SemesterController extends Controller
         $semesterEnum = $semester->semesterEnum();
         $setting = Setting::where('user_id', $user->id)->get()->first();
         $currentSemester = $semester->currentSemester($setting, $user->id);
-        $semesters = $semester->where('user_id', $user->id)->get();
+        $semesters = $semester->where('user_id', $user->id)->orderby('year')->orderby('type')->get();
 
         return [
             'current' => $currentSemester,

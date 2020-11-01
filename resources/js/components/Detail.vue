@@ -248,7 +248,7 @@ export default {
           this.dateList = dateListArray;
         },
         getPeriods(){
-          axios.get(`/api/period/${this.auth.id}/${this.setting.semester.id}`)
+          axios.get(`/api/period/${this.auth.id}?year=${this.setting.semester.year}&type=${this.setting.semester.type}`)
             .then(({data}) => {
               this.periodsList = [];
               this.periodsList = data.map(p => {
@@ -347,7 +347,8 @@ export default {
             'teacher': this.formData.teacher,
             'type': this.formData.type,
             'periods': this.formData.periods,
-            'semester_id': this.setting.semester.id
+            'year': this.setting.semester.year,
+            'semester_type': this.setting.semester.type
           }).then(({data}) => {
             this.backToTimetable();
           }).catch((err) => {

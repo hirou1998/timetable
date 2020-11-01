@@ -16,6 +16,7 @@ class Semester extends Model
 
     public function currentSemester($setting, $userId)
     {
+
         $currentSemester = $this->where('user_id', $userId)->where('year', $setting->current_year)->where('type', $setting->current_semester)->get()->first();
 
         return $currentSemester;

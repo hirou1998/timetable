@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         getCourses(semesterId){
-            axios.get(`api/period/${this.auth.id}/${semesterId}`)
+            axios.get(`api/period/${this.auth.id}?year=${this.setting.semester.year}&type=${this.setting.semester.type}`)
                 .then(({data}) => {
                     this.courses = data;
                 });

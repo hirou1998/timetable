@@ -64,18 +64,27 @@ class DatabaseSeeder extends Seeder
             'end_date' => '2021/02/01'
         ]);
 
+        $setting1 = factory(Setting::class)->create([
+            'user_id' => $user1->id,
+            'university' => '早稲田',
+            'current_year' => $semester1->year,
+            'current_semester' => $semester1->type
+        ]);
+
         $period1 = factory(Period::class)->create([
             'course_id' => $course1->id,
             'user_id' => $user1->id,
-            'semester_id' => $semester1->id,
             'day_of_week' => 2,
             'period' => 2,
+            'year' => $setting1->current_year,
+            'type' => $setting1->current_semester
         ]);
 
         $period2 = factory(Period::class)->create([
             'course_id' => $course2->id,
             'user_id' => $user1->id,
-            'semester_id' => $semester1->id,
+            'year' => $setting1->current_year,
+            'type' => $setting1->current_semester,
             'day_of_week' => 2,
             'period' => 3,
         ]);
@@ -83,7 +92,8 @@ class DatabaseSeeder extends Seeder
         $period3 = factory(Period::class)->create([
             'course_id' => $course2->id,
             'user_id' => $user1->id,
-            'semester_id' => $semester1->id,
+            'year' => $setting1->current_year,
+            'type' => $setting1->current_semester,
             'day_of_week' => 4,
             'period' => 3,
         ]);
@@ -91,7 +101,8 @@ class DatabaseSeeder extends Seeder
         $period4 = factory(Period::class)->create([
             'course_id' => $course3->id,
             'user_id' => $user1->id,
-            'semester_id' => $semester1->id,
+            'year' => $setting1->current_year,
+            'type' => $setting1->current_semester,
             'day_of_week' => 4,
             'period' => 2,
         ]);
@@ -99,7 +110,8 @@ class DatabaseSeeder extends Seeder
         $period5 = factory(Period::class)->create([
             'course_id' => $course4->id,
             'user_id' => $user1->id,
-            'semester_id' => $semester1->id,
+            'year' => $setting1->current_year,
+            'type' => $setting1->current_semester,
             'day_of_week' => 4,
             'period' => 4,
         ]);
@@ -110,11 +122,6 @@ class DatabaseSeeder extends Seeder
         //     'day_of_week' => 3,
         //     'period' => 2,
         // ]);
-
-        $setting1 = factory(Setting::class)->create([
-            'user_id' => $user1->id,
-            'university' => '早稲田'
-        ]);
 
         $assignment1 = factory(Assignment::class)->create([
             'user_id' => $user1->id,
