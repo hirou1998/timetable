@@ -115,7 +115,7 @@ export default {
                 return this.semester.endDate.year;
             },
             set(year){
-                let endDate = this.updatEendDate({year});
+                let endDate = this.updateEndDate({year});
                 this.updateValue({endDate})
             }
         },
@@ -156,7 +156,11 @@ export default {
             return date.getDate();
         },
         save(){
-            this.$emit('edit');
+            if(this.semester.id){
+                this.$emit('edit');
+            }else{
+                this.$emit('add');
+            }
         },
         updateValue(value){
             this.$emit('change', {...this.semester, ...value})

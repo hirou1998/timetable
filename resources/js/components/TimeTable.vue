@@ -59,13 +59,13 @@ export default {
         },
     },
     methods: {
-        async getCourses(semesterId){
+        getCourses(semesterId){
             axios.get(`api/period/${this.auth.id}/${semesterId}`)
                 .then(({data}) => {
                     this.courses = data;
                 });
         },
-        async getSetting(){
+        getSetting(){
             axios.get(`api/user/setting/${this.auth.id}`)
                 .then(({data}) => {
                     this.setting = data;

@@ -24,6 +24,11 @@
           @select="selectSemester"
           @show="showOption"
         />
+        <div class="semester-add-block">
+          <button class="semester-add-button btn" @click="addSemester">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
       </div>
       <div class="setting-semester-button-block" v-if="listVisibility">
         <button class="setting-semester-button setting-semester-delete" @click="cancelChange">変更を取り消す</button>
@@ -52,6 +57,7 @@
       v-show="editModalVisibility"
       @cancel="editModalVisibility = false"
       @edit="edit()"
+      @add="add()"
       :types="semesters.semesterType"
     />
   </div>
@@ -78,6 +84,21 @@ export default {
     return {
       current: {},
       deleteModalVisibility: false,
+      defaultSemester: {
+        endDate: {
+          year: '',
+          month: '',
+          day: ''
+        },
+        startDate: {
+          year: '',
+          month: '',
+          day: ''
+        },
+        type: '',
+        year: '',
+        user_id: ''
+      },
       editModalVisibility: false,
       endYear: 2050,
       listVisibility: false,
@@ -85,8 +106,22 @@ export default {
       optionVisibility: false,
       semesters: {},
       startYear: 2010,
-      optionTargetSemester: {},
-      optionButtonVisibility: false
+      optionTargetSemester: {
+        endDate: {
+          year: '',
+          month: '',
+          day: ''
+        },
+        startDate: {
+          year: '',
+          month: '',
+          day: ''
+        },
+        type: '',
+        year: '',
+        user_id: ''
+      },
+      optionButtonVisibility: false,
     }
   },
   computed: {
@@ -95,11 +130,33 @@ export default {
     },
   },
   methods: {
+    add(){
+      this.formatOptionTargetSemester();
+      axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
+        'year': this.optionTargetSemester.year,
+        'type': this.optionTargetSemester.type,
+        'start_date': this.optionTargetSemester.start_date,
+        'end_date': this.optionTargetSemester.end_date
+      })
+      .then(({data}) => {
+        console.log(data)
+        this.semesters.semesters.push(data);
+        this.editModalVisibility = false;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    addSemester(){
+      this.optionTargetSemester = this.defaultSemester;
+      this.editSemester();
+    },
     changeCurrent(semester){
       this.current = semester;
     },
     cancelChange(){
       this.listVisibility = false;
+      this.current = this.semesters.current;
     },
     deleteSemester(){
       const deleteItemId = this.semesters.current.id;
@@ -114,10 +171,11 @@ export default {
       })
     },
     edit(){
-      let editedStartDate = this.optionTargetSemester.startDate;
-      let editedEndDate = this.optionTargetSemester.endDate;
-      this.optionTargetSemester.start_date = this.formatDate(editedStartDate.year, editedStartDate.month, editedStartDate.day);
-      this.optionTargetSemester.end_date = this.formatDate(editedEndDate.year, editedEndDate.month, editedEndDate.day);
+      // let editedStartDate = this.optionTargetSemester.startDate;
+      // let editedEndDate = this.optionTargetSemester.endDate;
+      // this.optionTargetSemester.start_date = this.formatDate(editedStartDate.year, editedStartDate.month, editedStartDate.day);
+      // this.optionTargetSemester.end_date = this.formatDate(editedEndDate.year, editedEndDate.month, editedEndDate.day);
+      this.formatOptionTargetSemester();
       axios.put(`/setting/mypage/semester/edit/${this.optionTargetSemester.id}`, {
         'year': this.optionTargetSemester.year,
         'type': this.optionTargetSemester.type,
@@ -146,10 +204,15 @@ export default {
       this.editModalVisibility = true;
       this.optionVisibility = false;
     },
+    formatOptionTargetSemester(){
+      let editedStartDate = this.optionTargetSemester.startDate;
+      let editedEndDate = this.optionTargetSemester.endDate;
+      this.optionTargetSemester.start_date = this.formatDate(editedStartDate.year, editedStartDate.month, editedStartDate.day);
+      this.optionTargetSemester.end_date = this.formatDate(editedEndDate.year, editedEndDate.month, editedEndDate.day);
+    },
     getSemesters(){
       axios.get(`/api/setting/semester/detail/${this.auth.id}`)
       .then(({data}) => {
-        console.log(data)
         var startDate = this.getDateObj(data.current.start_date);
         var endDate = this.getDateObj(data.current.end_date);
         var shapedSemesters = data.semesters.map(s => {
@@ -206,23 +269,15 @@ export default {
       return year + '-' + month + '-' + day;
     },
     save(){
-      // this.loadingVisibility = true;
-      // var formItem = this.current;
-      // var startDate = this.getDateObj(formItem.start_date);
-      // var endDate = this.getDateObj(formItem.end_date);
-      // axios.post(`/setting/mypage/semester/create/${this.auth.id}`, {
-      //   'year': formItem.year,
-      //   'type': formItem.type,
-      //   'start_date': this.formatDate(startDate.year, startDate.month, startDate.day),
-      //   'end_date': this.formatDate(endDate.year, endDate.month, endDate.day)
-      // })
-      // .then(({data}) => {
-      //   this.loadingVisibility = false;
-      //   this.listVisibility = false;
-      // })
-      // .catch(err => {
-      //   console.log(err);
-      // })
+      this.loadingVisibility = true;
+      axios.post(`/setting/mypage/semester/change/${this.current.id}`)
+      .then(({data}) => {
+        this.loadingVisibility = false;
+        this.listVisibility = false;
+      })
+      .catch(err => {
+        console.log(err)
+      })
     },
     selectSemester(semester){
       let current = this.semesters.current;

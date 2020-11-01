@@ -9,29 +9,30 @@ use App\Setting;
 
 class SemesterController extends Controller
 {
-    public function create(Semester $semester, User $user, Setting $setting, Request $request)
+
+    public function store(Semester $semester, User $user, Request $request)
     {
-        $targetSemester = $semester->doesExistSemester($user->id, $request->year, $request->type);
-        if($targetSemester){
-            $targetSemester->update([
-                'year' => $request->year,
-                'type' => $request->type,
+        $inputYear = $request->year;
+        $inputType = $request->type;
+        $alreadyExist = $semester->doesExistSemester($user->id, $inputYear, $inputYear);
+        if(!$alreadyExist){
+            $item = $semester->create([
+                'year' => $inputYear,
+                'type' => $inputType,
                 'start_date' => $request->start_date,
-                'end_date' => $request->end_date
+                'end_date' => $request->end_date,
+                'user_id' => $user->id
             ]);
-            $setting->changeCurrentSemester($user->id, $targetSemester);
-            return $targetSemester;
+            return $item;
         }else{
-            $newSemester = $semester->create([
-                'user_id' => $user->id,
-                'year' => $request->year,
-                'type' => $request->type,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date
-            ]);
-            $setting->changeCurrentSemester($user->id, $newSemester);
-            return $newSemester;
+            return 'すでに登録されている 年/学期 です';
         }
+    }
+
+
+    public function change(Semester $semester, Setting $setting)
+    {
+        $setting->changeCurrentSemester(auth()->user()->id, $semester);
     }
 
     public function edit(Semester $semester, Request $request)

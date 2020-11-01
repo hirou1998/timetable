@@ -67,7 +67,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/setting/mypage/semester', function(){
         return view('timetable.index');
     })->name('setting.semester');
-    Route::post('/setting/mypage/semester/create/{user}', 'SemesterController@create');
+    Route::post('/setting/mypage/semester/create/{user}', 'SemesterController@store');
+    Route::post('/setting/mypage/semester/change/{semester}', 'SemesterController@change');
     Route::delete('/setting/mypage/semester/delete/{semester}', 'SemesterController@destroy');
     Route::put('/setting/mypage/semester/edit/{semester}', 'SemesterController@edit');
 });

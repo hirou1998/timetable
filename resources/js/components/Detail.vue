@@ -52,11 +52,13 @@
 						</ul>
 						<ul v-else>
 							<li class="form-group course-detail-body-info-select-flex" v-for="(period, index) in formData.periods" :key="period.day_of_week + '-' + period.period">
-								<select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control" @change="changePeriodOptions($event,index)">
+								<!-- <select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control" @change="changePeriodOptions($event,index)"> -->
+                <select :ref="'dayOfWeek' + index" :value="period.day_of_week" class="form-control">
 									<option v-for="(day, index) in weekOfDay" :value="index + 1" :key="day">{{day}}</option>
 								</select>
 								<select :ref="'period' + index" :value="period.period" class="form-control">
-									<option :value="item" v-for="item in periodOptionsList[index]" :key="item">{{item}}</option>
+									<!-- <option :value="item" v-for="item in periodOptionsList[index]" :key="item">{{item}}</option> -->
+                  <option :value="item" v-for="item in periodOptions" :key="item">{{item}}</option>
 								</select>
 							</li>
 							<button class="btn btn-outline-info btn-sm" @click="addPeriodForm">曜日・時限を追加</button>
@@ -257,9 +259,13 @@ export default {
               });
               if(this.isEditing){
                 this.periodOptionsList = [];
-                for(var i = 0; i < this.course.periods.length; i++){
-                  var options = this.createValidOptions(this.course.periods[i].day_of_week, this.course.periods[i].period);
-                  this.periodOptionsList.push(options);
+                if(this.course.periods){
+                  for(var i = 0; i < this.course.periods.length; i++){
+                    var options = this.createValidOptions(this.course.periods[i].day_of_week, this.course.periods[i].period);
+                    this.periodOptionsList.push(options);
+                  }
+                }else{
+                  this.periodOptionsList = this.periodOptions
                 }
               }
             });
@@ -340,7 +346,8 @@ export default {
             'name': this.formData.name,
             'teacher': this.formData.teacher,
             'type': this.formData.type,
-            'periods': this.formData.periods
+            'periods': this.formData.periods,
+            'semester_id': this.setting.semester.id
           }).then(({data}) => {
             this.backToTimetable();
           }).catch((err) => {
