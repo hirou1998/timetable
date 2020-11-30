@@ -17,8 +17,8 @@ class CreateSettingsTable extends Migration
             $table->uuid('id');
             $table->uuid('user_id');
             $table->boolean('edited')->default(false);
-            $table->year('current_year');
-            $table->enum('current_semester', ['1学期', '2学期', '3学期'])->default('1学期');
+            $table->year('current_year')->nullable();
+            $table->enum('current_semester', ['1学期', '2学期', '3学期'])->nullable();
             $table->time('first_start_time')->default('9:00');
             $table->time('first_end_time')->default('10:30');
             $table->time('second_start_time')->default('10:40');

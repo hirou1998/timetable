@@ -53,8 +53,8 @@
       @delete="deleteSemester"
     />
     <semester-modal
-      v-model="optionTargetSemester"
-      v-show="editModalVisibility"
+      :semester="optionTargetSemester"
+      v-if="editModalVisibility"
       @cancel="editModalVisibility = false"
       @edit="edit()"
       @add="add()"

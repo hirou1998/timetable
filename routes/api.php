@@ -25,6 +25,6 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('events/{user}', 'Api\EventController@index');
     Route::get('setting/semester/detail/{user}', 'Api\SemesterController@index');
     Route::get('setting/semester/enum', 'Api\SemesterController@semesterEnum');
+    Route::get('setting/semester/current/{user}', 'Api\SemesterController@currentSemester');
+    Route::get('setting/semester/types', 'Api\TypeController@index');
 });
-
-Route::get('setting/semester/current/{user}', 'Api\SemesterController@currentSemester');

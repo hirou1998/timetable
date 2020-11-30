@@ -15488,6 +15488,17 @@ ul {
   padding: 0;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
 a {
   color: #2b2b2b;
   text-decoration: none;
@@ -15517,6 +15528,10 @@ a:hover {
 
 .justify-content-space-around {
   justify-content: space-around !important;
+}
+
+.normal-text {
+  font-size: 0.9rem;
 }
 
 .course {
@@ -16621,6 +16636,32 @@ a:hover {
   transform: translate(-50%, 100%);
 }
 
+.modal-popup {
+  opacity: 0;
+  -webkit-animation: popup 1s 0.5s forwards;
+          animation: popup 1s 0.5s forwards;
+}
+
+@-webkit-keyframes popup {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes popup {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .color-area {
   display: flex;
   width: 50%;
@@ -16774,5 +16815,48 @@ a:hover {
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
   }
+}
+
+.create-setting-modal {
+  height: 80vh;
+}
+
+.create-setting-head {
+  text-align: center;
+}
+
+.create-setting-prev {
+  position: absolute;
+  left: 3%;
+  bottom: 1%;
+  text-decoration: underline;
+}
+
+.create-setting-next {
+  position: absolute;
+  right: 3%;
+  bottom: 1%;
+  text-decoration: underline;
+}
+
+.create-setting-section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 96%;
+  transform: translate(-50%, -50%);
+  transition: 0.5s;
+}
+
+.create-setting-section[data-position=center] {
+  left: 50%;
+}
+
+.create-setting-section[data-position=right] {
+  left: 150%;
+}
+
+.create-setting-section[data-position=left] {
+  left: -50%;
 }
 

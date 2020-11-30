@@ -67,3 +67,15 @@
 .slide-enter, .slide-leave-to{
     transform: translate(-50%, 100%);
 }
+.modal-popup{
+    opacity: 0;
+    animation: popup 1s .5s forwards;
+}
+@keyframes popup{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}

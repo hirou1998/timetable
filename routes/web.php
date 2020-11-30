@@ -71,4 +71,5 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/setting/mypage/semester/change/{semester}', 'SemesterController@change');
     Route::delete('/setting/mypage/semester/delete/{semester}', 'SemesterController@destroy');
     Route::put('/setting/mypage/semester/edit/{semester}', 'SemesterController@edit');
+    Route::post('/setting/{user}/register', 'SettingController@register');
 });

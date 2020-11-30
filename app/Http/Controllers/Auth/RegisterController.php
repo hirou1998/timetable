@@ -32,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/timetable';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.

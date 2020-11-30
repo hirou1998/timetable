@@ -3,7 +3,6 @@
       <setting-head
         name="マイページ"
         link="setting"
-        :option-button-visibility="!isEditing"
         @edit="toggleEditing"
       />
       <div class="setting-edit-block">
@@ -35,7 +34,7 @@
             </router-link>
           </div>
         </li>
-        <li class="setting-list">
+        <!-- <li class="setting-list">
           <div class="setting-list-icon">
             <img src="/images/setting-colored.png" alt="">
           </div>
@@ -44,7 +43,7 @@
               プロフィール詳細編集
             </router-link>
           </div>
-        </li>
+        </li> -->
         <!-- <li class="setting-list">
           <div class="setting-list-icon">
             <img src="/images/memo.png" alt="">
