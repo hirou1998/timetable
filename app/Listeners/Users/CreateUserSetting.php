@@ -22,8 +22,6 @@ class CreateUserSetting
         // //登録日時によってデフォルトの終了日を決定
         // $todayMonth <= 8 ? $start = date('Y-m-d', mktime(0,0,0,4,8,$todayYear)) : $start = date('Y-m-d', mktime(0,0,0,9,27,$todayYear));
 
-        // $event->user->setting()->create([
-
-        // ])
+        $event->user->setting()->create();
     }
 }

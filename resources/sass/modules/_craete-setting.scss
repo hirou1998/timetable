@@ -1,0 +1,35 @@
+.create-setting-modal{
+    height: 80vh;
+}
+.create-setting-head{
+    text-align: center;
+}
+.create-setting-prev{
+    position: absolute;
+    left: 3%;
+    bottom: 1%;
+    text-decoration: underline;
+}
+.create-setting-next{
+    position: absolute;
+    right: 3%;
+    bottom: 1%;
+    text-decoration: underline;
+}
+.create-setting-section{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 96%;
+    transform: translate(-50%, -50%);
+    transition: .5s;
+}
+.create-setting-section[data-position="center"]{
+    left: 50%;
+}
+.create-setting-section[data-position="right"]{
+    left: 150%;
+}
+.create-setting-section[data-position="left"]{
+    left: -50%;
+}
