@@ -111,6 +111,11 @@ export default {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     },
+    computed: {
+      auth(){
+        return __auth();
+      }
+    },
     methods: {
         async login(){
             const isValid = await this.$refs.observer.validate();
@@ -118,6 +123,11 @@ export default {
                 document.querySelector('#login').submit();
             }
         }
-    } 
+    },
+    mounted(){
+      if(this.auth){
+        this.$router.push('/timetable');
+      }
+    }
 }
 </script>

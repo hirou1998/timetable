@@ -67,6 +67,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        //$api_token = Str::random(80);
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -81,7 +83,7 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        $this->guard()->login($user);
+        //$this->guard()->login($user);
 
         return $this->registered($request, $user) ?: redirect($this->redirectPath());
     }
