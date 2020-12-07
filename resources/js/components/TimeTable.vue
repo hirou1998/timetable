@@ -137,7 +137,7 @@ export default {
                 edited: true
             })
             .then(({data}) => {
-                console.log(data)
+                this.getSetting();
             })
             .catch(err => {
                 console.log(err)

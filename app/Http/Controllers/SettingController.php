@@ -24,7 +24,8 @@ class SettingController extends Controller
             'sixth_end_time' => $request->sixth_end_time,
             'university' => $request->university,
             'enter_year' => $request->enter_year,
-            'graduation_year' => $request->graduation_year
+            'graduation_year' => $request->graduation_year,
+            'edited' => $request->edited
         ]);
         return $user->setting;
     }
