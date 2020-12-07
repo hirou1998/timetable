@@ -24,6 +24,6 @@ class CreateUserSetting
         // $todayMonth <= 8 ? $start = date('Y-m-d', mktime(0,0,0,4,8,$todayYear)) : $start = date('Y-m-d', mktime(0,0,0,9,27,$todayYear));
 
         $event->user->setting()->create();
-        //Type::class()->create();
+        Type::createIfNotExist();
     }
 }
