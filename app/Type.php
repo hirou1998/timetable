@@ -4,8 +4,19 @@ namespace App;
 
 class Type extends Model
 {
-    public function index()
+    public static function index()
     {
-        return $this->first();
+        return static::first();
+    }
+
+    public static function createIfNotExist()
+    {
+        $record = static::index();
+
+        if($record){
+            return false;
+        }else{
+            static::create();
+        }
     }
 }
